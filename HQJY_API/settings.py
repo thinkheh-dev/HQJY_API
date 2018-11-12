@@ -30,33 +30,34 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-#替换系统用户模型
-AUTH_USER_MODEL = 'users.UserProfile'
+# 替换系统用户模型
+AUTH_USER_MODEL = 'users.UserInfo'
 
 # Application definition
 
 INSTALLED_APPS = [
+	'xadmin',
+    'crispy_forms',
+    'reversion',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+	'service_object.apps.ServiceObjectConfig',
+	'enterprise_info.apps.EnterpriseInfoConfig',
     'users.apps.UsersConfig',
     'bg_services.apps.BgServicesConfig',
-    'enterprise_info.apps.EnterpriseInfoConfig',
     'inc_operation.apps.IncOperationConfig',
-    'page_control.apps.PageControlConfig',
     'platform_operation.apps.PlatformOperationConfig',
-    'service_object.apps.ServiceObjectConfig',
     'user_operation.apps.UserOperationConfig',
-    'xadmin',
+	'page_control.apps.PageControlConfig',
     'DjangoUeditor',
-    'crispy_forms',
     'django_filters',
     'rest_framework',
     'corsheaders',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -146,11 +147,11 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 
-
-MEDIA_URL = "/media/"
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
+
+MEDIA_URL = "/media/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
@@ -177,27 +178,27 @@ JWT_AUTH = {
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
 }
 
-#手机号码正则表达式
+# 手机号码正则表达式
 REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
 
 
 
-#支付宝相关配置
+# 支付宝相关配置
 # private_key_path = os.path.join(BASE_DIR, 'apps/trade/keys/private_2048.txt')
 # ali_pub_key_path = os.path.join(BASE_DIR, 'apps/trade/keys/alipay_key_2048.txt')
 
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    }
-}
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": "redis://127.0.0.1:6379",
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#         }
+#     }
+# }
 
 # session 设置
-SESSION_COOKIE_AGE = 60 * 5 # 5分钟
+SESSION_COOKIE_AGE = 60 * 30 # 30分钟
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True # 关闭浏览器，则COOKIE失效

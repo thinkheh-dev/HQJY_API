@@ -16,8 +16,6 @@ from django.utils.translation import ugettext as _
 
 from .util import vendor
 
-DJANGO_11 = True
-
 
 class AdminDateWidget(forms.DateInput):
 
@@ -128,10 +126,7 @@ class AdminCheckboxSelect(forms.CheckboxSelectMultiple):
         if value is None:
             value = []
         has_id = attrs and 'id' in attrs
-        if DJANGO_11:
-            final_attrs = self.build_attrs(attrs, extra_attrs={'name': name})
-        else:
-            final_attrs = self.build_attrs(attrs, name=name)
+        final_attrs = self.build_attrs(attrs, extra_attrs={'name': name})
         output = []
         # Normalize to strings
         str_values = set([force_text(v) for v in value])
@@ -149,7 +144,6 @@ class AdminCheckboxSelect(forms.CheckboxSelectMultiple):
             option_value = force_text(option_value)
             rendered_cb = cb.render(name, option_value)
             option_label = conditional_escape(force_text(option_label))
-            final_attrs['inline'] = True if self.attrs['inline'] else False
 
             if final_attrs.get('inline', False):
                 output.append(u'<label%s class="checkbox-inline">%s %s</label>' % (label_for, rendered_cb, option_label))

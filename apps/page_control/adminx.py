@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#
+# @version : v1.0
+# @time    : 2018-11-07 16:35
+# @author  : warlock921
+# @contact : caoyu921@163.com
+# @file    : adminx.py
+# @software: PyCharm
+
+import xadmin
+from page_control.models import HomeNav, HomeBackground, WebLogo, WebFooterLink, WebFooterInfo, WebName, ADConfig
+
+
+class HomeNavAdmin(object):
+	list_display = ['nav_name', 'nav_image', 'nav_link']
+	
+
+class HomeBackgroundAdmin(object):
+	list_display = ['img_default', 'img_upload', 'img_url']
+	
+
+class WebLogoAdmin(object):
+	list_display = ['img_logo', 'img_url']
+
+
+class WebFooterLinkAdmin(object):
+	list_display = ['link_name', 'link_url']
+
+
+class WebFooterInfoAdmin(object):
+	list_display = ['web_contact', 'web_address', 'web_icp', 'web_security_info', 'wechat_qrcode', 'wechat_qrcode2',
+	                'web_footer_link', 'web_footer_link']
+
+
+class WebNameAdmin(object):
+	list_display = ['web_name', 'name_display']
+
+
+class ADConfigAdmin(object):
+	list_display = ['ad_img', 'img_description', 'img_index', 'ad_index']
+	
+	
+xadmin.site.register(HomeNav, HomeNavAdmin)
+xadmin.site.register(HomeBackground, HomeBackgroundAdmin)
+xadmin.site.register(WebLogo, WebLogoAdmin)
+xadmin.site.register(WebFooterLink, WebFooterLinkAdmin)
+xadmin.site.register(WebFooterInfo, WebFooterInfoAdmin)
+xadmin.site.register(WebName, WebNameAdmin)
+xadmin.site.register(ADConfig, ADConfigAdmin)

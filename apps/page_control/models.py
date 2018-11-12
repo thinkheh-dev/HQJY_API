@@ -7,7 +7,7 @@ class HomeNav(models.Model):
 	主页导航
 	"""
 	nav_name = models.CharField(max_length=30, blank=True, null=True, verbose_name="导航名称")
-	nav_image = models.ImageField(upload_to="/home_nav", blank=True, null=True, verbose_name="导航图片")
+	nav_image = models.ImageField(upload_to="home_nav/", blank=True, null=True, verbose_name="导航图片")
 	nav_link = models.URLField(verbose_name="导航链接", blank=True, null=True)
 	
 	class Meta:
@@ -21,8 +21,8 @@ class HomeBackground(models.Model):
 	"""
 	主页页头背景图
 	"""
-	img_default = models.ImageField(upload_to="/home_back", blank=True, null=True, verbose_name="默认图片")
-	img_upload = models.ImageField(upload_to="/home_back_upload", blank=True, null=True, verbose_name="自定义图片上传")
+	img_default = models.ImageField(upload_to="home_back/", blank=True, null=True, verbose_name="默认图片")
+	img_upload = models.ImageField(upload_to="home_back_upload/", blank=True, null=True, verbose_name="自定义图片上传")
 	img_url = models.URLField(verbose_name="图片地址", blank=True, null=True,)
 	
 	class Meta:
@@ -33,7 +33,7 @@ class WebLogo(models.Model):
 	"""
 	网站标志
 	"""
-	img_logo = models.ImageField(upload_to="/web_logo", blank=True, null=True, verbose_name="网站logo图片")
+	img_logo = models.ImageField(upload_to="web_logo/", blank=True, null=True, verbose_name="网站logo图片")
 	img_url = models.URLField(verbose_name="图片地址", blank=True, null=True,)
 	
 	class Meta:
@@ -58,10 +58,10 @@ class ADConfig(models.Model):
 	"""
 	广告配置
 	"""
-	ad_img = models.ImageField(upload_to="/ad_img", blank=True, null=True, verbose_name="广告图片")
+	ad_img = models.ImageField(upload_to="ad_img/", blank=True, null=True, verbose_name="广告图片")
 	img_description = models.CharField(max_length=200, blank=True, null=True, verbose_name="图片描述")
 	img_index = models.IntegerField(default=0, editable=True, verbose_name="排序")
-	ad_index = models.IntegerField(default=1, max_length=10, editable=True, verbose_name="广告级别")
+	ad_index = models.IntegerField(default=1, editable=True, verbose_name="广告级别")
 	
 	class Meta:
 		verbose_name = "广告配置"
@@ -92,8 +92,10 @@ class WebFooterInfo(models.Model):
 	web_address = models.CharField(max_length=100, blank=True, null=True, verbose_name="地址")
 	web_icp = models.CharField(max_length=50, blank=True, null=True, verbose_name="ICP备案信息")
 	web_security_info = models.CharField(max_length=50, blank=True, null=True, verbose_name="公安备案信息")
-	wechat_qrcode = models.ImageField(upload_to="/wechat_qrcode", blank=True, null=True, verbose_name="公众号二维码")
-	web_footer_link = models.ForeignKey(WebFooterLink, on_delete=models.CASCADE, related_name="web_footer_link" )
+	wechat_qrcode = models.ImageField(upload_to="wechat_qrcode/", blank=True, null=True, verbose_name="公众号二维码")
+	wechat_qrcode2 = models.ImageField(upload_to="wechat_qrcode/", blank=True, null=True, verbose_name="小程序二维码")
+	web_footer_link = models.ForeignKey(WebFooterLink, on_delete=models.CASCADE, related_name="web_footer_link",
+	                                    verbose_name="页脚友情链接")
 	
 	class Meta:
 		verbose_name = "网站页脚信息"
