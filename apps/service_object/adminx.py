@@ -16,7 +16,7 @@ from service_object.models import ServiceClassification, ServiceClassificationSe
 
 
 class ServiceClassificationAdmin(object):
-	list_display = ['classio_name', 'belong_nav']
+	list_display = ['classio_name', 'belong_nav_sc']
 	
 
 class ServiceClassificationSecondAdmin(object):
@@ -29,7 +29,7 @@ class DefaultServicesAdmin(object):
 
 
 class FinancingServiesClassificationAdmin(object):
-	list_display = ['name', 'belong_nav']
+	list_display = ['name', 'belong_nav_fsc']
 
 
 class FinancingServicesClassificationSecondAdmin(object):

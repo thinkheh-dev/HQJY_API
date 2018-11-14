@@ -21,6 +21,6 @@ from rest_framework.documentation import include_docs_urls
 
 urlpatterns = [
     path('xadmin/', xadmin.site.urls),
-	path('api-auth/', include('rest_framework.urls')),
-    path('doc/', include_docs_urls(title='ThinkHehAPI'))
+	path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('doc/', include_docs_urls(title='红企家园后端API'))
 ]

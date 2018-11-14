@@ -10,7 +10,7 @@
 
 import xadmin
 from xadmin import views
-from .models import VerifyCode, UserPermissionsName, UserLabels, UserProfile, UserInfo
+from .models import VerifyCode, UserPermissionsName, UserLabels, UserInfo
 
 
 class BaseSetting(object):
@@ -33,11 +33,15 @@ class UserLabelsAdmin(object):
 	
 
 class UserInfoAdmin(object):
-	list_display = ['user_name', 'user_sex', 'user_phone', 'user_ip', 'user_browser', 'user_permissions_name', 'user_labels', 'disable_flag']
+	list_display = ['user_name', 'user_sex', 'user_phone', 'user_ip', 'user_browser', 'user_id_card',
+	                'user_birthday', 'QQ_num', 'wechat_num', 'contact_address', 'user_email',
+	                'user_real_name_authentication', 'user_to_company', 'enterprise_type_first',
+	                'enterprise_type_second' 'user_permissions_name',
+	                'user_labels', 'disable_flag']
 
 
-class UserProfileAdmin(object):
- 	list_display = ['user_id_card', 'user_birthday', 'QQ_num', 'wechat_num', 'contact_address', 'user_email', 'user_real_name_authentication', 'user_info', 'user_to_company', 'enterprise_type_first', 'enterprise_type_second']
+# class UserProfileAdmin(object):
+#  	list_display = ['user_id_card', 'user_birthday', 'QQ_num', 'wechat_num', 'contact_address', 'user_email', 'user_real_name_authentication', 'user_info', 'user_to_company', 'enterprise_type_first', 'enterprise_type_second']
 
 
 class VerifyCodeAdmin(object):
@@ -46,7 +50,6 @@ class VerifyCodeAdmin(object):
 
 xadmin.site.register(UserPermissionsName, UserPermissionsNameAdmin)
 xadmin.site.register(UserLabels, UserLabelsAdmin)
-xadmin.site.register(UserProfile, UserProfileAdmin)
 xadmin.site.register(VerifyCode, VerifyCodeAdmin)
 xadmin.site.register(views.BaseAdminView, BaseSetting)
 xadmin.site.register(views.CommAdminView, GlobalSettings)
