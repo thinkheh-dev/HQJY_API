@@ -9,21 +9,20 @@
 # @software: PyCharm
 
 import xadmin
-from enterprise_info.models import EnterpriseTypeFirst, EnterpriseTypeSecond, BasicEnterpriseInfo
+from enterprise_info.models import EnterpriseTypeLevel, EnterpriseType, BasicEnterpriseInfo
 
-class EnterpriseTypeFirstAdmin(object):
-	list_display = ['first_type_name', ]
+class EnterpriseTypeLevelAdmin(object):
+	list_display = ['name', 'level']
 	
-class EnterpriseTypeSecondAdmin(object):
-	list_display = ['second_type_name', 'enterprise_type_first']
+class EnterpriseTypeAdmin(object):
+	list_display = ['name', 'code', 'desc', 'category_type', 'add_time']
 	
 class BasicEnterpriseInfoAdmin(object):
 	list_display = ['name', 'credit_no', 'oper_name', 'econ_kind', 'regist_capi', 'scope', 'status', 'address',
 	                'start_date', 'term_start', 'term_end', 'belong_org', 'company_area', 'company_area',
-	                'enterprise_type_first', 'enterprise_type_second', 'oper_phone', 'scan_of_company_license',
+	                'enterprise_type', 'oper_phone', 'scan_of_company_license',
 	                'scan_of_id_card']
 
-
-xadmin.site.register(EnterpriseTypeFirst, EnterpriseTypeFirstAdmin)
-xadmin.site.register(EnterpriseTypeSecond, EnterpriseTypeSecondAdmin)
+xadmin.site.register(EnterpriseTypeLevel, EnterpriseTypeLevelAdmin)
+xadmin.site.register(EnterpriseType, EnterpriseTypeAdmin)
 xadmin.site.register(BasicEnterpriseInfo, BasicEnterpriseInfoAdmin)

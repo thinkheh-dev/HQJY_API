@@ -9,35 +9,35 @@
 # @software: PyCharm
 
 import xadmin
-from service_object.models import ServiceClassification, ServiceClassificationSecond, DefaultServices, \
-	FinancingServiesClassification, FinancingServicesClassificationSecond, FinancingServices, ServiceBrand, \
-	DefaultCouponType, DefaultServicesPackage, DefaultServiceCoupon, HotSearchWords, EnterpriseDemand, \
-	CorporateFinanceDemand
+from service_object.models import ServiceAbstractClass, ServiceClassification, DefaultServices, \
+	FinancingServiesClassification,FinancingServices, ServiceBrand, DefaultCouponType, DefaultServicesPackage, \
+	DefaultServiceCoupon, HotSearchWords,EnterpriseDemand, CorporateFinanceDemand
 
 
 class ServiceClassificationAdmin(object):
-	list_display = ['classio_name', 'belong_nav_sc']
-	
+	list_display = ['name', 'code', 'desc', 'category_type', 'is_tab', 'add_time']
 
-class ServiceClassificationSecondAdmin(object):
-	list_display = ['classis_name', 'service_classification']
+
+# class ServiceClassificationSecondAdmin(object):
+# 	list_display = ['classis_name', 'service_classification']
 	
 
 class DefaultServicesAdmin(object):
-	list_display = ['service_classification', 'service_classification_second', 'service_inventory',
+	list_display = ['service_classification', 'service_inventory',
 	                'service_market_price', 'service_platform_price']
+	style_fields = {"service_detailed_description": "ueditor"}
 
 
 class FinancingServiesClassificationAdmin(object):
-	list_display = ['name', 'belong_nav_fsc']
+	list_display = ['name', 'code', 'desc', 'category_type', 'is_tab', 'add_time']
 
 
-class FinancingServicesClassificationSecondAdmin(object):
-	list_display = ['name', 'fscs']
+# class FinancingServicesClassificationSecondAdmin(object):
+# 	list_display = ['name', 'fscs']
 
 
 class FinancingServicesAdmin(object):
-	list_display = ['fsc', 'fscs', 'time_limit', 'annual_interest_rate', 'approval_lines']
+	list_display = ['fsc', 'time_limit', 'annual_interest_rate', 'approval_lines']
 	
 	
 class ServiceBrandAdmin(object):
@@ -62,18 +62,18 @@ class HotSearchWordsAdmin(object):
 	
 
 class EnterpriseDemandAdmin(object):
-	list_display = ['sv_class', 'sv_class_s']
+	list_display = ['sv_class', ]
 
 
 class CorporateFinanceDemandAdmin(object):
-	list_display = ['fsc', 'fscs', 'financing_amount', 'financing_to', 'financing_maturity']
+	list_display = ['fsc', 'financing_amount', 'financing_to', 'financing_maturity']
 
 
 xadmin.site.register(ServiceClassification, ServiceClassificationAdmin)
-xadmin.site.register(ServiceClassificationSecond, ServiceClassificationSecondAdmin)
+# xadmin.site.register(ServiceClassificationSecond, ServiceClassificationSecondAdmin)
 xadmin.site.register(DefaultServices, DefaultServicesAdmin)
 xadmin.site.register(FinancingServiesClassification, FinancingServiesClassificationAdmin)
-xadmin.site.register(FinancingServicesClassificationSecond, FinancingServicesClassificationSecondAdmin)
+# xadmin.site.register(FinancingServicesClassificationSecond, FinancingServicesClassificationSecondAdmin)
 xadmin.site.register(FinancingServices, FinancingServicesAdmin)
 xadmin.site.register(ServiceBrand, ServiceBrandAdmin)
 xadmin.site.register(DefaultCouponType, DefaultCouponTypeAdmin)

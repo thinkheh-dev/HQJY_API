@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from enterprise_info.models import EnterpriseTypeFirst, EnterpriseTypeSecond, BasicEnterpriseInfo
+from enterprise_info.models import EnterpriseType, BasicEnterpriseInfo
 
 class UserPermissionsName(models.Model):
 	"""
@@ -55,10 +55,8 @@ class UserInfo(AbstractUser):
 	                                 #verbose_name="关联用户信息")
 	user_to_company = models.ForeignKey(BasicEnterpriseInfo, blank=True, null=True, on_delete=models.CASCADE,
 	                                    related_name="user_to_company", verbose_name="关联的企业")
-	enterprise_type_first = models.ForeignKey(EnterpriseTypeFirst, blank=True, null=True, on_delete=models.CASCADE,
-	                                          related_name="enterprise_type_first", verbose_name="企业一级分类")
-	enterprise_type_second = models.ForeignKey(EnterpriseTypeSecond, blank=True, null=True, on_delete=models.CASCADE,
-	                                           related_name="enterprise_type_second", verbose_name="企业二级分类")
+	enterprise_type = models.ForeignKey(EnterpriseType, blank=True, null=True, on_delete=models.CASCADE,
+	                                          related_name="enterprise_type", verbose_name="企业一级分类")
 	user_permission_name = models.ForeignKey(UserPermissionsName,null=True, blank=True, on_delete=models.CASCADE,
 	                                        related_name="user_permission_userinfo", verbose_name="关联用户权限")
 	user_labels = models.ForeignKey(UserLabels, on_delete=models.CASCADE, null=True, blank=True,

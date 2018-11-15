@@ -1,6 +1,6 @@
 from django.utils import timezone
 import uuid
-
+from DjangoUeditor.models import UEditorField
 from django.db import models
 
 from users.models import UserInfo
@@ -43,7 +43,7 @@ class OrderInfo(models.Model):
 	order_sn = models.UUIDField(auto_created=True, default=uuid.uuid4, verbose_name="订单号uuid")
 	#trade_sn = models.CharField(max_length=200, verbose_name="交易号") -- 用于网上支付的交易号，目前暂不启用
 	order_status = models.CharField(max_length=50, choices=ORDER_STATUS, verbose_name="交易状态")
-	order_message = models.TextField(verbose_name="订单留言")
+	order_message = models.TextField(default="", verbose_name="订单留言")
 	order_amount = models.IntegerField(default=0, editable=True, verbose_name="订单金额")
 	default_service_coupon = models.ManyToManyField(DefaultServiceCoupon, verbose_name="可用优惠券")
 	pay_time = models.DateTimeField(default=timezone.now, verbose_name="支付时间")
