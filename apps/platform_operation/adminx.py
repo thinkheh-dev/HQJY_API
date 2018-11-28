@@ -24,12 +24,14 @@ class InfoCategoriesSecondAdmin(object):
 class WeMediaArticlesAdmin(object):
 	list_display = ['title', 'subtitle', 'info_categories', 'info_categories_second', 'abstract', 'content',
 	                'attachment', 'publish_time', 'author', 'read_nums']
+	style_fields = {"content": "ueditor"}
 
 
 class PlatformActivityAdmin(object):
 	list_display = ['activity_title', 'activity_posters', 'activity_organizer', 'activity_start_time',
 	                'activity_end_time', 'activity_address', 'activity_desc', 'activity_tickets', 'meals_flag',
 	                'accommodation_flag', 'add_time']
+	style_fields = {"activity_desc": "ueditor"}
 
 
 class ActivityRegListAdmin(object):

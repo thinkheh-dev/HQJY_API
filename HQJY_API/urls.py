@@ -17,14 +17,26 @@ from django.urls import path, include
 import xadmin
 
 from rest_framework.documentation import include_docs_urls
+from rest_framework.routers import DefaultRouter
+
 from DjangoUeditor import urls as DjangoUeditor_urls
-# from django.contrib import admin
+
+from service_object.views import DefaultServicesListViewSet
+
+#实例化Router对象，用于配置路由
+router = DefaultRouter()
+
+#配置路由
+router.register(r'default-services', DefaultServicesListViewSet, base_name='dslist')
 
 urlpatterns = [
     path('xadmin/', xadmin.site.urls),
 	path('ueditor/', include(DjangoUeditor_urls)),
+	path('', include(router.urls)),
 	path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('doc/', include_docs_urls(title='红企家园后端API'))
+    path('doc/', include_docs_urls(title='红企家园后端API')),
+	
+	#path('default-services/', DefaultServicesListView.as_view(), name='ds-list')
 ]
 
 from django.conf import settings

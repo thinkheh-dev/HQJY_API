@@ -105,7 +105,7 @@ class BasicEnterpriseInfo(models.Model):
 	                                          related_name="entype_first", verbose_name="企业分类")
 	# enterprise_type_second = models.ForeignKey(EnterpriseTypeSecond, on_delete=models.CASCADE,
 	#                                            related_name="entype_second", verbose_name="企业二级分类")
-	oper_phone = models.CharField(max_length=11, blank=True, null=True, verbose_name="法人联系人")
+	oper_phone = models.CharField(max_length=11, blank=True, null=True, verbose_name="企业联系人")
 	scan_of_company_license = models.ImageField(upload_to="company_license/", blank=True, null=True,
 	                                            verbose_name="营业执照复印件")
 	scan_of_id_card = models.ImageField(upload_to="id_card/", blank=True, null=True, verbose_name="法人身份复印件")

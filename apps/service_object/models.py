@@ -54,7 +54,7 @@ class ServiceClassification(models.Model):
 	
 	name = models.CharField(default="", max_length=30, verbose_name="类别名", help_text="类别名")
 	code = models.CharField(default="", max_length=30, verbose_name="类别code", help_text="类别code")
-	desc = models.TextField(default="", help_text="产品详细描述", blank=True, null=True, verbose_name="产品详细描述")
+	desc = models.TextField(default="", help_text="类别描述", verbose_name="类别描述")
 	category_type = models.IntegerField(choices=CLASSIFICATION, verbose_name="类目级别", help_text="类目级别")
 	parent_category = models.ForeignKey("self", null=True, blank=True, verbose_name="父类目级别", help_text="父目录",
 	                                    related_name="sub_classification", on_delete=models.CASCADE)
@@ -111,7 +111,7 @@ class DefaultServices(ServiceAbstractClass):
 	service_platform_price = models.FloatField(verbose_name="平台价格")
 	
 	class Meta:
-		verbose_name = "普适服务产品"
+		verbose_name = "普适服务产品管理"
 		verbose_name_plural = verbose_name
 		
 	def __str__(self):
@@ -218,7 +218,8 @@ class DefaultServicesPackage(models.Model):
 	"""
 	package_name = models.CharField(max_length=200, verbose_name="普适服务包名称")
 	package_img = models.ImageField(upload_to="package_img/", blank=True, null=True, verbose_name="包封面图片")
-	package_desc = models.TextField(blank=True, null=True, verbose_name="包详细描述")
+	package_desc = UEditorField(verbose_name="包详细描述", imagePath="service_package/images/", width=1000,
+	                                            height=300, filePath="service_package/files/", default='')
 	default_service = models.ManyToManyField(DefaultServices, related_name="default_service",
 	                                         through="ServicePackageMiddle")
 	
@@ -294,13 +295,80 @@ class HotSearchWords(models.Model):
 	def __str__(self):
 		return self.keywords
 
+class DefaultServicesImage(models.Model):
+    """
+    普适服务轮播图
+    """
+    default_services = models.ForeignKey(DefaultServices, verbose_name="普适服务外键", on_delete=models.CASCADE,
+                                         related_name="default_images")
+    image = models.ImageField(upload_to="service/default_images", verbose_name="图片", null=True, blank=True)
+    add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
+
+    class Meta:
+        verbose_name = '普适服务轮播图片'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.default_services.service_name
+
+class FinancingServicesImage(models.Model):
+    """
+    金融服务轮播图
+    """
+    financing_services = models.ForeignKey(FinancingServices, verbose_name="金融服务外键", on_delete=models.CASCADE,
+                                           related_name="financing_images")
+    image = models.ImageField(upload_to="service/financing_images", verbose_name="图片", null=True, blank=True)
+    add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
+
+    class Meta:
+        verbose_name = '金融服务轮播图片'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.financing_services.service_name
+
+
+class DefaultServicesBanner(models.Model):
+    """
+    轮播的普适服务
+    """
+    default_services = models.ForeignKey(DefaultServices, verbose_name="普适服务外键", on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='service/default_banner/', verbose_name="轮播图片")
+    index = models.IntegerField(default=0, verbose_name="轮播顺序")
+    add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
+
+    class Meta:
+        verbose_name = '轮播的普适服务'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.default_services.service_name
+
+
+class FinancingServicesBanner(models.Model):
+    """
+    轮播的金融服务
+    """
+    financing_services = models.ForeignKey(FinancingServices, verbose_name="金融服务外键", on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='service/financing_banner/', verbose_name="轮播图片")
+    index = models.IntegerField(default=0, verbose_name="轮播顺序")
+    add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
+
+    class Meta:
+        verbose_name = '轮播的金融服务'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.financing_services.service_name
+
 
 class EnterpriseDemandAbstract(models.Model):
 	"""
 	企业需求（父级）
 	"""
 	company_info = models.ForeignKey(BasicEnterpriseInfo, on_delete=models.CASCADE, verbose_name="关联的企业")
-	demand_desc = models.TextField(verbose_name="需求描述（文字/图片）")
+	demand_desc = UEditorField(verbose_name='需求详细描述', height=300, width=1000, default='', blank=True,
+	                           imagePath="enterprise_demand/images/", toolbars='besttome', filePath='enterprise_demand/files/')
 	contact_name = models.CharField(max_length=20, blank=True, null=True, verbose_name="联系人姓名")
 	contact_phone = models.CharField(max_length=11, blank=True, null=True, verbose_name="联系人手机")
 	
@@ -341,3 +409,4 @@ class CorporateFinanceDemand(EnterpriseDemandAbstract):
 	
 	def __str__(self):
 		return self.company_name
+	

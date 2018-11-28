@@ -1,7 +1,7 @@
 from django.db import models
-
 from datetime import datetime
 
+from DjangoUeditor.models import UEditorField
 from users.models import UserInfo
 
 
@@ -44,7 +44,8 @@ class WeMediaArticles(models.Model):
 	                                    verbose_name="信息版块一级分类")
 	info_categories_second = models.ForeignKey(InfoCategoriesSecond, on_delete=models.CASCADE, verbose_name="信息板块二级分类")
 	abstract = models.TextField(max_length=200, blank=True, null=True, verbose_name="摘要")
-	content = models.TextField(blank=True, null=True, verbose_name="正文")
+	content = UEditorField(default="", width=1000, height=300, filePath="platform_op/files/",
+	                       imagePath="platform_op/images/", verbose_name="正文")
 	attachment = models.FileField(upload_to="we_media_articles/", verbose_name="附件")
 	publish_time = models.DateTimeField(auto_now_add=True, verbose_name="发布时间")
 	author = models.ForeignKey(UserInfo, on_delete=models.CASCADE, verbose_name="作者")
@@ -68,7 +69,8 @@ class PlatformActivity(models.Model):
 	activity_start_time = models.DateTimeField(default=datetime.now, editable=True, verbose_name="活动开始时间")
 	activity_end_time = models.DateTimeField(default=datetime.now, editable=True, verbose_name="活动结束时间")
 	activity_address = models.CharField(max_length=255, blank=True, null=True, verbose_name="活动地址")
-	activity_desc = models.TextField(verbose_name="活动详情") #这里使用副文本编辑器
+	activity_desc = UEditorField(default="", width=1000, height=300, filePath="platform_act/files/",
+	                       imagePath="platform_act/images/", verbose_name="活动详情")
 	activity_tickets = models.IntegerField(default=0, editable=True, verbose_name="门票价格")
 	meals_flag = models.BooleanField(default=False, editable=True, verbose_name="是否供餐")
 	accommodation_flag = models.BooleanField(default=False, editable=True, verbose_name="是否提供住宿")

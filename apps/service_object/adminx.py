@@ -11,7 +11,8 @@
 import xadmin
 from service_object.models import ServiceAbstractClass, ServiceClassification, DefaultServices, \
 	FinancingServiesClassification,FinancingServices, ServiceBrand, DefaultCouponType, DefaultServicesPackage, \
-	DefaultServiceCoupon, HotSearchWords,EnterpriseDemand, CorporateFinanceDemand
+	DefaultServiceCoupon, HotSearchWords,EnterpriseDemand, CorporateFinanceDemand, DefaultServicesImage, \
+	FinancingServicesImage, DefaultServicesBanner, FinancingServicesBanner
 
 
 class ServiceClassificationAdmin(object):
@@ -23,9 +24,20 @@ class ServiceClassificationAdmin(object):
 	
 
 class DefaultServicesAdmin(object):
-	list_display = ['service_classification', 'service_inventory',
+	list_display = ['service_sn','service_belong_to_company','service_name','service_classification', 'service_inventory',
 	                'service_market_price', 'service_platform_price']
+	search_fields = ['service_name', ]
+	list_editable = ['is_hot']
+	list_filter = ['service_name', 'service_sn', 'service_clicks', 'service_sales', 'service_fav_nums',
+	               'service_market_price', 'service_platform_price']
 	style_fields = {"service_detailed_description": "ueditor"}
+	
+	class DefaultServicesImageInline(object):
+		model = DefaultServicesImage
+		exclude = ['add_time']
+		extra = 1
+		
+	inlines = [DefaultServicesImageInline]
 
 
 class FinancingServiesClassificationAdmin(object):
@@ -37,8 +49,16 @@ class FinancingServiesClassificationAdmin(object):
 
 
 class FinancingServicesAdmin(object):
-	list_display = ['fsc', 'time_limit', 'annual_interest_rate', 'approval_lines']
+	list_display = ['service_sn','service_belong_to_company','service_name', 'fsc', 'time_limit',
+	                'annual_interest_rate', 'approval_lines']
+	style_fields = {"service_detailed_description": "ueditor"}
 	
+	class FinancingServicesImageInline(object):
+		model = FinancingServicesImage
+		exclude = ['add_time']
+		extra = 1
+	
+	inlines = [FinancingServicesImageInline]
 	
 class ServiceBrandAdmin(object):
 	list_display = ['brand_name', 'brand_desc', 'brand_img', 'add_time']
@@ -50,6 +70,7 @@ class DefaultCouponTypeAdmin(object):
 
 class DefaultServicesPackageAdmin(object):
 	list_display = ['package_name', 'package_img', 'package_desc', 'default_service']
+	style_fields = {"package_desc": "ueditor"}
 
 	
 class DefaultServiceCouponAdmin(object):
@@ -61,12 +82,30 @@ class HotSearchWordsAdmin(object):
 	list_display = ['keywords', 'key_index', 'add_time']
 	
 
+class DefaultServicesImageAdmin(object):
+	list_display = ['default_services', 'image', 'add_time']
+	
+	
+class FinancingServicesImageAdmin(object):
+	list_display = ['financing_services', 'image', 'add_time']
+
+	
+class DefaultServicesBannerAdmin(object):
+	list_display = ['default_services', 'image', 'index', 'add_time']
+	
+	
+class FinancingServicesBannerAdmin(object):
+	list_display = ['financing_services', 'image', 'index', 'add_time']
+
+
 class EnterpriseDemandAdmin(object):
 	list_display = ['sv_class', ]
+	style_fields = {"demand_desc": "ueditor"}
 
 
 class CorporateFinanceDemandAdmin(object):
 	list_display = ['fsc', 'financing_amount', 'financing_to', 'financing_maturity']
+	style_fields = {"demand_desc": "ueditor"}
 
 
 xadmin.site.register(ServiceClassification, ServiceClassificationAdmin)
@@ -80,5 +119,9 @@ xadmin.site.register(DefaultCouponType, DefaultCouponTypeAdmin)
 xadmin.site.register(DefaultServicesPackage, DefaultServicesPackageAdmin)
 xadmin.site.register(DefaultServiceCoupon, DefaultServiceCouponAdmin)
 xadmin.site.register(HotSearchWords, HotSearchWordsAdmin)
+xadmin.site.register(DefaultServicesImage, DefaultServicesImageAdmin)
+xadmin.site.register(FinancingServicesImage, FinancingServicesImageAdmin)
+xadmin.site.register(DefaultServicesBanner, DefaultServicesBannerAdmin)
+xadmin.site.register(FinancingServicesBanner, FinancingServicesBannerAdmin)
 xadmin.site.register(EnterpriseDemand, EnterpriseDemandAdmin)
 xadmin.site.register(CorporateFinanceDemand, CorporateFinanceDemandAdmin)
