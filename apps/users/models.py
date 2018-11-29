@@ -56,7 +56,7 @@ class UserInfo(AbstractUser):
 	user_to_company = models.ForeignKey(BasicEnterpriseInfo, blank=True, null=True, on_delete=models.CASCADE,
 	                                    related_name="user_to_company", verbose_name="关联的企业")
 	enterprise_type = models.ForeignKey(EnterpriseType, blank=True, null=True, on_delete=models.CASCADE,
-	                                          related_name="enterprise_type", verbose_name="企业一级分类")
+	                                          related_name="enterprise_type", verbose_name="企业分类")
 	user_permission_name = models.ForeignKey(UserPermissionsName,null=True, blank=True, on_delete=models.CASCADE,
 	                                        related_name="user_permission_userinfo", verbose_name="关联用户权限")
 	user_labels = models.ForeignKey(UserLabels, on_delete=models.CASCADE, null=True, blank=True,
@@ -103,7 +103,7 @@ class VerifyCode(models.Model):
 	"""
 	短信验证码
 	"""
-	code = models.CharField(max_length=10, verbose_name="短信验证码")
+	code = models.CharField(max_length=6, verbose_name="短信验证码")
 	user_phone = models.CharField(max_length=11, verbose_name="用户手机号")
 	add_time = models.DateTimeField(default=datetime.now, verbose_name="验证时间")
 	

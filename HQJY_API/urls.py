@@ -18,23 +18,36 @@ import xadmin
 
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken import views
+from rest_framework_jwt.views import obtain_jwt_token
 
 from DjangoUeditor import urls as DjangoUeditor_urls
 
 from service_object.views import DefaultServicesListViewSet
+from users.views import SmsCodeViewset, UserViewset
 
 #实例化Router对象，用于配置路由
 router = DefaultRouter()
 
 #配置路由
 router.register(r'default-services', DefaultServicesListViewSet, base_name='dslist')
+router.register(r'codes', SmsCodeViewset, base_name='codes')
+router.register(r'users', UserViewset, base_name='users')
 
 urlpatterns = [
     path('xadmin/', xadmin.site.urls),
 	path('ueditor/', include(DjangoUeditor_urls)),
 	path('', include(router.urls)),
 	path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('doc/', include_docs_urls(title='红企家园后端API')),
+	
+	#drf自带的认证模式
+	# path('api-token-auth/', views.obtain_auth_token),
+	
+	#jwt认证模式
+	path('login/', obtain_jwt_token),
+	
+    path('docs/', include_docs_urls(title='红企家园后端API')),
+
 	
 	#path('default-services/', DefaultServicesListView.as_view(), name='ds-list')
 ]
