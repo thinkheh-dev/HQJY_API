@@ -10,7 +10,7 @@
 
 import xadmin
 from service_object.models import ServiceAbstractClass, ServiceClassification, DefaultServices, \
-	FinancingServiesClassification,FinancingServices, ServiceBrand, DefaultCouponType, DefaultServicesPackage, \
+	FinancingServicesClassification,FinancingServices, ServiceBrand, DefaultCouponType, DefaultServicesPackage, \
 	DefaultServiceCoupon, HotSearchWords,EnterpriseDemand, CorporateFinanceDemand, DefaultServicesImage, \
 	FinancingServicesImage, DefaultServicesBanner, FinancingServicesBanner
 
@@ -40,7 +40,7 @@ class DefaultServicesAdmin(object):
 	inlines = [DefaultServicesImageInline]
 
 
-class FinancingServiesClassificationAdmin(object):
+class FinancingServicesClassificationAdmin(object):
 	list_display = ['name', 'code', 'desc', 'category_type', 'is_tab', 'add_time']
 
 
@@ -111,7 +111,7 @@ class CorporateFinanceDemandAdmin(object):
 xadmin.site.register(ServiceClassification, ServiceClassificationAdmin)
 # xadmin.site.register(ServiceClassificationSecond, ServiceClassificationSecondAdmin)
 xadmin.site.register(DefaultServices, DefaultServicesAdmin)
-xadmin.site.register(FinancingServiesClassification, FinancingServiesClassificationAdmin)
+xadmin.site.register(FinancingServicesClassification, FinancingServicesClassificationAdmin)
 # xadmin.site.register(FinancingServicesClassificationSecond, FinancingServicesClassificationSecondAdmin)
 xadmin.site.register(FinancingServices, FinancingServicesAdmin)
 xadmin.site.register(ServiceBrand, ServiceBrandAdmin)

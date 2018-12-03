@@ -23,7 +23,7 @@ from rest_framework_jwt.views import obtain_jwt_token
 
 from DjangoUeditor import urls as DjangoUeditor_urls
 
-from service_object.views import DefaultServicesListViewSet
+from service_object.views import DefaultServicesListViewSet, FinancingServicesListViewSet
 from users.views import SmsCodeViewset, UserViewset
 
 #实例化Router对象，用于配置路由
@@ -31,6 +31,7 @@ router = DefaultRouter()
 
 #配置路由
 router.register(r'default-services', DefaultServicesListViewSet, base_name='dslist')
+router.register(r'financing-services', FinancingServicesListViewSet, base_name='fnlist')
 router.register(r'codes', SmsCodeViewset, base_name='codes')
 router.register(r'users', UserViewset, base_name='users')
 

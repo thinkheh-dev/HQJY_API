@@ -103,7 +103,8 @@ class DefaultServices(ServiceAbstractClass):
 	"""
 	普适服务产品
 	"""
-	service_classification = models.ForeignKey(ServiceClassification, on_delete=models.CASCADE, verbose_name="普适服务分类")
+	service_classification = models.ForeignKey(ServiceClassification, on_delete=models.CASCADE,
+	                                           verbose_name="普适服务分类")
 	# service_classification_second = models.ForeignKey(ServiceClassificationSecond, on_delete=models.CASCADE,
 	#                                                   verbose_name="普适服务二级分类")
 	service_inventory = models.IntegerField(editable=True, verbose_name="库存数")
@@ -118,7 +119,7 @@ class DefaultServices(ServiceAbstractClass):
 		return self.service_name
 	
 
-class FinancingServiesClassification(models.Model):
+class FinancingServicesClassification(models.Model):
 	"""
 	金融服务类别
 	"""
@@ -181,10 +182,9 @@ class FinancingServices(ServiceAbstractClass):
 	"""
 	金融服务产品
 	"""
-	fsc = models.ForeignKey(FinancingServiesClassification, on_delete=models.CASCADE, related_name="financing_sc",
-	                        verbose_name="融资服务分类")
-	# fscs = models.ForeignKey(FinancingServicesClassificationSecond, on_delete=models.CASCADE,
-	#                          related_name="financing_scs", verbose_name="融资服务二级外键")
+	fsc = models.ForeignKey(FinancingServicesClassification, on_delete=models.CASCADE, verbose_name="融资服务分类")
+	service_market_price = models.FloatField(verbose_name="市场价格", default=0)
+	service_platform_price = models.FloatField(verbose_name="平台价格", default=0)
 	time_limit = models.CharField(max_length=10, verbose_name="期限")
 	annual_interest_rate = models.CharField(max_length=10, verbose_name="年利率")
 	approval_lines = models.CharField(max_length=10, verbose_name="审批额度")
@@ -296,70 +296,70 @@ class HotSearchWords(models.Model):
 		return self.keywords
 
 class DefaultServicesImage(models.Model):
-    """
+	"""
     普适服务轮播图
     """
-    default_services = models.ForeignKey(DefaultServices, verbose_name="普适服务外键", on_delete=models.CASCADE,
+	default_services = models.ForeignKey(DefaultServices, verbose_name="普适服务外键", on_delete=models.CASCADE,
                                          related_name="default_images")
-    image = models.ImageField(upload_to="service/default_images", verbose_name="图片", null=True, blank=True)
-    add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
+	image = models.ImageField(upload_to="service/default_images", verbose_name="图片", null=True, blank=True)
+	add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
+	
+	class Meta:
+		verbose_name = '普适服务轮播图片'
+		verbose_name_plural = verbose_name
 
-    class Meta:
-        verbose_name = '普适服务轮播图片'
-        verbose_name_plural = verbose_name
-
-    def __str__(self):
-        return self.default_services.service_name
+	def __str__(self):
+		return self.default_services.service_name
 
 class FinancingServicesImage(models.Model):
-    """
+	"""
     金融服务轮播图
-    """
-    financing_services = models.ForeignKey(FinancingServices, verbose_name="金融服务外键", on_delete=models.CASCADE,
+	"""
+	financing_services = models.ForeignKey(FinancingServices, verbose_name="金融服务外键", on_delete=models.CASCADE,
                                            related_name="financing_images")
-    image = models.ImageField(upload_to="service/financing_images", verbose_name="图片", null=True, blank=True)
-    add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
+	image = models.ImageField(upload_to="service/financing_images", verbose_name="图片", null=True, blank=True)
+	add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 
-    class Meta:
-        verbose_name = '金融服务轮播图片'
-        verbose_name_plural = verbose_name
+	class Meta:
+		verbose_name = '金融服务轮播图片'
+		verbose_name_plural = verbose_name
 
-    def __str__(self):
-        return self.financing_services.service_name
+	def __str__(self):
+		return self.financing_services.service_name
 
 
 class DefaultServicesBanner(models.Model):
-    """
+	"""
     轮播的普适服务
-    """
-    default_services = models.ForeignKey(DefaultServices, verbose_name="普适服务外键", on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='service/default_banner/', verbose_name="轮播图片")
-    index = models.IntegerField(default=0, verbose_name="轮播顺序")
-    add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
+	"""
+	default_services = models.ForeignKey(DefaultServices, verbose_name="普适服务外键", on_delete=models.CASCADE)
+	image = models.ImageField(upload_to='service/default_banner/', verbose_name="轮播图片")
+	index = models.IntegerField(default=0, verbose_name="轮播顺序")
+	add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 
-    class Meta:
-        verbose_name = '轮播的普适服务'
-        verbose_name_plural = verbose_name
+	class Meta:
+		verbose_name = '轮播的普适服务'
+		verbose_name_plural = verbose_name
 
-    def __str__(self):
-        return self.default_services.service_name
+	def __str__(self):
+		return self.default_services.service_name
 
 
 class FinancingServicesBanner(models.Model):
-    """
+	"""
     轮播的金融服务
-    """
-    financing_services = models.ForeignKey(FinancingServices, verbose_name="金融服务外键", on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='service/financing_banner/', verbose_name="轮播图片")
-    index = models.IntegerField(default=0, verbose_name="轮播顺序")
-    add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
+	"""
+	financing_services = models.ForeignKey(FinancingServices, verbose_name="金融服务外键", on_delete=models.CASCADE)
+	image = models.ImageField(upload_to='service/financing_banner/', verbose_name="轮播图片")
+	index = models.IntegerField(default=0, verbose_name="轮播顺序")
+	add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 
-    class Meta:
-        verbose_name = '轮播的金融服务'
-        verbose_name_plural = verbose_name
+	class Meta:
+		verbose_name = '轮播的金融服务'
+		verbose_name_plural = verbose_name
 
-    def __str__(self):
-        return self.financing_services.service_name
+	def __str__(self):
+		return self.financing_services.service_name
 
 
 class EnterpriseDemandAbstract(models.Model):
@@ -397,7 +397,7 @@ class CorporateFinanceDemand(EnterpriseDemandAbstract):
 	"""
 	企业金融需求信息
 	"""
-	fsc = models.ForeignKey(FinancingServiesClassification, on_delete=models.CASCADE, verbose_name="金融服务需求分类")
+	fsc = models.ForeignKey(FinancingServicesClassification, on_delete=models.CASCADE, verbose_name="金融服务需求分类")
 	#fscs = models.ForeignKey(FinancingServicesClassificationSecond, on_delete=models.CASCADE, verbose_name="金融服务二级分类")
 	financing_amount = models.IntegerField(blank=True, null=True, verbose_name="融资金额")
 	financing_to = models.CharField(max_length=100, blank=True, null=True, verbose_name="融资投向")
