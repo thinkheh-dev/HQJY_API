@@ -23,15 +23,34 @@ from rest_framework_jwt.views import obtain_jwt_token
 
 from DjangoUeditor import urls as DjangoUeditor_urls
 
-from service_object.views import DefaultServicesListViewSet, FinancingServicesListViewSet
+from service_object.views import DefaultServicesListViewSet, FinancingServicesListViewSet, DefaultCategoryViewset, \
+	FinancingCategoryViewset, HotSearchsViewset, DefaultServicesBannerViewset, FinancingServicesBannerViewset, ServicesBrandViewset
 from users.views import SmsCodeViewset, UserViewset
 
 #实例化Router对象，用于配置路由
 router = DefaultRouter()
 
 #配置路由
+#下面这些router很重要，不要随便修改，不然你会后悔！！
+
+#配置服务接口路由
 router.register(r'default-services', DefaultServicesListViewSet, base_name='dslist')
 router.register(r'financing-services', FinancingServicesListViewSet, base_name='fnlist')
+
+#配置服务分类路由
+router.register(r'default-categorys', DefaultCategoryViewset, base_name='dcategorys')
+router.register(r'financing-categorys', FinancingCategoryViewset, base_name='fcategorys')
+
+#配置热搜词路由
+router.register(r'hotsearchs', HotSearchsViewset, base_name='hotsearchs')
+
+#配置轮播图路由
+router.register(r'default-banner', DefaultServicesBannerViewset, base_name='dbanner')
+router.register(r'financing-banner', FinancingServicesBannerViewset, base_name='fbanner')
+
+#配置服务品牌路由
+router.register(r'service-brand', ServicesBrandViewset, base_name='sbrand')
+
 router.register(r'codes', SmsCodeViewset, base_name='codes')
 router.register(r'users', UserViewset, base_name='users')
 

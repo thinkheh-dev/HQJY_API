@@ -390,14 +390,15 @@ class EnterpriseDemand(EnterpriseDemandAbstract):
 		verbose_name_plural = verbose_name
 	
 	def __str__(self):
-		return self.company_name
+		return self.company_info.name
 
 
 class CorporateFinanceDemand(EnterpriseDemandAbstract):
 	"""
 	企业金融需求信息
 	"""
-	fsc = models.ForeignKey(FinancingServicesClassification, on_delete=models.CASCADE, verbose_name="金融服务需求分类")
+	fsc = models.ForeignKey(FinancingServicesClassification, on_delete=models.CASCADE, verbose_name="金融服务需求分类",
+	                        related_name="fsc_class")
 	#fscs = models.ForeignKey(FinancingServicesClassificationSecond, on_delete=models.CASCADE, verbose_name="金融服务二级分类")
 	financing_amount = models.IntegerField(blank=True, null=True, verbose_name="融资金额")
 	financing_to = models.CharField(max_length=100, blank=True, null=True, verbose_name="融资投向")
@@ -408,5 +409,5 @@ class CorporateFinanceDemand(EnterpriseDemandAbstract):
 		verbose_name_plural = verbose_name
 	
 	def __str__(self):
-		return self.company_name
+		return self.company_info.name
 	
