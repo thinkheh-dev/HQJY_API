@@ -19,6 +19,7 @@ class ServiceClassificationAdmin(object):
 	list_display = ['name', 'code', 'desc', 'category_type', 'is_tab', 'add_time']
 
 
+# 已舍弃
 # class ServiceClassificationSecondAdmin(object):
 # 	list_display = ['classis_name', 'service_classification']
 	
@@ -44,6 +45,7 @@ class FinancingServicesClassificationAdmin(object):
 	list_display = ['name', 'code', 'desc', 'category_type', 'is_tab', 'add_time']
 
 
+# 已舍弃
 # class FinancingServicesClassificationSecondAdmin(object):
 # 	list_display = ['name', 'fscs']
 
@@ -109,10 +111,10 @@ class CorporateFinanceDemandAdmin(object):
 
 
 xadmin.site.register(ServiceClassification, ServiceClassificationAdmin)
-# xadmin.site.register(ServiceClassificationSecond, ServiceClassificationSecondAdmin)
+# xadmin.site.register(ServiceClassificationSecond, ServiceClassificationSecondAdmin) 已舍弃
 xadmin.site.register(DefaultServices, DefaultServicesAdmin)
 xadmin.site.register(FinancingServicesClassification, FinancingServicesClassificationAdmin)
-# xadmin.site.register(FinancingServicesClassificationSecond, FinancingServicesClassificationSecondAdmin)
+# xadmin.site.register(FinancingServicesClassificationSecond, FinancingServicesClassificationSecondAdmin) 已舍弃
 xadmin.site.register(FinancingServices, FinancingServicesAdmin)
 xadmin.site.register(ServiceBrand, ServiceBrandAdmin)
 xadmin.site.register(DefaultCouponType, DefaultCouponTypeAdmin)

@@ -98,7 +98,8 @@ class ServiceClassification(models.Model):
 #
 # 	def __str__(self):
 # 		return self.classis_name
-	
+
+
 class DefaultServices(ServiceAbstractClass):
 	"""
 	普适服务产品
@@ -178,6 +179,7 @@ class FinancingServicesClassification(models.Model):
 # 	def __str__(self):
 # 		return self.name
 
+
 class FinancingServices(ServiceAbstractClass):
 	"""
 	金融服务产品
@@ -195,7 +197,8 @@ class FinancingServices(ServiceAbstractClass):
 		
 	def __str__(self):
 		return self.service_name
-	
+
+
 class ServiceBrand(models.Model):
 	"""
 	服务品牌
@@ -211,6 +214,7 @@ class ServiceBrand(models.Model):
 		
 	def __str__(self):
 		return self.brand_name
+
 
 class DefaultServicesPackage(models.Model):
 	"""
@@ -230,6 +234,7 @@ class DefaultServicesPackage(models.Model):
 	def __str__(self):
 		return self.package_name
 	
+	
 class ServicePackageMiddle(models.Model):
 	"""
 	普适服务包中间模型
@@ -241,6 +246,7 @@ class ServicePackageMiddle(models.Model):
 	class Meta:
 		db_table = "service_package_relationship"
 		
+
 class DefaultCouponType(models.Model):
 	"""
 	普适服务优惠券类型
@@ -254,6 +260,7 @@ class DefaultCouponType(models.Model):
 	
 	def __str__(self):
 		return self.name
+
 
 class DefaultServiceCoupon(models.Model):
 	"""
@@ -279,7 +286,8 @@ class DefaultServiceCoupon(models.Model):
 	
 	def __str__(self):
 		return self.coupon_name
-	
+
+
 class HotSearchWords(models.Model):
 	"""
 	热搜词
@@ -294,6 +302,7 @@ class HotSearchWords(models.Model):
 	
 	def __str__(self):
 		return self.keywords
+
 
 class DefaultServicesImage(models.Model):
 	"""
@@ -310,6 +319,7 @@ class DefaultServicesImage(models.Model):
 
 	def __str__(self):
 		return self.default_services.service_name
+
 
 class FinancingServicesImage(models.Model):
 	"""

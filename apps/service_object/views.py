@@ -7,7 +7,7 @@ from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import DefaultServices, FinancingServices, ServiceClassification, FinancingServicesClassification, \
-    HotSearchWords, ServiceBrand, DefaultServicesBanner, FinancingServicesBanner
+    HotSearchWords, ServiceBrand, DefaultServicesBanner, FinancingServicesBanner, EnterpriseDemand, CorporateFinanceDemand
 
 from .serializers import DefaultServicesSerializers, FinancingServicesSerializers, \
     FinancingServicesClassificationSerializers, FinancingServicesImageSerializers, ServiceBrandSerializers, \
@@ -122,5 +122,31 @@ class ServicesBrandViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, vie
 	"""
 	queryset = ServiceBrand.objects.all()
 	serializer_class = ServiceBrandSerializers
+	
+class EnterpriseDemandViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin,
+                              viewsets.GenericViewSet):
+	"""
+	企业普适服务需求列表、详情
+	list:
+		需求列表
+	retrieve:
+		需求详情
+	create:
+		创建需求
+	"""
+	queryset = EnterpriseDemand.objects.all()
+	serializer_class = EnterpriseDemandSerializers
 
-
+class CorporateFinanceDemandViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin,
+                                    viewsets.GenericViewSet):
+	"""
+	企业金融服务需求列表、详情
+	list:
+		需求列表
+	retrieve:
+		需求详情
+	create:
+		创建需求
+	"""
+	queryset = CorporateFinanceDemand.objects.all()
+	serializer_class = CorporateFinanceDemandSerializers

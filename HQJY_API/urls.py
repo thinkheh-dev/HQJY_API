@@ -24,7 +24,8 @@ from rest_framework_jwt.views import obtain_jwt_token
 from DjangoUeditor import urls as DjangoUeditor_urls
 
 from service_object.views import DefaultServicesListViewSet, FinancingServicesListViewSet, DefaultCategoryViewset, \
-	FinancingCategoryViewset, HotSearchsViewset, DefaultServicesBannerViewset, FinancingServicesBannerViewset, ServicesBrandViewset
+	FinancingCategoryViewset, HotSearchsViewset, DefaultServicesBannerViewset, FinancingServicesBannerViewset, \
+	ServicesBrandViewset, EnterpriseDemandViewset, CorporateFinanceDemandViewset
 from users.views import SmsCodeViewset, UserViewset
 
 #实例化Router对象，用于配置路由
@@ -50,6 +51,10 @@ router.register(r'financing-banner', FinancingServicesBannerViewset, base_name='
 
 #配置服务品牌路由
 router.register(r'service-brand', ServicesBrandViewset, base_name='sbrand')
+
+#配置企业需求路由
+router.register(r'en-demand', EnterpriseDemandViewset, base_name='endemand')
+router.register(r'fi-demand', CorporateFinanceDemandViewset, base_name='fidemand')
 
 router.register(r'codes', SmsCodeViewset, base_name='codes')
 router.register(r'users', UserViewset, base_name='users')
