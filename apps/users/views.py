@@ -27,9 +27,13 @@ class CustomBackend(ModelBackend):
     """
 
 	def authenticate(self, request, username=None, password=None, **kwargs):
+		print('进入验证')
 		try:
 			user = User.objects.get(Q(username=username) | Q(user_phone=username))
+			print(user)
+			print(password)
 			if user.check_password(password):
+				print("验证密码通过！")
 				return user
 			else:
 				return None
