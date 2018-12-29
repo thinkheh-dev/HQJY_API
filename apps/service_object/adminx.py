@@ -28,7 +28,7 @@ class DefaultServicesAdmin(object):
 	list_display = ['service_sn','service_belong_to_company','service_name','service_classification', 'service_inventory',
 	                'service_market_price', 'service_platform_price']
 	search_fields = ['service_name', ]
-	list_editable = ['is_hot']
+	list_editable = ['is_hot', ]
 	list_filter = ['service_name', 'service_sn', 'service_clicks', 'service_sales', 'service_fav_nums',
 	               'service_market_price', 'service_platform_price']
 	style_fields = {"service_detailed_description": "ueditor"}
@@ -53,6 +53,10 @@ class FinancingServicesClassificationAdmin(object):
 class FinancingServicesAdmin(object):
 	list_display = ['service_sn','service_belong_to_company','service_name', 'fsc', 'time_limit',
 	                'annual_interest_rate', 'approval_lines']
+	search_fields = ['service_name', ]
+	list_editable = ['is_hot', ]
+	list_filter = ['service_name', 'service_sn', 'service_clicks', 'service_sales', 'service_fav_nums',
+	               'service_market_price', 'service_platform_price']
 	style_fields = {"service_detailed_description": "ueditor"}
 	
 	class FinancingServicesImageInline(object):
