@@ -92,25 +92,25 @@ class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveMode
 	serializer_class = UserRegSerializer
 	queryset = User.objects.all()
 	
-	# authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication )
-	#
-	# def get_serializer_class(self):
-	#     if self.action == "retrieve":
-	#         return UserInfoDetailSerializers
-	#     elif self.action == "create":
-	#         return UserRegSerializer
-	#
-	#     return UserDetailSerializer
-	#
-	# # permission_classes = (permissions.IsAuthenticated, )
-	# def get_permissions(self):
-	#     if self.action == "retrieve":
-	#         return [permissions.IsAuthenticated()]
-	#     elif self.action == "create":
-	#         return []
-	#
-	#     return []
-	#
+	authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication )
+
+	def get_serializer_class(self):
+		if self.action == "retrieve":
+			return UserInfoDetailSerializers
+		elif self.action == "create":
+			return UserRegSerializer
+
+		return UserInfoDetailSerializers
+
+	# permission_classes = (permissions.IsAuthenticated, )
+	def get_permissions(self):
+		if self.action == "retrieve":
+			return [permissions.IsAuthenticated()]
+		elif self.action == "create":
+			return []
+
+		return []
+
 	def create(self, request, *args, **kwargs):
 		serializer = self.get_serializer(data=request.data)
 		serializer.is_valid(raise_exception=True)
