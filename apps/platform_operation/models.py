@@ -21,7 +21,7 @@ class InfoCategories(models.Model):
 	name = models.CharField(default="", max_length=30, verbose_name="类别名", help_text="类别名")
 	code = models.CharField(default="", max_length=30, verbose_name="类别code", help_text="类别code")
 	desc = models.TextField(default="", help_text="类别描述", verbose_name="类别描述")
-	category_type = models.IntegerField(choices=CLASSIFICATION, verbose_name="类目级别", help_text="类目级别")
+	category_type = models.IntegerField(choices=CLASSIFICATION, verbose_name="类目级别", help_text="类目级别", default=1)
 	parent_category = models.ForeignKey("self", null=True, blank=True, verbose_name="父类目级别", help_text="父目录",
 	                                    related_name="sub_classification", on_delete=models.CASCADE)
 	is_tab = models.BooleanField(default=False, verbose_name="是否导航", help_text="是否导航")

@@ -9,7 +9,7 @@
 # @software: PyCharm
 
 import xadmin
-from platform_operation.models import InfoCategories, InfoCategoriesSecond, WeMediaArticles, PlatformActivity, \
+from platform_operation.models import InfoCategories, WeMediaArticles, PlatformActivity, \
 	ActivityRegList, ActivityRegistration
 
 
@@ -17,9 +17,9 @@ class InfoCategoriesAdmin(object):
 	list_display = ['section_name', ]
 	
 
-class InfoCategoriesSecondAdmin(object):
-	list_display = ['section_name', 'info_categories']
-	
+# class InfoCategoriesSecondAdmin(object):
+# 	list_display = ['section_name', 'info_categories']
+
 
 class WeMediaArticlesAdmin(object):
 	list_display = ['title', 'subtitle', 'info_categories', 'info_categories_second', 'abstract', 'content',
@@ -43,7 +43,7 @@ class ActivityRegistrationAdmin(object):
 	
 	
 xadmin.site.register(InfoCategories, InfoCategoriesAdmin)
-xadmin.site.register(InfoCategoriesSecond, InfoCategoriesSecondAdmin)
+#xadmin.site.register(InfoCategoriesSecond, InfoCategoriesSecondAdmin)
 xadmin.site.register(WeMediaArticles, WeMediaArticlesAdmin)
 xadmin.site.register(PlatformActivity, PlatformActivityAdmin)
 xadmin.site.register(ActivityRegList, ActivityRegListAdmin)
