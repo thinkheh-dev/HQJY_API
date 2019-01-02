@@ -28,7 +28,7 @@ class InfoCategories(models.Model):
 	add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 	
 	class Meta:
-		verbose_name = "信息一级分类"
+		verbose_name = "平台信息分类"
 		verbose_name_plural = verbose_name
 	
 	def __str__(self):
