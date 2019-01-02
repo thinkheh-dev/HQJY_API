@@ -14,7 +14,7 @@ from platform_operation.models import InfoCategories, WeMediaArticles, PlatformA
 
 
 class InfoCategoriesAdmin(object):
-	list_display = ['section_name', ]
+	list_display = ['name', 'code', 'desc', 'category_type', 'parent_category', 'is_tab', 'add_time']
 	
 
 # class InfoCategoriesSecondAdmin(object):
