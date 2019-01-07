@@ -55,7 +55,7 @@ class CustomBackend(ModelBackend):
 				user.user_browser = agent
 				user.save()
 				
-				print("验证密码通过！")
+				print("验证密码通过！", user.user_ip)
 				return user
 			else:
 				print("验证不通过")
@@ -144,7 +144,6 @@ class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveMode
 
 		serializer = self.get_serializer(data=request.data)
 		serializer.is_valid(raise_exception=True)
-		print(serializer.data.user_ip)
 		user = self.perform_create(serializer)
 		
 		re_dict = serializer.data
