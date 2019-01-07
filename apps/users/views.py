@@ -28,14 +28,16 @@ class CustomBackend(ModelBackend):
 	
 	def authenticate(self, request, username=None, password=None, **kwargs):
 		
-		print('进入验证')
+		print('in pass')
 		
 		def get_ip(request):
 			x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
 			if x_forwarded_for:
 				ip = x_forwarded_for.split(',')[0]  # 所以这里是真实的ip
+				print("realip", ip)
 			else:
 				ip = request.META.get('REMOTE_ADDR')  # 这里获得代理ip
+				print("proxyip", ip)
 			return ip
 		
 		try:
