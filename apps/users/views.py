@@ -27,7 +27,17 @@ class CustomBackend(ModelBackend):
     """
 	
 	def authenticate(self, request, username=None, password=None, **kwargs):
+		
 		print('进入验证')
+		
+		def get_ip(request):
+			x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+			if x_forwarded_for:
+				ip = x_forwarded_for.split(',')[0]  # 所以这里是真实的ip
+			else:
+				ip = request.META.get('REMOTE_ADDR')  # 这里获得代理ip
+			return ip
+		
 		try:
 			user = User.objects.get(Q(username=username) | Q(user_phone=username))
 			print(user)
@@ -37,7 +47,8 @@ class CustomBackend(ModelBackend):
 				
 				#获取用户的浏览器及IP地址
 				agent = request.META.get('HTTP_USER_AGENT')
-				user_ip_now = request.META.get('REMOTE_ADDR')
+				
+				user_ip_now = get_ip(request)
 				
 				#保存用户ip地址及浏览器
 				user.user_ip = user_ip_now
