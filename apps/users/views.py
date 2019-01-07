@@ -55,7 +55,7 @@ class CustomBackend(ModelBackend):
 				user.user_browser = agent
 				user.save()
 				
-				print("验证密码通过！", user.user_ip)
+				print("passworde pass", user.user_ip)
 				return user
 			else:
 				print("验证不通过")
