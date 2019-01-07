@@ -97,56 +97,56 @@ class HotSearchsViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
     
     
 class DefaultServicesBannerViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
-	"""
-	获取普适服务轮播图列表
-	"""
-	queryset = DefaultServicesBanner.objects.all().order_by("index")
-	serializer_class = DefaultServicesBannerSerializers
-	
+    """
+    获取普适服务轮播图列表
+    """
+    queryset = DefaultServicesBanner.objects.all().order_by("index")
+    serializer_class = DefaultServicesBannerSerializers
+    
 
 class FinancingServicesBannerViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
-	"""
-	获取金融服务轮播图列表
-	"""
-	queryset = FinancingServicesBanner.objects.all().order_by("index")
-	serializer_class = FinancingServicesBannerSerializers
-	
+    """
+    获取金融服务轮播图列表
+    """
+    queryset = FinancingServicesBanner.objects.all().order_by("index")
+    serializer_class = FinancingServicesBannerSerializers
+    
 
 class ServicesBrandViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
-	"""
-	获取品牌列表、详情
-	list:
-		品牌列表
-	retrieve:
-		品牌详情
-	"""
-	queryset = ServiceBrand.objects.all()
-	serializer_class = ServiceBrandSerializers
-	
+    """
+    获取品牌列表、详情
+    list:
+        品牌列表
+    retrieve:
+        品牌详情
+    """
+    queryset = ServiceBrand.objects.all()
+    serializer_class = ServiceBrandSerializers
+    
 class EnterpriseDemandViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin,
                               viewsets.GenericViewSet):
-	"""
-	企业普适服务需求列表、详情
-	list:
-		需求列表
-	retrieve:
-		需求详情
-	create:
-		创建需求
-	"""
-	queryset = EnterpriseDemand.objects.all()
-	serializer_class = EnterpriseDemandSerializers
+    """
+    企业普适服务需求列表、详情
+    list:
+        需求列表
+    retrieve:
+        需求详情
+    create:
+        创建需求
+    """
+    queryset = EnterpriseDemand.objects.all()
+    serializer_class = EnterpriseDemandSerializers
 
 class CorporateFinanceDemandViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin,
                                     viewsets.GenericViewSet):
-	"""
-	企业金融服务需求列表、详情
-	list:
-		需求列表
-	retrieve:
-		需求详情
-	create:
-		创建需求
-	"""
-	queryset = CorporateFinanceDemand.objects.all()
-	serializer_class = CorporateFinanceDemandSerializers
+    """
+    企业金融服务需求列表、详情
+    list:
+        需求列表
+    retrieve:
+        需求详情
+    create:
+        创建需求
+    """
+    queryset = CorporateFinanceDemand.objects.all()
+    serializer_class = CorporateFinanceDemandSerializers

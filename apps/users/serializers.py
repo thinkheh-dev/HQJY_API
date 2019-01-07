@@ -15,6 +15,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
 from django.contrib.auth import get_user_model
+from django.http import request
 
 from .models import VerifyCode
 from HQJY_API.settings import REGEX_MOBILE
@@ -78,7 +79,6 @@ class UserRegSerializer(serializers.ModelSerializer):
         style={'input_type': 'password'},help_text="密码", label="密码", write_only=True,
     )
 	
-	
 	# def create(self, validated_data):
 	# 	user = super(UserRegSerializer, self).create(validated_data=validated_data)
 	# 	user.set_password(validated_data["password"])
@@ -109,4 +109,3 @@ class UserRegSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = User
 		fields = ("username", "code", "user_phone", "password")
-		

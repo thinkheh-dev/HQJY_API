@@ -34,6 +34,16 @@ class CustomBackend(ModelBackend):
 			print(password)
 			print(user.check_password(password))
 			if user.check_password(password):
+				
+				#获取用户的浏览器及IP地址
+				agent = request.META.get('HTTP_USER_AGENT')
+				user_ip_now = request.META.get('REMOTE_ADDR')
+				
+				#保存用户ip地址及浏览器
+				user.user_ip = user_ip_now
+				user.user_browser = agent
+				user.save()
+				
 				print("验证密码通过！")
 				return user
 			else:
@@ -87,7 +97,15 @@ class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
 
 class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
 	"""
-    用户
+	create:
+		用户注册
+	list:
+		用户列表
+	retrieve:
+		用户详情
+	update:
+		用户信息更新
+	
     """
 	serializer_class = UserRegSerializer
 	queryset = User.objects.all()
@@ -112,8 +130,10 @@ class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveMode
 		return []
 
 	def create(self, request, *args, **kwargs):
+
 		serializer = self.get_serializer(data=request.data)
 		serializer.is_valid(raise_exception=True)
+		print(serializer.data.user_ip)
 		user = self.perform_create(serializer)
 		
 		re_dict = serializer.data
@@ -125,6 +145,7 @@ class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveMode
 		return Response(re_dict, status=status.HTTP_201_CREATED, headers=headers)
 	
 	def get_object(self):
+		print(self.request.user)
 		return self.request.user
 	
 	def perform_create(self, serializer):
