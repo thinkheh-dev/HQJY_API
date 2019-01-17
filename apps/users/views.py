@@ -30,15 +30,15 @@ class CustomBackend(ModelBackend):
 		
 		print('in pass')
 		
-		def get_ip(request):
-			x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-			if x_forwarded_for:
-				ip = x_forwarded_for.split(',')[0]  # 所以这里是真实的ip
-				print("realip", ip)
-			else:
-				ip = request.META.get('REMOTE_ADDR')  # 这里获得代理ip
-				print("proxyip", ip)
-			return ip
+		# def get_ip(request):
+		# 	x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+		# 	if x_forwarded_for:
+		# 		ip = x_forwarded_for.split(',')[0]  # 所以这里是真实的ip
+		# 		print("realip:", ip)
+		# 	else:
+		# 		ip = request.META.get('REMOTE_ADDR')  # 这里获得代理ip
+		# 		print("proxyip:", ip)
+		# 	return ip
 		
 		try:
 			user = User.objects.get(Q(username=username) | Q(user_phone=username))
@@ -47,20 +47,20 @@ class CustomBackend(ModelBackend):
 			print(user.check_password(password))
 			if user.check_password(password):
 				
-				#获取用户的浏览器及IP地址
-				agent = request.META.get('HTTP_USER_AGENT')
+				# #获取用户的浏览器及IP地址
+				# agent = request.META.get('HTTP_USER_AGENT')
+				#
+				# user_ip_now = get_ip(request)
+				#
+				# #保存用户ip地址及浏览器
+				# user.user_ip = user_ip_now
+				# user.user_browser = agent
+				# user.save()
 				
-				user_ip_now = get_ip(request)
-				
-				#保存用户ip地址及浏览器
-				user.user_ip = user_ip_now
-				user.user_browser = agent
-				user.save()
-				
-				print("passworde pass", user.user_ip)
+				print("password pass", user.user_ip)
 				return user
 			else:
-				print("验证不通过")
+				print("password not pass")
 				return None
 		except Exception as e:
 			return None
@@ -118,7 +118,6 @@ class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveMode
 		用户详情
 	update:
 		用户信息更新
-	
     """
 	serializer_class = UserRegSerializer
 	queryset = User.objects.all()
