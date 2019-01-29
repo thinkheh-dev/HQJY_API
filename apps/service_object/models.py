@@ -54,6 +54,8 @@ class ServiceClassification(models.Model):
 	
 	name = models.CharField(default="", max_length=30, verbose_name="类别名", help_text="类别名")
 	code = models.CharField(default="", max_length=30, verbose_name="类别code", help_text="类别code")
+	ico_str = models.CharField(default="", max_length=100, verbose_name="图标代码", help_text="图标代码")
+	ico_file = models.FileField(upload_to="nav_ico/", blank=True, null=True, verbose_name="图标上传", help_text="图标上传")
 	desc = models.TextField(default="", help_text="类别描述", verbose_name="类别描述")
 	category_type = models.IntegerField(choices=CLASSIFICATION, verbose_name="类目级别", help_text="类目级别")
 	parent_category = models.ForeignKey("self", null=True, blank=True, verbose_name="父类目级别", help_text="父目录",
@@ -134,6 +136,8 @@ class FinancingServicesClassification(models.Model):
 	
 	name = models.CharField(default="", max_length=30, verbose_name="类别名", help_text="类别名")
 	code = models.CharField(default="", max_length=30, verbose_name="类别code", help_text="类别code")
+	ico_str = models.CharField(default="", max_length=100, verbose_name="图标代码", help_text="图标代码")
+	ico_file = models.FileField(upload_to="nav_ico/", blank=True, null=True, verbose_name="图标上传", help_text="图标上传")
 	desc = models.TextField(default="", verbose_name="类别描述", help_text="类别描述")
 	category_type = models.IntegerField(choices=CLASSIFICATION, verbose_name="类目级别", help_text="类目级别")
 	parent_category = models.ForeignKey("self", null=True, blank=True, verbose_name="父类目级别", help_text="父目录",

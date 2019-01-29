@@ -16,13 +16,13 @@ from service_object.models import ServiceAbstractClass, ServiceClassification, D
 
 
 class ServiceClassificationAdmin(object):
-	list_display = ['name', 'code', 'desc', 'category_type', 'is_tab', 'add_time']
+	list_display = ['name', 'code', 'ico_str', 'ico_file', 'desc', 'category_type', 'is_tab', 'add_time']
 
 
 # 已舍弃
 # class ServiceClassificationSecondAdmin(object):
 # 	list_display = ['classis_name', 'service_classification']
-	
+
 
 class DefaultServicesAdmin(object):
 	list_display = ['service_sn','service_belong_to_company','service_name','service_classification', 'service_inventory',
@@ -42,7 +42,7 @@ class DefaultServicesAdmin(object):
 
 
 class FinancingServicesClassificationAdmin(object):
-	list_display = ['name', 'code', 'desc', 'category_type', 'is_tab', 'add_time']
+	list_display = ['name', 'code', 'ico_str', 'ico_file', 'desc', 'category_type', 'is_tab', 'add_time']
 
 
 # 已舍弃
