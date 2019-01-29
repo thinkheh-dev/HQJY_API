@@ -66,7 +66,7 @@ urlpatterns = [
 	path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 	
 	#drf自带的认证模式
-	#path('api-token-auth/', views.obtain_auth_token),
+	path('api-token-auth/', views.obtain_auth_token),
 	
 	#jwt认证模式
 	path('login/', obtain_jwt_token),

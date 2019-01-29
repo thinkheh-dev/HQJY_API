@@ -30,37 +30,34 @@ class CustomBackend(ModelBackend):
 		
 		print('in pass')
 		
-		# def get_ip(request):
-		# 	x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-		# 	if x_forwarded_for:
-		# 		ip = x_forwarded_for.split(',')[0]  # 所以这里是真实的ip
-		# 		print("realip:", ip)
-		# 	else:
-		# 		ip = request.META.get('REMOTE_ADDR')  # 这里获得代理ip
-		# 		print("proxyip:", ip)
-		# 	return ip
+		def get_ip(request):
+			x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+			if x_forwarded_for:
+				ip = x_forwarded_for.split(',')[0]  # 所以这里是真实的ip
+				print("realip:", ip)
+			else:
+				ip = request.META.get('REMOTE_ADDR')  # 这里获得代理ip
+				print("proxyip:", ip)
+			return ip
 		
 		try:
 			user = User.objects.get(Q(username=username) | Q(user_phone=username))
-			print(user)
-			print(password)
-			print(user.check_password(password))
+			# print(user)
+			# print(password)
+			# print(user.check_password(password))
+			
 			if user.check_password(password):
-				
-				# #获取用户的浏览器及IP地址
+				# # 获取用户的浏览器及IP地址
 				# agent = request.META.get('HTTP_USER_AGENT')
 				#
 				# user_ip_now = get_ip(request)
 				#
-				# #保存用户ip地址及浏览器
+				# # 保存用户ip地址及浏览器
 				# user.user_ip = user_ip_now
 				# user.user_browser = agent
 				# user.save()
-				
-				print("password pass", user.user_ip)
 				return user
 			else:
-				print("password not pass")
 				return None
 		except Exception as e:
 			return None
@@ -108,7 +105,8 @@ class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
 			}, status=status.HTTP_201_CREATED)
 
 
-class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class UserViewset(CreateModelMixin, mixins.ListModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin,
+                  viewsets.GenericViewSet):
 	"""
 	create:
 		用户注册
@@ -156,7 +154,6 @@ class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveMode
 		return Response(re_dict, status=status.HTTP_201_CREATED, headers=headers)
 	
 	def get_object(self):
-		print(self.request.user)
 		return self.request.user
 	
 	def perform_create(self, serializer):
