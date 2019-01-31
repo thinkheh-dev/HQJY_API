@@ -45,4 +45,4 @@ class DefaultCategoryFilter(django_filters.rest_framework.FilterSet):
 	
 	class Meta:
 		model = ServiceClassification
-		fields = ['category_type_number', ]
+		fields = ['category_type_number',]

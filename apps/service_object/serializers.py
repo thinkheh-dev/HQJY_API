@@ -61,7 +61,7 @@ class ServiceClassificationNavSerializers(serializers.ModelSerializer):
 	"""
 	class Meta:
 		model = ServiceClassification
-		fields = ('name', 'category_type', 'is_tab')
+		fields = ('name', 'ico_str', 'ico_file', 'category_type')
 
 
 class DefaultServicesImageSerializers(serializers.ModelSerializer):

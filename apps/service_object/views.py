@@ -80,7 +80,7 @@ class DefaultCategoryNavViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
     list:
         普适服务分类导航数据
     """
-    queryset = ServiceClassification.objects.all()
+    queryset = ServiceClassification.objects.filter(is_tab=True)
     serializer_class = ServiceClassificationNavSerializers
     filter_backends = (DjangoFilterBackend, )
     filter_class = DefaultCategoryFilter
