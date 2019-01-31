@@ -41,8 +41,8 @@ class DefaultCategoryFilter(django_filters.rest_framework.FilterSet):
 	"""
 	普适服务分类过滤类
 	"""
-	category_type_number = django_filters.NumberFilter(field_name='category_type', help_text = "普适服务分类级别", lookup_expr='exact')
+	category_type = django_filters.NumberFilter(field_name='category_type', help_text = "普适服务分类级别", lookup_expr='exact')
 	
 	class Meta:
 		model = ServiceClassification
-		fields = ['category_type_number',]
+		fields = ['category_type',]
