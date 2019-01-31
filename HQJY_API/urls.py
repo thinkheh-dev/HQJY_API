@@ -25,8 +25,11 @@ from DjangoUeditor import urls as DjangoUeditor_urls
 
 from service_object.views import DefaultServicesListViewSet, FinancingServicesListViewSet, DefaultCategoryViewset, \
 	FinancingCategoryViewset, HotSearchsViewset, DefaultServicesBannerViewset, FinancingServicesBannerViewset, \
-	ServicesBrandViewset, EnterpriseDemandViewset, CorporateFinanceDemandViewset
+	ServicesBrandViewset, EnterpriseDemandViewset, CorporateFinanceDemandViewset, DefaultCategoryNavViewset
+
 from users.views import SmsCodeViewset, UserViewset
+
+from enterprise_info.views import EnterpriseListViewSet, EnterpriseTypeListViewset
 
 #实例化Router对象，用于配置路由
 router = DefaultRouter()
@@ -42,6 +45,8 @@ router.register(r'financing-services', FinancingServicesListViewSet, base_name='
 router.register(r'default-categorys', DefaultCategoryViewset, base_name='dcategorys')
 router.register(r'financing-categorys', FinancingCategoryViewset, base_name='fcategorys')
 
+router.register(r'default-nav', DefaultCategoryNavViewset, base_name='dnavcategroys')
+
 #配置热搜词路由
 router.register(r'hotsearchs', HotSearchsViewset, base_name='hotsearchs')
 
@@ -56,8 +61,13 @@ router.register(r'service-brand', ServicesBrandViewset, base_name='sbrand')
 router.register(r'en-demand', EnterpriseDemandViewset, base_name='endemand')
 router.register(r'fi-demand', CorporateFinanceDemandViewset, base_name='fidemand')
 
+#配置用户相关路由
 router.register(r'codes', SmsCodeViewset, base_name='codes')
 router.register(r'users', UserViewset, base_name='users')
+
+#配置企业信息理由
+router.register(r'enterprise-info', EnterpriseListViewSet, base_name='enterpriselist')
+router.register(r'enterprise-type', EnterpriseTypeListViewset, base_name='enterprisetype')
 
 urlpatterns = [
     path('xadmin/', xadmin.site.urls),

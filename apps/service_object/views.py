@@ -13,13 +13,12 @@ from .serializers import DefaultServicesSerializers, FinancingServicesSerializer
     FinancingServicesClassificationSerializers, FinancingServicesImageSerializers, ServiceBrandSerializers, \
     DefaultServicesPackageSerializers, DefaultCouponTypeSerializers, DefaultServiceCouponSerializers, \
     HotSearchWordsSerializers, DefaultServicesBannerSerializers, FinancingServicesBannerSerializers, \
-    EnterpriseDemandSerializers, CorporateFinanceDemandSerializers, ServiceClassificationSerializers
+    EnterpriseDemandSerializers, CorporateFinanceDemandSerializers, ServiceClassificationSerializers, ServiceClassificationNavSerializers
 
-from .filters import DefaultServicesFilter, FinancingServicesFilter
-
-# Create your views here.
+from .filters import DefaultServicesFilter, FinancingServicesFilter, DefaultCategoryFilter
 
 
+#分页
 class DefaultServicesPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = 'page_size'
@@ -74,6 +73,18 @@ class DefaultCategoryViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, v
     """
     queryset = ServiceClassification.objects.filter(category_type=1)
     serializer_class = ServiceClassificationSerializers
+
+    
+class DefaultCategoryNavViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    list:
+        普适服务分类导航数据
+    """
+    queryset = ServiceClassification.objects.all()
+    serializer_class = ServiceClassificationNavSerializers
+    filter_backends = (DjangoFilterBackend, )
+    filter_class = DefaultCategoryFilter
+    
     
     
 class FinancingCategoryViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):

@@ -55,13 +55,22 @@ class ServiceClassificationSerializers(serializers.ModelSerializer):
 #普适服务分类序列化函数--结束
 
 
+class ServiceClassificationNavSerializers(serializers.ModelSerializer):
+	"""
+	普通服务分类导航
+	"""
+	class Meta:
+		model = ServiceClassification
+		fields = ('name', 'category_type', 'is_tab')
+
+
 class DefaultServicesImageSerializers(serializers.ModelSerializer):
 	"""
 	普适服务轮播图
 	"""
 	class Meta:
 		model = DefaultServicesImage
-		fields = ('image', )
+		fields = ('image', '')
 
 
 class DefaultServicesSerializers(serializers.ModelSerializer):
@@ -221,4 +230,3 @@ class CorporateFinanceDemandSerializers(serializers.ModelSerializer):
 	class Meta:
 		model = CorporateFinanceDemand
 		fields = "__all__"
-		

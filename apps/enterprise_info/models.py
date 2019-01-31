@@ -1,6 +1,30 @@
 from django.db import models
 from datetime import datetime
 
+class EnterpriseLabel(models.Model):
+	"""
+	企业标签
+	"""
+	LEVEL_CHOICE = (
+		(1,'普通'),
+		(2,'高级'),
+		(3,'超级'),
+	)
+	name = models.CharField(max_length=50, blank=True, null=True, verbose_name="企业标签名称",
+	                        help_text="企业标签名称")
+	label_ico = models.FileField(verbose_name="标签图片", upload_to="en_label_ico/", blank=True, null=True,
+	                             help_text="企业标签图片")
+	level = models.IntegerField(default=1, choices=LEVEL_CHOICE, blank=True, null=True, verbose_name="企业标签级别", \
+	                                                                                               help_text="标签级别")
+	class Meta:
+		verbose_name = "企业标签管理"
+		verbose_name_plural = verbose_name
+
+	def __str__(self):
+		return self.name
+	
+
+
 class EnterpriseTypeLevel(models.Model):
 	"""
 	企业分类级别
@@ -63,7 +87,7 @@ class EnterpriseType(models.Model):
 #
 # 	def __str__(self):
 # 		return self.second_type_name
-		
+
 
 class BasicEnterpriseInfo(models.Model):
 	"""
@@ -103,8 +127,8 @@ class BasicEnterpriseInfo(models.Model):
 	company_area = models.CharField(max_length=20, choices=COUNTY_CHOICES, verbose_name="企业归属地")
 	enterprise_type = models.ForeignKey(EnterpriseType, on_delete=models.CASCADE,
 	                                          related_name="entype_first", verbose_name="企业分类")
-	# enterprise_type_second = models.ForeignKey(EnterpriseTypeSecond, on_delete=models.CASCADE,
-	#                                            related_name="entype_second", verbose_name="企业二级分类")
+	enterprise_label = models.ForeignKey(EnterpriseLabel, on_delete=models.CASCADE, related_name="enlabel",
+	                                     verbose_name="企业标签")
 	oper_phone = models.CharField(max_length=11, blank=True, null=True, verbose_name="企业联系人")
 	scan_of_company_license = models.ImageField(upload_to="company_license/", blank=True, null=True,
 	                                            verbose_name="营业执照复印件")
