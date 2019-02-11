@@ -70,7 +70,7 @@ class DefaultServicesImageSerializers(serializers.ModelSerializer):
 	"""
 	class Meta:
 		model = DefaultServicesImage
-		fields = ('image', '')
+		fields = ('image', )
 
 
 class DefaultServicesSerializers(serializers.ModelSerializer):
@@ -124,6 +124,14 @@ class FinancingServicesClassificationSerializers(serializers.ModelSerializer):
 		model = FinancingServicesClassification
 		fields = "__all__"
 #金融服务分类序列化函数--结束
+
+class FinancingServicesClassificationNavSerializers(serializers.ModelSerializer):
+	"""
+	金融服务分类导航
+	"""
+	class Meta:
+		model = FinancingServicesClassification
+		fields = ('name', 'ico_str', 'ico_file', 'category_type')
 
 
 class FinancingServicesImageSerializers(serializers.ModelSerializer):

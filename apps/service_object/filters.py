@@ -8,7 +8,7 @@
 # @file    : filter.py
 # @software: PyCharm
 import django_filters
-from .models import DefaultServices, FinancingServices, ServiceClassification
+from .models import DefaultServices, FinancingServices, ServiceClassification, FinancingServicesClassification
 
 
 class DefaultServicesFilter(django_filters.rest_framework.FilterSet):
@@ -46,3 +46,13 @@ class DefaultCategoryFilter(django_filters.rest_framework.FilterSet):
 	class Meta:
 		model = ServiceClassification
 		fields = ['category_type',]
+		
+class FinancingCategoryFilter(django_filters.rest_framework.FilterSet):
+	"""
+	金融服务分类过滤类
+	"""
+	category_type = django_filters.NumberFilter(field_name='category_type', help_text="金融服务分类级别", lookup_expr='exact')
+	
+	class Meta:
+		model = FinancingServicesClassification
+		fields = ['category_type', ]

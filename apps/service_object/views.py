@@ -13,9 +13,10 @@ from .serializers import DefaultServicesSerializers, FinancingServicesSerializer
     FinancingServicesClassificationSerializers, FinancingServicesImageSerializers, ServiceBrandSerializers, \
     DefaultServicesPackageSerializers, DefaultCouponTypeSerializers, DefaultServiceCouponSerializers, \
     HotSearchWordsSerializers, DefaultServicesBannerSerializers, FinancingServicesBannerSerializers, \
-    EnterpriseDemandSerializers, CorporateFinanceDemandSerializers, ServiceClassificationSerializers, ServiceClassificationNavSerializers
+    EnterpriseDemandSerializers, CorporateFinanceDemandSerializers, ServiceClassificationSerializers, \
+    ServiceClassificationNavSerializers, FinancingServicesClassificationNavSerializers
 
-from .filters import DefaultServicesFilter, FinancingServicesFilter, DefaultCategoryFilter
+from .filters import DefaultServicesFilter, FinancingServicesFilter, DefaultCategoryFilter, FinancingCategoryFilter
 
 
 #分页
@@ -78,7 +79,7 @@ class DefaultCategoryViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, v
 class DefaultCategoryNavViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     list:
-        普适服务分类导航数据
+        普适服务分类导航数据 -- 只显示后台确认是导航条目的数据
     """
     queryset = ServiceClassification.objects.filter(is_tab=True)
     serializer_class = ServiceClassificationNavSerializers
@@ -96,6 +97,17 @@ class FinancingCategoryViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin,
     """
     queryset = FinancingServicesClassification.objects.filter(category_type=1)
     serializer_class = FinancingServicesClassificationSerializers
+    
+
+class FinancingCategoryNavViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    list:
+        金融服务分类导航数据 -- 只显示后台确认是导航条目的数据
+    """
+    queryset = FinancingServicesClassification.objects.filter(is_tab=True)
+    serializer_class = FinancingServicesClassificationNavSerializers
+    filter_backends = (DjangoFilterBackend, )
+    filter_class = FinancingCategoryFilter
     
 
 class HotSearchsViewset(mixins.ListModelMixin, viewsets.GenericViewSet):

@@ -25,7 +25,8 @@ from DjangoUeditor import urls as DjangoUeditor_urls
 
 from service_object.views import DefaultServicesListViewSet, FinancingServicesListViewSet, DefaultCategoryViewset, \
 	FinancingCategoryViewset, HotSearchsViewset, DefaultServicesBannerViewset, FinancingServicesBannerViewset, \
-	ServicesBrandViewset, EnterpriseDemandViewset, CorporateFinanceDemandViewset, DefaultCategoryNavViewset
+	ServicesBrandViewset, EnterpriseDemandViewset, CorporateFinanceDemandViewset, DefaultCategoryNavViewset, \
+	FinancingCategoryNavViewset
 
 from users.views import SmsCodeViewset, UserViewset
 
@@ -46,6 +47,7 @@ router.register(r'default-categorys', DefaultCategoryViewset, base_name='dcatego
 router.register(r'financing-categorys', FinancingCategoryViewset, base_name='fcategorys')
 
 router.register(r'default-nav', DefaultCategoryNavViewset, base_name='dnavcategroys')
+router.register(r'financing-nav', FinancingCategoryNavViewset, base_name='fnavcategorys')
 
 #配置热搜词路由
 router.register(r'hotsearchs', HotSearchsViewset, base_name='hotsearchs')
