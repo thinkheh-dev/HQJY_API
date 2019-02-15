@@ -16,6 +16,8 @@ from .models import ServiceClassification, DefaultServices, FinancingServicesCla
 	EnterpriseDemand, CorporateFinanceDemand, DefaultServicesImage, FinancingServicesImage, DefaultServicesBanner, \
 	FinancingServicesBanner
 
+from enterprise_info.serializers import BasicEnterpriseInfoNameSerializers
+
 #普适服务分类序列化函数--开始
 class ServiceClassificationSerializers5(serializers.ModelSerializer):
 	class Meta:
@@ -79,6 +81,7 @@ class DefaultServicesSerializers(serializers.ModelSerializer):
 	"""
 	service_classification = ServiceClassificationSerializers()
 	default_images = DefaultServicesImageSerializers(many=True)
+	service_belong_to_company = BasicEnterpriseInfoNameSerializers()
 	class Meta:
 		model = DefaultServices
 		fields = "__all__"

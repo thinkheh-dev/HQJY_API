@@ -40,16 +40,14 @@ class EnterpriseTypeSerializers3(serializers.ModelSerializer):
 
 
 class EnterpriseTypeSerializers2(serializers.ModelSerializer):
-	
-	sub_classification = EnterpriseTypeSerializers3(many=True)
+	sub_type = EnterpriseTypeSerializers3(many=True)
 	
 	class Meta:
 		model = EnterpriseType
 		fields = "__all__"
 		
 class EnterpriseTypeSerializers(serializers.ModelSerializer):
-	
-	sub_classification = EnterpriseTypeSerializers2(many=True)
+	sub_type = EnterpriseTypeSerializers2(many=True)
 	
 	class Meta:
 		model = EnterpriseType
@@ -68,5 +66,12 @@ class BasicEnterpriseInfoSerializers(serializers.ModelSerializer):
 		model = BasicEnterpriseInfo
 		fields = "__all__"
 
+class BasicEnterpriseInfoNameSerializers(serializers.ModelSerializer):
+	"""
+	企业名称序列化
+	"""
+	class Meta:
+		model = BasicEnterpriseInfo
+		fields = ("name", )
 		
 
