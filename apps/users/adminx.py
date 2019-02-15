@@ -14,14 +14,14 @@ from .models import VerifyCode, UserPermissionsName, UserLabels, UserInfo
 
 
 class BaseSetting(object):
-    enable_themes = True
-    use_bootswatch = True
+	enable_themes = True
+	use_bootswatch = True
 
 
 class GlobalSettings(object):
-    site_title = "红企家园后台管理系统"
-    site_footer = "ThinkHeH 红企家园"
-    menu_style = "accordion"
+	site_title = "红企家园后台管理系统"
+	site_footer = "ThinkHeH 红企家园"
+	menu_style = "accordion"
 
 
 class UserPermissionsNameAdmin(object):
@@ -30,10 +30,10 @@ class UserPermissionsNameAdmin(object):
 
 class UserLabelsAdmin(object):
 	list_display = ['label_name', ]
-	
+
 
 class UserInfoAdmin(object):
-	list_display = ['user_name', 'user_sex', 'user_phone', 'user_ip', 'user_browser', 'user_id_card',
+	list_display = ['user_name', 'user_logo', 'user_sex', 'user_phone', 'user_ip', 'user_browser', 'user_id_card',
 	                'user_birthday', 'QQ_num', 'wechat_num', 'contact_address', 'user_email',
 	                'user_real_name_authentication', 'user_to_company', 'enterprise_type_first',
 	                'enterprise_type_second' 'user_permissions_name',

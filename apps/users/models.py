@@ -26,6 +26,7 @@ class UserLabels(models.Model):
 	用户模式
 	"""
 	label_name = models.CharField(max_length=20, verbose_name="模式名称")
+	label_img = models.ImageField(upload_to="label_img/", blank=True, null=True, verbose_name="用户模式标签图片")
 	
 	class Meta:
 		verbose_name = "用户模式"
@@ -40,6 +41,7 @@ class UserInfo(AbstractUser):
 	用户主信息
 	"""
 	user_name = models.CharField(max_length=50, verbose_name="用户姓名")
+	user_logo = models.ImageField(upload_to="user_logo/", blank=True, null=True, verbose_name="用户头像")
 	user_sex = models.CharField(max_length=10,choices=(("male", "男"), ("female", "女")), default="male",
 	                            verbose_name="性别")
 	user_phone = models.CharField(max_length=11, null=True, blank=True, verbose_name="用户手机号")
@@ -98,7 +100,7 @@ class UserInfo(AbstractUser):
 #
 # 	def __str__(self):
 # 		return self.user_info
-	
+
 
 class VerifyCode(models.Model):
 	"""
