@@ -10,7 +10,7 @@
 
 import xadmin
 from xadmin import views
-from .models import VerifyCode, UserPermissionsName, UserLabels, UserInfo
+from .models import VerifyCode, UserPermissionsName, UserLabels, UserInfo, UserProtocol
 
 
 class BaseSetting(object):
@@ -37,7 +37,7 @@ class UserInfoAdmin(object):
 	                'user_birthday', 'QQ_num', 'wechat_num', 'contact_address', 'user_email',
 	                'user_real_name_authentication', 'user_to_company', 'enterprise_type_first',
 	                'enterprise_type_second' 'user_permissions_name',
-	                'user_labels', 'disable_flag']
+	                'user_labels', 'disable_flag', 'user_protocol']
 
 
 # class UserProfileAdmin(object):
@@ -46,10 +46,15 @@ class UserInfoAdmin(object):
 
 class VerifyCodeAdmin(object):
 	list_display = ['code', 'user_phone', "add_time"]
+	
+	
+class UserProtocolAdmin(object):
+	list_display = ['protocol_title', 'protocol_subtitle', 'protocol_content']
 
 
 xadmin.site.register(UserPermissionsName, UserPermissionsNameAdmin)
 xadmin.site.register(UserLabels, UserLabelsAdmin)
 xadmin.site.register(VerifyCode, VerifyCodeAdmin)
+xadmin.site.register(UserProtocol, UserProtocolAdmin)
 xadmin.site.register(views.BaseAdminView, BaseSetting)
 xadmin.site.register(views.CommAdminView, GlobalSettings)
