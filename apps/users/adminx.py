@@ -50,6 +50,7 @@ class VerifyCodeAdmin(object):
 	
 class UserProtocolAdmin(object):
 	list_display = ['protocol_title', 'protocol_subtitle', 'protocol_content']
+	style_fields = {"protocol_content": "ueditor"}
 
 
 xadmin.site.register(UserPermissionsName, UserPermissionsNameAdmin)
