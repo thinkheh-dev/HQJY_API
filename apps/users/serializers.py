@@ -60,6 +60,29 @@ class UserInfoDetailSerializers(serializers.ModelSerializer):
 		          'user_birthday', 'QQ_num', 'wechat_num', 'contact_address', 'user_email',
 		          'user_real_name_authentication', 'user_to_company', 'enterprise_type', 'user_permission_name',
 		          'user_labels', 'disable_flag')
+		
+class UserPhoneSerializers(serializers.Serializer):
+	"""
+	用户手机号异步验证序列化
+	"""
+	
+	user_phone = serializers.CharField(max_length=11)
+	
+	def validate_user_phone(self, user_phone):
+		"""
+		验证手机号
+		:param user_phone:
+		:return: user_phone
+		"""
+		# 验证手机是否存在
+		if User.objects.filter(user_phone=user_phone).count():
+			raise serializers.ValidationError("用户已经存在")
+		
+		# 验证手机号是否合法
+		if not re.match(REGEX_MOBILE, user_phone):
+			raise serializers.ValidationError("手机号不合法")
+		
+		return user_phone
 
 
 class UserRegSerializer(serializers.ModelSerializer):

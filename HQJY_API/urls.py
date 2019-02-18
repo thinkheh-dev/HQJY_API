@@ -28,7 +28,7 @@ from service_object.views import DefaultServicesListViewSet, FinancingServicesLi
 	ServicesBrandViewset, EnterpriseDemandViewset, CorporateFinanceDemandViewset, DefaultCategoryNavViewset, \
 	FinancingCategoryNavViewset
 
-from users.views import SmsCodeViewset, UserViewset
+from users.views import SmsCodeViewset, UserViewset, UserPhoneViewSet
 
 from enterprise_info.views import EnterpriseListViewSet, EnterpriseTypeListViewset
 
@@ -64,6 +64,7 @@ router.register(r'en-demand', EnterpriseDemandViewset, base_name='endemand')
 router.register(r'fi-demand', CorporateFinanceDemandViewset, base_name='fidemand')
 
 #配置用户相关路由
+router.register(r'userphone', UserPhoneViewSet, base_name='userphone')
 router.register(r'codes', SmsCodeViewset, base_name='codes')
 router.register(r'users', UserViewset, base_name='users')
 

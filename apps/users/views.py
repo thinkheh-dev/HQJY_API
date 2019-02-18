@@ -13,7 +13,7 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
 
-from .serializers import SmsSerializer, UserRegSerializer, UserInfoDetailSerializers
+from .serializers import SmsSerializer, UserRegSerializer, UserInfoDetailSerializers, UserPhoneSerializers
 from HQJY_API.settings import API_KEY
 from apiutils.yunpiansms import YunPianSms
 from .models import VerifyCode
@@ -105,7 +105,7 @@ class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
 			}, status=status.HTTP_201_CREATED)
 
 
-class UserViewset(CreateModelMixin, mixins.ListModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin,
+class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin,
                   viewsets.GenericViewSet):
 	"""
 	create:
@@ -158,3 +158,16 @@ class UserViewset(CreateModelMixin, mixins.ListModelMixin, mixins.UpdateModelMix
 	
 	def perform_create(self, serializer):
 		return serializer.save()
+
+class UserPhoneViewSet(CreateModelMixin, viewsets.GenericViewSet):
+	"""
+	用户手机号注册验证
+	"""
+	serializer_class = UserPhoneSerializers
+	
+	def create(self, request, *args, **kwargs):
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		
+		user_phone = serializer.validated_data["user_phone"]
+		return Response({"user_phone":user_phone})
