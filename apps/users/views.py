@@ -46,7 +46,7 @@ class CustomBackend(ModelBackend):
 			# print(password)
 			# print(user.check_password(password))
 			
-			if user.check_password(password):
+			if user.check_password(password) and self.user_can_authenticate(user):
 				# # 获取用户的浏览器及IP地址
 				# agent = request.META.get('HTTP_USER_AGENT')
 				#
@@ -130,7 +130,6 @@ class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveMode
 
 		return UserInfoDetailSerializers
 
-	# permission_classes = (permissions.IsAuthenticated, )
 	def get_permissions(self):
 		if self.action == "retrieve":
 			return [permissions.IsAuthenticated()]

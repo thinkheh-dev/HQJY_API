@@ -66,8 +66,8 @@ class UserInfo(AbstractUser):
 	                                        related_name="user_permission_userinfo", verbose_name="关联用户权限")
 	user_labels = models.ForeignKey(UserLabels, on_delete=models.CASCADE, null=True, blank=True,
 	                                related_name="user_labels_userinfo", verbose_name="关联用户模式标签")
-	disable_flag = models.CharField(max_length=10, choices=(("ENABLE", "启用"), ("DISABLE", "禁用")), default="ENABLE",
-	                                verbose_name="用户禁用标志")
+	# disable_flag = models.CharField(max_length=10, choices=(("ENABLE", "启用"), ("DISABLE", "禁用")), default="ENABLE",
+	#                                 verbose_name="用户禁用标志")
 	user_protocol = models.BooleanField(verbose_name="是否同意用户协议")
 	class Meta:
 		verbose_name = "用户信息"

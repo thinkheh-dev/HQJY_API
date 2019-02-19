@@ -21,6 +21,8 @@ class BaseSetting(object):
 class GlobalSettings(object):
 	site_title = "红企家园后台管理系统"
 	site_footer = "ThinkHeH 红企家园"
+	apps_icons = {'users': 'fa fa-puzzle-piece', 'enterprise_info': 'fa fa-random', 'service_object': 'fa fa-edit',
+	              'platform_operation': 'fa fa-code-fork', 'page_control': 'fa fa-gears', 'user_operation': 'fa fa-shopping-cart'}
 	menu_style = "accordion"
 
 
@@ -37,11 +39,7 @@ class UserInfoAdmin(object):
 	                'user_birthday', 'QQ_num', 'wechat_num', 'contact_address', 'user_email',
 	                'user_real_name_authentication', 'user_to_company', 'enterprise_type_first',
 	                'enterprise_type_second' 'user_permissions_name',
-	                'user_labels', 'disable_flag', 'user_protocol']
-
-
-# class UserProfileAdmin(object):
-#  	list_display = ['user_id_card', 'user_birthday', 'QQ_num', 'wechat_num', 'contact_address', 'user_email', 'user_real_name_authentication', 'user_info', 'user_to_company', 'enterprise_type_first', 'enterprise_type_second']
+	                'user_labels', 'user_protocol']
 
 
 class VerifyCodeAdmin(object):
