@@ -56,7 +56,7 @@ class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
 				"mobile": sms_status["msg"]
 			}, status=status.HTTP_400_BAD_REQUEST)
 		else:
-			code_record = VerifyCode(code=code, user_phone=user_phone)
+			code_record = VerifyCode(code=code, user_phone=mobile)
 			code_record.save()
 			return Response({
 				"mobile": mobile
