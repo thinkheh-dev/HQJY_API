@@ -183,7 +183,9 @@ JWT_AUTH = {
 }
 
 # 云片网短信发送API-KEY：
-API_KEY = "ff2cf8283b3eb184e767c7c21dd5c165"
+#API_KEY = "ff2cf8283b3eb184e767c7c21dd5c165"
+API_KEY = "04049cb7d221836ae7eb5eb5150f3417"
+
 
 # 手机号码正则表达式
 REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"

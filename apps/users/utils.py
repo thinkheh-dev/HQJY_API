@@ -15,11 +15,12 @@ from django.db.models import Q
 
 def jwt_response_payload_handler(token, user=None, request=None):
 	"""为返回的结果添加用户相关信息"""
-	
+	print(user.user_permission_name)
 	return {
 		'token': token,
 		'user_id': user.id,
-		'username': user.username
+		'username': user.username,
+		'user_permission_name': user.user_permission_name.id
 	}
 
 User = get_user_model()
@@ -53,6 +54,7 @@ class CustomBackend(ModelBackend):
 		
 		try:
 			user = User.objects.get(Q(username=username) | Q(user_phone=username))
+			print(user)
 			
 			# # 获取用户的浏览器及IP地址
 			# agent = get_agent()

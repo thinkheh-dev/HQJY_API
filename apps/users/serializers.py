@@ -17,7 +17,7 @@ from rest_framework.validators import UniqueValidator
 from django.contrib.auth import get_user_model
 from django.http import request
 
-from .models import VerifyCode
+from .models import VerifyCode, UserPermissionsName
 from HQJY_API.settings import REGEX_MOBILE
 
 User = get_user_model()
@@ -49,6 +49,14 @@ class SmsSerializer(serializers.Serializer):
 			raise serializers.ValidationError("验证码发送时间间隔不足60S")
 		
 		return user_phone
+
+
+# class UserPermissionsNameSerializers(serializers.ModelSerializer):
+# 	"""自定义用户权限序列化"""
+#
+# 	class Meta:
+# 		model = UserPermissionsName
+# 		fields = ("permission_name", "permission_sn", "permission_desc")
 
 
 class UserInfoDetailSerializers(serializers.ModelSerializer):

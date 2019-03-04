@@ -24,15 +24,15 @@ class YunPianSms(object):
 		parmas = {
 			"apikey": self.api_key,
 			"mobile": user_phone,
-			"text": "【红企家园】您的验证码是{code}。如非本人操作，请忽略本短信".format(code=code)
+			#"text": "【红企家园】您的验证码是{code}。如非本人操作，请忽略本短信".format(code=code)
+			"text": "【姚运旭】测试验证码是{code}".format(code=code)
 		}
 		
 		response = requests.post(self.single_send_url, data=parmas)
 		re_dict = json.loads(response.text)
 		return re_dict
 	
-	if __name__ == "__main__":
-		yun_pian = YunPianSms("")
-		yun_pian.send_sms("2018", "")
-		
-		
+	# if __name__ == "__main__":
+	# 	yun_pian = YunPianSms("")
+	# 	yun_pian.send_sms("2018", "")
+	
