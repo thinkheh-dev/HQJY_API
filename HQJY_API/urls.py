@@ -13,7 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.urls import path, include
+from django.urls import path, include, re_path
 import xadmin
 
 from rest_framework.documentation import include_docs_urls
@@ -24,13 +24,21 @@ from rest_framework_jwt.views import obtain_jwt_token
 from DjangoUeditor import urls as DjangoUeditor_urls
 
 from service_object.views import DefaultServicesListViewSet, FinancingServicesListViewSet, DefaultCategoryViewset, \
-	FinancingCategoryViewset, HotSearchsViewset, DefaultServicesBannerViewset, FinancingServicesBannerViewset, \
-	ServicesBrandViewset, EnterpriseDemandViewset, CorporateFinanceDemandViewset, DefaultCategoryNavViewset, \
-	FinancingCategoryNavViewset
+	 FinancingCategoryViewset, HotSearchsViewset, DefaultServicesBannerViewset, FinancingServicesBannerViewset, \
+	 ServicesBrandViewset, EnterpriseDemandViewset, CorporateFinanceDemandViewset, DefaultCategoryNavViewset, \
+	 FinancingCategoryNavViewset
 
 from users.views import SmsCodeViewset, UserViewset, UserPhoneViewSet
 
 from enterprise_info.views import EnterpriseListViewSet, EnterpriseTypeListViewset
+
+from page_control.models import SystemAdminURL
+
+
+admin_url = SystemAdminURL.objects.all().first()
+print(admin_url)
+
+
 
 #实例化Router对象，用于配置路由
 router = DefaultRouter()
@@ -73,13 +81,14 @@ router.register(r'enterprise-info', EnterpriseListViewSet, base_name='enterprise
 router.register(r'enterprise-type', EnterpriseTypeListViewset, base_name='enterprisetype')
 
 urlpatterns = [
-    path('xadmin/', xadmin.site.urls),
+    re_path(r'^%s/' % (admin_url), xadmin.site.urls),
+	#re_path(r'^%s/%s/' % (model._meta.app_label, model._meta.model_name), include(view_urls)) #例子 可删除
 	path('ueditor/', include(DjangoUeditor_urls)),
 	path('', include(router.urls)),
 	path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 	
 	#drf自带的认证模式
-	path('api-token-auth/', views.obtain_auth_token),
+	#path('api-token-auth/', views.obtain_auth_token),
 	
 	#jwt认证模式
 	path('login/', obtain_jwt_token),

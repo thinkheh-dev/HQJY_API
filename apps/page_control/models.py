@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 
 # 页面配置模型
 
@@ -103,3 +104,18 @@ class WebFooterInfo(models.Model):
 		
 	def __str__(self):
 		return self.web_contact
+	
+class SystemAdminURL(models.Model):
+	"""
+	后台管理系统地址
+	"""
+	web_admin_url = models.CharField(default="HQJY-Admin", max_length=20, verbose_name="系统后台管理地址")
+	add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
+	
+	class Meta:
+		verbose_name = "系统后台管理地址"
+		verbose_name_plural = verbose_name
+		ordering = ("-add_time", )
+	
+	def __str__(self):
+		return self.web_admin_url

@@ -69,6 +69,7 @@ MIDDLEWARE = [
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -141,7 +142,7 @@ USE_TZ = False
 
 # 用户认证配置
 AUTHENTICATION_BACKENDS = (
-	'users.views.CustomBackend',
+	'users.utils.CustomBackend',
 )
 
 # Static files (CSS, JavaScript, Images)
@@ -178,6 +179,7 @@ import datetime
 JWT_AUTH = {
 	'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
 	'JWT_AUTH_HEADER_PREFIX': 'JWT',
+	'JWT_RESPONSE_PAYLOAD_HANDLER': 'users.utils.jwt_response_payload_handler',  # response中token的payload部分处理函数
 }
 
 # 云片网短信发送API-KEY：

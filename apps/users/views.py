@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import get_user_model
 from django.db.models import Q
+from django.http import HttpResponse
 
 from rest_framework.mixins import CreateModelMixin
 from rest_framework import viewsets, status, mixins
@@ -19,49 +20,6 @@ from apiutils.yunpiansms import YunPianSms
 from .models import VerifyCode
 
 User = get_user_model()
-
-
-class CustomBackend(ModelBackend):
-	"""
-    自定义用户验证
-    """
-	
-	def authenticate(self, request, username=None, password=None, **kwargs):
-		
-		print('in pass')
-		
-		def get_ip(request):
-			x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-			if x_forwarded_for:
-				ip = x_forwarded_for.split(',')[0]  # 所以这里是真实的ip
-				print("realip:", ip)
-			else:
-				ip = request.META.get('REMOTE_ADDR')  # 这里获得代理ip
-				print("proxyip:", ip)
-			return ip
-		
-		try:
-			user = User.objects.get(Q(username=username) | Q(user_phone=username))
-			# print(user)
-			# print(password)
-			# print(user.check_password(password))
-			
-			if user.check_password(password) and self.user_can_authenticate(user):
-				# # 获取用户的浏览器及IP地址
-				# agent = request.META.get('HTTP_USER_AGENT')
-				#
-				# user_ip_now = get_ip(request)
-				#
-				# # 保存用户ip地址及浏览器
-				# user.user_ip = user_ip_now
-				# user.user_browser = agent
-				# user.save()
-				return user
-			else:
-				return None
-		except Exception as e:
-			return None
-
 
 class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
 	"""
@@ -135,7 +93,6 @@ class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveMode
 			return [permissions.IsAuthenticated()]
 		elif self.action == "create":
 			return []
-
 		return []
 
 	def create(self, request, *args, **kwargs):
@@ -157,6 +114,9 @@ class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveMode
 	
 	def perform_create(self, serializer):
 		return serializer.save()
+
+
+	
 
 class UserPhoneViewSet(CreateModelMixin, viewsets.GenericViewSet):
 	"""

@@ -9,7 +9,8 @@
 # @software: PyCharm
 
 import xadmin
-from page_control.models import HomeNav, HomeBackground, WebLogo, WebFooterLink, WebFooterInfo, WebName, ADConfig
+from page_control.models import HomeNav, HomeBackground, WebLogo, WebFooterLink, WebFooterInfo, WebName, ADConfig, \
+	SystemAdminURL
 
 
 class HomeNavAdmin(object):
@@ -40,6 +41,10 @@ class WebNameAdmin(object):
 class ADConfigAdmin(object):
 	list_display = ['ad_img', 'img_description', 'img_index', 'ad_index']
 	
+
+class SystemAdminURLAdmin(object):
+	list_display = ['web_admin_url', ]
+	
 	
 xadmin.site.register(HomeNav, HomeNavAdmin)
 xadmin.site.register(HomeBackground, HomeBackgroundAdmin)
@@ -48,3 +53,4 @@ xadmin.site.register(WebFooterLink, WebFooterLinkAdmin)
 xadmin.site.register(WebFooterInfo, WebFooterInfoAdmin)
 xadmin.site.register(WebName, WebNameAdmin)
 xadmin.site.register(ADConfig, ADConfigAdmin)
+xadmin.site.register(SystemAdminURL, SystemAdminURLAdmin)
