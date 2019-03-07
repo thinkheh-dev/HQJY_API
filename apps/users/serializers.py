@@ -67,25 +67,25 @@ class FindPasswordSmsSerializer(serializers.Serializer):
 		"""
 		# 验证手机号是否合法
 		if not re.match(REGEX_MOBILE, user_phone):
-			return Response({
-				"error_messages": "手机号不合法"
-			}, status=status.HTTP_400_BAD_REQUEST)
-			# raise serializers.ValidationError("","手机号不合法")
+			# return Response({
+			# 	"error_messages": "手机号不合法"
+			# }, status=status.HTTP_400_BAD_REQUEST)
+			raise serializers.ValidationError("手机号不合法", code=status.HTTP_400_BAD_REQUEST)
 		
 		# 验证手机是否存在
 		if not User.objects.filter(user_phone=user_phone).count():
-			return Response({
-				"error_messages": "用户不存在，请先注册！"
-			}, status=status.HTTP_400_BAD_REQUEST)
-			#raise serializers.ValidationError("用户不存在，请先注册！")
+			# return Response({
+			# 	"error_messages": "用户不存在，请先注册！"
+			# }, status=status.HTTP_400_BAD_REQUEST)
+			raise serializers.ValidationError("用户不存在,请先注册", code=status.HTTP_400_BAD_REQUEST)
 		
 		# 验证码发送频率
 		one_minute_ago = datetime.now() - timedelta(hours=0, minutes=1, seconds=0)
 		if VerifyCode.objects.filter(add_time__gt=one_minute_ago, user_phone=user_phone).count():
-			return Response({
-				"error_messages": "验证码发送时间间隔不足60S"
-			}, status=status.HTTP_400_BAD_REQUEST)
-			#raise serializers.ValidationError("验证码发送时间间隔不足60S")
+			# return Response({
+			# 	"error_messages": "验证码发送时间间隔不足60S"
+			# }, status=status.HTTP_400_BAD_REQUEST)
+			raise serializers.ValidationError("验证码发送时间间隔不足60S", code=status.HTTP_400_BAD_REQUEST)
 		
 		return user_phone
 
@@ -207,22 +207,13 @@ class UserFindPasswordSerizlizers(serializers.Serializer):
 			
 			five_mintes_ago = datetime.now() - timedelta(hours=0, minutes=5, seconds=0)
 			if five_mintes_ago > last_record.add_time:
-				return Response({
-					"error_messages": "验证码过期"
-				}, status=status.HTTP_400_BAD_REQUEST)
-				#raise serializers.ValidationError("验证码过期")
+				raise serializers.ValidationError("验证码过期", code=status.HTTP_400_BAD_REQUEST)
 			
 			if last_record.code != code:
-				return Response({
-					"error_messages": "验证码错误"
-				}, status=status.HTTP_400_BAD_REQUEST)
-				#raise serializers.ValidationError("验证码错误")
+				raise serializers.ValidationError("验证码错误", code=status.HTTP_400_BAD_REQUEST)
 		
 		else:
-			return Response({
-				"error_messages": "验证码错误"
-			}, status=status.HTTP_400_BAD_REQUEST)
-			#raise serializers.ValidationError("验证码错误")
+			raise serializers.ValidationError("验证码错误", code=status.HTTP_400_BAD_REQUEST)
 	
 	def validate(self, attrs):
 		del attrs["code"]
