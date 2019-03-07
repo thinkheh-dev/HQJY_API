@@ -5,12 +5,13 @@ from django.db.models import Q
 from django.http import HttpResponse
 
 from rest_framework.mixins import CreateModelMixin
-from rest_framework import viewsets, status, mixins
+from rest_framework import viewsets, status, mixins, exceptions
 from rest_framework.response import Response
 from random import choice
 from rest_framework import permissions
 from rest_framework import authentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from rest_framework.throttling import SimpleRateThrottle
 
 from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
 from rest_framework.decorators import action
@@ -180,7 +181,16 @@ class UserPhoneViewSet(CreateModelMixin, viewsets.GenericViewSet):
 		
 		user_phone = serializer.validated_data["user_phone"]
 		return Response({"user_phone":user_phone})
+
+
+class UserChangePasswordThrottle(SimpleRateThrottle):
+	"""
+	限制用户登录60s尝试次数
+	"""
+	scope = 'user_change_password_scope'  # 显示频率的Key,在配置文件里需要有个跟这个同名
 	
+	def get_cache_key(self, request, view):
+		return self.get_ident(request)  # 获取请求IP
 	
 	
 class UserPasswordModifyViewSet(viewsets.ModelViewSet):
@@ -193,6 +203,10 @@ class UserPasswordModifyViewSet(viewsets.ModelViewSet):
 	"""
 	serializer_class = UserFindPasswordSerizlizers
 	queryset = User.objects.all()
+	
+	throttle_classes = [UserChangePasswordThrottle, ]
+	
+	
 
 	@action(detail=True, methods=['post'])
 	def set_password(self, request, pk=None):
@@ -207,5 +221,17 @@ class UserPasswordModifyViewSet(viewsets.ModelViewSet):
 		else:
 			return Response(serializer.errors,
 			                status=status.HTTP_400_BAD_REQUEST)
+	
+	def throttled(self, request, wait):
+		"""
+		访问次数被限制时，定制错误信息
+		"""
+		
+		class Throttled(exceptions.Throttled):
+			default_detail = '系统检测到您的操作太过于频繁，'
+			extra_detail_singular = '请在 {wait} 秒之后再操作.'
+			extra_detail_plural = '请在 {wait} 秒之后再操作.'
+		
+		raise Throttled(wait)
 	
 	

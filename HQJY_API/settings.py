@@ -174,9 +174,9 @@ REST_FRAMEWORK = {
 	#     'user': '3/minute'
 	# }
 	
-	# 'DEFAULT_THROTTLE_RATES': {
-	# 	'user_login_scope': '5/minute',
-	# },
+	'DEFAULT_THROTTLE_RATES': {
+		'user_change_password_scope': '5/minute',
+	},
 	
 }
 
