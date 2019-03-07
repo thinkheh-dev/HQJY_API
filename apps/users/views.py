@@ -13,8 +13,11 @@ from rest_framework import authentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
+from rest_framework.decorators import action
+from django.views.decorators.csrf import csrf_exempt
 
-from .serializers import SmsSerializer, UserRegSerializer, UserInfoDetailSerializers, UserPhoneSerializers
+from .serializers import SmsSerializer, FindPasswordSmsSerializer, UserRegSerializer, UserInfoDetailSerializers, \
+						 UserPhoneSerializers, UserFindPasswordSerizlizers
 from HQJY_API.settings import API_KEY
 from apiutils.yunpiansms import YunPianSms
 from .models import VerifyCode
@@ -63,8 +66,50 @@ class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
 			}, status=status.HTTP_201_CREATED)
 
 
-class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin,
-                  viewsets.GenericViewSet):
+class FindPasswordSmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
+	"""
+    找回密码-发送短信验证码
+    """
+	serializer_class = FindPasswordSmsSerializer
+	
+	def generate_code(self):
+		"""
+        生成六数字的验证码
+        :return:
+        """
+		seeds = "1234567890"
+		random_str = []
+		for i in range(6):
+			random_str.append(choice(seeds))
+		
+		return "".join(random_str)
+	
+	def create(self, request, *args, **kwargs):
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		
+		mobile = serializer.validated_data["user_phone"]
+		user_id = list(User.objects.filter(user_phone=mobile).values('id'))[0]['id']
+		
+		yun_pian = YunPianSms(API_KEY)
+		
+		code = self.generate_code()
+		
+		sms_status = yun_pian.send_sms(code=code, user_phone=mobile)
+		
+		if sms_status["code"] != 0:
+			return Response({
+				"mobile": sms_status["msg"]
+			}, status=status.HTTP_400_BAD_REQUEST)
+		else:
+			code_record = VerifyCode(code=code, user_phone=mobile)
+			code_record.save()
+			return Response({
+				"user_id": user_id, "mobile": mobile
+			}, status=status.HTTP_201_CREATED)
+
+
+class UserViewset(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
 	"""
 	create:
 		用户注册
@@ -74,6 +119,8 @@ class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveMode
 		用户详情
 	update:
 		用户信息更新
+	partial：
+		部分更新用户信息
     """
 	serializer_class = UserRegSerializer
 	queryset = User.objects.all()
@@ -114,8 +161,6 @@ class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveMode
 	
 	def perform_create(self, serializer):
 		return serializer.save()
-
-
 	
 
 class UserPhoneViewSet(CreateModelMixin, viewsets.GenericViewSet):
@@ -130,3 +175,32 @@ class UserPhoneViewSet(CreateModelMixin, viewsets.GenericViewSet):
 		
 		user_phone = serializer.validated_data["user_phone"]
 		return Response({"user_phone":user_phone})
+	
+	
+	
+class UserPasswordModifyViewSet(viewsets.ModelViewSet):
+	"""
+	用户通过手机号修改密码
+	update:
+		更新用户信息
+	partial：
+		部分更新用户信息
+	"""
+	serializer_class = UserFindPasswordSerizlizers
+	queryset = User.objects.all()
+
+	@action(detail=True, methods=['post'])
+	def set_password(self, request, pk=None):
+		user = self.get_object()
+		serializer = UserFindPasswordSerizlizers(data=request.data)
+		print(serializer)
+		if serializer.is_valid():
+			user.set_password(serializer.data['password'])
+			user.save()
+			return Response({"user_phone": user.user_phone, "user_id": pk},
+			                status=status.HTTP_202_ACCEPTED)
+		else:
+			return Response(serializer.errors,
+			                status=status.HTTP_400_BAD_REQUEST)
+	
+	

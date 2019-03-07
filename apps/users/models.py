@@ -68,7 +68,7 @@ class UserInfo(AbstractUser):
 	                                related_name="user_labels_userinfo", verbose_name="关联用户模式标签")
 	# disable_flag = models.CharField(max_length=10, choices=(("ENABLE", "启用"), ("DISABLE", "禁用")), default="ENABLE",
 	#                                 verbose_name="用户禁用标志")
-	user_protocol = models.BooleanField(verbose_name="是否同意用户协议")
+	user_protocol = models.BooleanField(default=False, verbose_name="是否同意用户协议")
 	class Meta:
 		verbose_name = "用户信息"
 		verbose_name_plural = verbose_name

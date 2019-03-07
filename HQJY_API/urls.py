@@ -19,7 +19,7 @@ import xadmin
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
-from rest_framework_jwt.views import obtain_jwt_token
+from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token, refresh_jwt_token
 
 from DjangoUeditor import urls as DjangoUeditor_urls
 
@@ -28,7 +28,8 @@ from service_object.views import DefaultServicesListViewSet, FinancingServicesLi
 	 ServicesBrandViewset, EnterpriseDemandViewset, CorporateFinanceDemandViewset, DefaultCategoryNavViewset, \
 	 FinancingCategoryNavViewset
 
-from users.views import SmsCodeViewset, UserViewset, UserPhoneViewSet
+from users.views import SmsCodeViewset, FindPasswordSmsCodeViewset, UserViewset, UserPhoneViewSet, \
+						UserPasswordModifyViewSet
 
 from enterprise_info.views import EnterpriseListViewSet, EnterpriseTypeListViewset
 
@@ -36,7 +37,7 @@ from page_control.models import SystemAdminURL
 
 
 admin_url = SystemAdminURL.objects.all().first()
-print(admin_url)
+
 
 
 
@@ -76,11 +77,16 @@ router.register(r'userphone', UserPhoneViewSet, base_name='userphone')
 router.register(r'codes', SmsCodeViewset, base_name='codes')
 router.register(r'users', UserViewset, base_name='users')
 
+#用户忘记密码相关路由
+router.register(r'find-password-code', FindPasswordSmsCodeViewset, base_name='findpasswordcode')
+router.register(r'find-password', UserPasswordModifyViewSet, base_name='findpassword')
+
 #配置企业信息理由
 router.register(r'enterprise-info', EnterpriseListViewSet, base_name='enterpriselist')
 router.register(r'enterprise-type', EnterpriseTypeListViewset, base_name='enterprisetype')
 
 urlpatterns = [
+	#path('xadmin/', xadmin.site.urls),
     re_path(r'^%s/' % (admin_url), xadmin.site.urls),
 	#re_path(r'^%s/%s/' % (model._meta.app_label, model._meta.model_name), include(view_urls)) #例子 可删除
 	path('ueditor/', include(DjangoUeditor_urls)),

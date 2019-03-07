@@ -103,6 +103,7 @@ DATABASES = {
 		'NAME': 'hqjy_api_database',
 		'USER': 'root',
 		'PASSWORD': 'P@ssword',
+		#'HOST': 'localhost',
 		'HOST': '192.168.10.205',
 		'PORT': '3306',
 		#'OPTIONS': { 'init_command': 'SET storage_engine=INNODB;' } ,
