@@ -12,6 +12,11 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import get_user_model
 from django.db.models import Q
+from rest_framework.throttling import SimpleRateThrottle
+
+
+User = get_user_model()
+
 
 def jwt_response_payload_handler(token, user=None, request=None):
 	"""为返回的结果添加用户相关信息"""
@@ -22,14 +27,37 @@ def jwt_response_payload_handler(token, user=None, request=None):
 		'username': user.username,
 		'user_permission_name': user.user_permission_name.id
 	}
+	
+class UserLoginThrottle(SimpleRateThrottle):
+	"""
+	限制用户登录60s尝试次数
+	"""
+	scope = 'user_login_scope'  # 显示频率的Key,在配置文件里需要有个跟这个同名
+	
+	def get_cache_key(self, request, view):
+		return self.get_ident(request)  # 获取请求IP
 
-User = get_user_model()
+
 
 class CustomBackend(ModelBackend):
 	"""
     自定义用户验证
     """
 	
+	throttle_classes = [UserLoginThrottle, ]
+	
+	def throttled(self, request, wait):
+		"""
+		访问次数被限制时，定制错误信息
+		"""
+		
+		class Throttled(exceptions.Throttled):
+			default_detail = '请求被限制.'
+			extra_detail_singular = '请 {wait} 秒之后再重试.'
+			extra_detail_plural = '请 {wait} 秒之后再重试.'
+		
+		raise Throttled(wait)
+
 	def authenticate(self, request, username=None, password=None, **kwargs):
 		
 		

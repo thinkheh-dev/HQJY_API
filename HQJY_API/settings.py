@@ -173,6 +173,11 @@ REST_FRAMEWORK = {
 	#     'anon': '2/minute',
 	#     'user': '3/minute'
 	# }
+	
+	# 'DEFAULT_THROTTLE_RATES': {
+	# 	'user_login_scope': '5/minute',
+	# },
+	
 }
 
 import datetime
