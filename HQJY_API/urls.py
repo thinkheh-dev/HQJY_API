@@ -78,8 +78,8 @@ router.register(r'codes', SmsCodeViewset, base_name='codes')
 router.register(r'users', UserViewset, base_name='users')
 
 #用户忘记密码相关路由
-router.register(r'find-password-code', FindPasswordSmsCodeViewset, base_name='findpasswordcode')
-router.register(r'find-password', UserPasswordModifyViewSet, base_name='findpassword')
+router.register(r'change-password-code', FindPasswordSmsCodeViewset, base_name='changepasswordcode')
+router.register(r'change-password', UserPasswordModifyViewSet, base_name='changepassword')
 
 #配置企业信息理由
 router.register(r'enterprise-info', EnterpriseListViewSet, base_name='enterpriselist')
