@@ -198,7 +198,7 @@ class UserFindPasswordSerizlizers(serializers.Serializer):
 			
 			five_mintes_ago = datetime.now() - timedelta(hours=0, minutes=5, seconds=0)
 			if five_mintes_ago > last_record.add_time:
-				raise serializers.ValidationError(detail={"error_message": "验证码错误", "error_code":
+				raise serializers.ValidationError(detail={"error_message": "验证码过期", "error_code":
 														  status.HTTP_400_BAD_REQUEST})
 			
 			if last_record.code != code:

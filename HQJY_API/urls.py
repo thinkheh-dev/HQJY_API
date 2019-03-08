@@ -101,7 +101,6 @@ urlpatterns = [
 	
     path('docs/', include_docs_urls(title='红企家园后端API')),
 
-	
 	#path('default-services/', DefaultServicesListView.as_view(), name='ds-list')
 ]
 
