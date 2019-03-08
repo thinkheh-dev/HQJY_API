@@ -55,20 +55,16 @@ class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
 		
 		sms_status = yun_pian.send_sms(code=code, user_phone=mobile)
 		
-		if not serializer.validated_data["user_phone"]:
-			return Response({
-				"user_phone": mobile
-			}, status=status.HTTP_400_BAD_REQUEST)
-			
+
 		if sms_status["code"] != 0:
 			return Response({
-				"mobile": sms_status["msg"]
+				"user_phone": sms_status["msg"]
 			}, status=status.HTTP_400_BAD_REQUEST)
 		else:
 			code_record = VerifyCode(code=code, user_phone=mobile)
 			code_record.save()
 			return Response({
-				"mobile": mobile
+				"user_phone": mobile
 			}, status=status.HTTP_201_CREATED)
 
 
@@ -105,13 +101,13 @@ class FindPasswordSmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
 		
 		if sms_status["code"] != 0:
 			return Response({
-				"mobile": sms_status["msg"]
+				"user_phone": sms_status["msg"]
 			}, status=status.HTTP_400_BAD_REQUEST)
 		else:
 			code_record = VerifyCode(code=code, user_phone=mobile)
 			code_record.save()
 			return Response({
-				"user_id": user_id, "mobile": mobile
+				"user_id": user_id, "user_phone": mobile
 			}, status=status.HTTP_201_CREATED)
 
 
