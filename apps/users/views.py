@@ -193,7 +193,11 @@ class UserChangePasswordThrottle(SimpleRateThrottle):
 		return self.get_ident(request)  # 获取请求IP
 	
 	
-class UserPasswordModifyViewSet(viewsets.ModelViewSet):
+class UserPasswordModifyViewSet(mixins.CreateModelMixin,
+								mixins.RetrieveModelMixin,
+                                mixins.UpdateModelMixin,
+                                mixins.DestroyModelMixin,
+                                viewsets.GenericViewSet):
 	"""
 	用户通过手机号修改密码
 	update:
@@ -206,7 +210,21 @@ class UserPasswordModifyViewSet(viewsets.ModelViewSet):
 	
 	throttle_classes = [UserChangePasswordThrottle, ]
 	
+	def create(self, request, *args, **kwargs):
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		self.perform_create(serializer)
+		headers = self.get_success_headers(serializer.data)
+		return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 	
+	def perform_create(self, serializer):
+		serializer.save()
+	
+	def get_success_headers(self, data):
+		try:
+			return {'Location': str(data[api_settings.URL_FIELD_NAME])}
+		except (TypeError, KeyError):
+			return {}
 
 	@action(detail=True, methods=['post'])
 	def set_password(self, request, pk=None):
