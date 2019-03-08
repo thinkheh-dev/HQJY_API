@@ -62,8 +62,9 @@ class UserInfo(AbstractUser):
 	                                    related_name="user_to_company", verbose_name="关联的企业")
 	enterprise_type = models.ForeignKey(EnterpriseType, blank=True, null=True, on_delete=models.CASCADE,
 	                                          related_name="enterprise_type", verbose_name="企业分类")
-	user_permission_name = models.ForeignKey(UserPermissionsName,null=True, blank=True, on_delete=models.CASCADE,
-	                                        related_name="user_permission_userinfo", verbose_name="关联用户权限")
+	user_permission_name = models.ForeignKey(UserPermissionsName,null=True, default=1, blank=True,
+	                                         on_delete=models.CASCADE, related_name="user_permission_userinfo",
+	                                         verbose_name="关联用户权限")
 	user_labels = models.ForeignKey(UserLabels, on_delete=models.CASCADE, null=True, blank=True,
 	                                related_name="user_labels_userinfo", verbose_name="关联用户模式标签")
 	# disable_flag = models.CharField(max_length=10, choices=(("ENABLE", "启用"), ("DISABLE", "禁用")), default="ENABLE",
