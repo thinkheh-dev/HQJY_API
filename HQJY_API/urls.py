@@ -29,7 +29,7 @@ from service_object.views import DefaultServicesListViewSet, FinancingServicesLi
 	 FinancingCategoryNavViewset
 
 from users.views import SmsCodeViewset, FindPasswordSmsCodeViewset, UserViewset, UserPhoneViewSet, \
-						UserPasswordModifyViewSet
+						UserPasswordModifyViewSet, UserProtocolViewSet
 
 from enterprise_info.views import EnterpriseListViewSet, EnterpriseTypeListViewset
 
@@ -76,6 +76,7 @@ router.register(r'fi-demand', CorporateFinanceDemandViewset, base_name='fidemand
 router.register(r'userphone', UserPhoneViewSet, base_name='userphone')
 router.register(r'codes', SmsCodeViewset, base_name='codes')
 router.register(r'users', UserViewset, base_name='users')
+router.register(r'user-protocol', UserProtocolViewSet, base_name='userprotocol')
 
 #用户忘记密码相关路由
 router.register(r'change-password-code', FindPasswordSmsCodeViewset, base_name='changepasswordcode')

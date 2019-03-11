@@ -18,10 +18,10 @@ from rest_framework.decorators import action
 from django.views.decorators.csrf import csrf_exempt
 
 from .serializers import SmsSerializer, FindPasswordSmsSerializer, UserRegSerializer, UserInfoDetailSerializers, \
-						 UserPhoneSerializers, UserFindPasswordSerizlizers
+						 UserPhoneSerializers, UserFindPasswordSerizlizers, UserProtocolSerializers
 from HQJY_API.settings import API_KEY
 from apiutils.yunpiansms import YunPianSms
-from .models import VerifyCode
+from .models import VerifyCode, UserProtocol
 
 User = get_user_model()
 
@@ -153,7 +153,8 @@ class UserViewset(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.Retri
 		re_dict = serializer.data
 		payload = jwt_payload_handler(user)
 		re_dict["token"] = jwt_encode_handler(payload)
-		re_dict["name"] = user.user_name if user.user_name else user.username
+		#re_dict["user_name"] = user.user_name if user.user_name else user.username
+		
 		
 		headers = self.get_success_headers(serializer.data)
 		return Response(re_dict, status=status.HTTP_201_CREATED, headers=headers)
@@ -181,7 +182,7 @@ class UserPhoneViewSet(CreateModelMixin, viewsets.GenericViewSet):
 
 class UserChangePasswordThrottle(SimpleRateThrottle):
 	"""
-	限制用户登录60s尝试次数
+	限制用户登录60s尝试次数-阀值类
 	"""
 	scope = 'user_change_password_scope'  # 显示频率的Key,在配置文件里需要有个跟这个同名
 	
@@ -232,4 +233,16 @@ class UserPasswordModifyViewSet(mixins.RetrieveModelMixin,
 		
 		raise Throttled(wait)
 	
+
+class UserProtocolViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+	"""
+	用户协议视图
+	list:
+		协议列表
+	retrieve:
+		协议详情
+	"""
+	
+	serializer_class = UserProtocolSerializers
+	queryset = UserProtocol.objects.all()
 	

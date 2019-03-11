@@ -18,7 +18,7 @@ from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from django.http import request
 
-from .models import VerifyCode, UserPermissionsName
+from .models import VerifyCode, UserPermissionsName, UserProtocol
 from HQJY_API.settings import REGEX_MOBILE
 
 
@@ -228,4 +228,14 @@ class UserFindPasswordSerizlizers(serializers.Serializer):
 	class Meta:
 		model = User
 		fields = ("code", "user_phone", "password")
+		
+		
+class UserProtocolSerializers(serializers.ModelSerializer):
+	"""
+	用户协议序列化
+	"""
+	class Meta:
+		model = UserProtocol
+		fields = ('id', 'protocol_title', 'protocol_subtitle', 'protocol_content')
+	
 

@@ -42,13 +42,33 @@ class UserInfo(AbstractUser):
 	"""
 	用户主信息
 	"""
-	user_name = models.CharField(max_length=50, verbose_name="用户姓名")
+	COUNTY_CHOICES = (
+		("个旧市", "个旧市"),
+		("开远市", "开远市"),
+		("蒙自市", "蒙自市"),
+		("建水县", "建水县"),
+		("石屏县", "石屏县"),
+		("弥勒市", "弥勒市"),
+		("泸西县", "泸西县"),
+		("红河县", "红河县"),
+		("元阳县", "元阳县"),
+		("绿春县", "绿春县"),
+		("屏边县", "屏边县"),
+		("金平县", "金平县"),
+		("河口县", "河口县"),
+		("昆明市", "昆明市"),
+		("其他地州", "其他地州"),
+		("其他省市", "其他省市"),
+	)
+	
+	user_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="用户姓名")
+	#user_home = models.CharField(max_length=10, choices=COUNTY_CHOICES, blank=True, null=True, verbose_name="用户归属地")
 	user_logo = models.ImageField(upload_to="user_logo/", blank=True, null=True, verbose_name="用户头像")
-	user_sex = models.CharField(max_length=10,choices=(("male", "男"), ("female", "女")), default="male",
-	                            verbose_name="性别")
+	user_sex = models.CharField(max_length=10,choices=(("male", "男"), ("female", "女")), default="male", blank=True,
+	                            null=True, verbose_name="性别")
 	user_phone = models.CharField(max_length=11, null=True, blank=True, verbose_name="用户手机号")
-	user_ip = models.GenericIPAddressField(blank=True, null=True, verbose_name="最后一次登录IP地址")
-	user_browser = models.CharField(max_length=200, blank=True, null=True, verbose_name="最一次登录用的浏览器")
+	#user_ip = models.GenericIPAddressField(blank=True, null=True, verbose_name="最后一次登录IP地址")
+	#user_browser = models.CharField(max_length=200, blank=True, null=True, verbose_name="最一次登录用的浏览器")
 	user_id_card = models.CharField(max_length=18, blank=True, null=True, verbose_name="身份证号")
 	user_birthday = models.DateField(blank=True, null=True, editable=False, verbose_name="用户生日")
 	QQ_num = models.CharField(max_length=20, blank=True, null=True, verbose_name="QQ号码")
@@ -56,8 +76,6 @@ class UserInfo(AbstractUser):
 	contact_address = models.CharField(max_length=200, blank=True, null=True, verbose_name="联系地址")
 	user_email = models.EmailField(blank=True, null=True, verbose_name="电子邮件地址")
 	user_real_name_authentication = models.BooleanField(default=False, verbose_name="实名认证标志")
-	#user_info = models.OneToOneField(UserInfo, on_delete=models.CASCADE, related_name="user_profile",
-	                                 #verbose_name="关联用户信息")
 	user_to_company = models.ForeignKey(BasicEnterpriseInfo, blank=True, null=True, on_delete=models.CASCADE,
 	                                    related_name="user_to_company", verbose_name="关联的企业")
 	enterprise_type = models.ForeignKey(EnterpriseType, blank=True, null=True, on_delete=models.CASCADE,
