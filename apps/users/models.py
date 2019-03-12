@@ -62,7 +62,6 @@ class UserInfo(AbstractUser):
 	)
 	
 	user_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="用户姓名")
-	#user_home = models.CharField(max_length=10, choices=COUNTY_CHOICES, blank=True, null=True, verbose_name="用户归属地")
 	user_logo = models.ImageField(upload_to="user_logo/", blank=True, null=True, verbose_name="用户头像")
 	user_sex = models.CharField(max_length=10,choices=(("male", "男"), ("female", "女")), default="male", blank=True,
 	                            null=True, verbose_name="性别")
@@ -83,6 +82,10 @@ class UserInfo(AbstractUser):
 	user_permission_name = models.ForeignKey(UserPermissionsName,null=True, default=1, blank=True,
 	                                         on_delete=models.CASCADE, related_name="user_permission_userinfo",
 	                                         verbose_name="关联用户权限")
+	user_home = models.CharField(max_length=10, choices=COUNTY_CHOICES, blank=True, null=True, verbose_name="用户归属地")
+	is_xs_admin = models.BooleanField(default=False, null=True, blank=True, verbose_name="是否县市管理员")
+	is_ableto_buy = models.BooleanField(default=True, null=True, blank=True, verbose_name="是否允许购买产品")
+	
 	user_labels = models.ForeignKey(UserLabels, on_delete=models.CASCADE, null=True, blank=True,
 	                                related_name="user_labels_userinfo", verbose_name="关联用户模式标签")
 	# disable_flag = models.CharField(max_length=10, choices=(("ENABLE", "启用"), ("DISABLE", "禁用")), default="ENABLE",
