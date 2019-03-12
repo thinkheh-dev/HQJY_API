@@ -94,11 +94,11 @@ class UserInfoDetailSerializers(serializers.ModelSerializer):
 	
 	class Meta:
 		model = User
-		fields = ('id', 'user_name', 'user_logo', 'user_sex', 'user_phone', 'user_ip', 'user_browser', 'user_id_card',
-		          'user_birthday', 'QQ_num', 'wechat_num', 'contact_address', 'user_email',
-		          'user_real_name_authentication', 'user_to_company', 'enterprise_type', 'user_permission_name',
-		          'user_labels')
-
+		fields = ('id', 'user_name', 'user_logo', 'user_sex', 'user_phone', 'user_id_card', 'user_birthday',
+		          'QQ_num', 'wechat_num', 'contact_address', 'user_email', 'user_real_name_authentication',
+		          'user_to_company', 'enterprise_type', 'user_permission_name', 'user_home', 'is_xs_admin',
+		          'is_ableto_buy', 'user_labels')
+		
 
 class UserPhoneSerializers(serializers.Serializer):
 	"""

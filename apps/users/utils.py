@@ -63,19 +63,7 @@ class CustomBackend(ModelBackend):
 			user = User.objects.get(Q(username=username) | Q(user_phone=username))
 			print(user)
 			
-			# # 获取用户的浏览器及IP地址
-			# agent = get_agent()
-			# print(agent)
-			#
-			# user_ip_now = get_ip()
-			# print(user_ip_now)
-			
 			if user.check_password(password) and self.user_can_authenticate(user):
-				
-				# # 保存用户ip地址及浏览器
-				# user.user_ip = user_ip_now
-				# user.user_browser = agent
-				# user.save()
 				
 				return user
 			else:
