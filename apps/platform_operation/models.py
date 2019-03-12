@@ -25,7 +25,7 @@ class InfoCategories(models.Model):
 	parent_category = models.ForeignKey("self", null=True, blank=True, verbose_name="父类目级别", help_text="父目录",
 	                                    related_name="sub_classification", on_delete=models.CASCADE)
 	is_tab = models.BooleanField(default=False, verbose_name="是否导航", help_text="是否导航")
-	add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
+	add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间", help_text="添加时间")
 	
 	class Meta:
 		verbose_name = "平台信息分类"
@@ -54,18 +54,18 @@ class WeMediaArticles(models.Model):
 	"""
 	平台自媒体文章
 	"""
-	title = models.CharField(max_length=200, verbose_name="标题")
-	subtitle = models.CharField(max_length=200, blank=True, null=True, verbose_name="副标题")
-	info_categories = models.ForeignKey(InfoCategories, on_delete=models.CASCADE,
-	                                    verbose_name="信息版块分类")
+	title = models.CharField(max_length=200, verbose_name="标题", help_text="标题")
+	subtitle = models.CharField(max_length=200, blank=True, null=True, verbose_name="副标题", help_text="副标题")
+	info_categories = models.ForeignKey(InfoCategories, on_delete=models.CASCADE, verbose_name="信息版块分类",
+	                                    help_text="信息版块分类")
 	#info_categories_second = models.ForeignKey(InfoCategoriesSecond, on_delete=models.CASCADE, verbose_name="信息板块二级分类")
-	abstract = models.TextField(max_length=200, blank=True, null=True, verbose_name="摘要")
+	abstract = models.TextField(max_length=200, blank=True, null=True, verbose_name="摘要", help_text="摘要")
 	content = UEditorField(default="", width=1000, height=300, filePath="platform_op/files/",
-	                       imagePath="platform_op/images/", verbose_name="正文")
-	attachment = models.FileField(upload_to="we_media_articles/", verbose_name="附件")
-	publish_time = models.DateTimeField(auto_now_add=True, verbose_name="发布时间")
-	author = models.ForeignKey(UserInfo, on_delete=models.CASCADE, verbose_name="作者")
-	read_nums = models.IntegerField(default=0, editable=True, verbose_name="阅读计数")
+	                       imagePath="platform_op/images/", verbose_name="正文", help_text="正文")
+	attachment = models.FileField(upload_to="we_media_articles/", verbose_name="附件", help_text="附件")
+	publish_time = models.DateTimeField(auto_now_add=True, verbose_name="发布时间", help_text="发布时间")
+	author = models.ForeignKey(UserInfo, on_delete=models.CASCADE, verbose_name="作者", help_text="作者")
+	read_nums = models.IntegerField(default=0, editable=True, verbose_name="阅读计数", help_text="阅读计数")
 	
 	class Meta:
 		verbose_name = "平台自媒体文章"
@@ -79,18 +79,18 @@ class PlatformActivity(models.Model):
 	"""
 	平台活动
 	"""
-	activity_title = models.CharField(max_length=200, verbose_name="活动名称")
-	activity_posters = models.ImageField(upload_to="platform_activity/", blank=True, null=True, verbose_name="封面图片")
-	activity_organizer = models.CharField(max_length=200, blank=True, null=True, verbose_name="活动发布人")
-	activity_start_time = models.DateTimeField(default=datetime.now, editable=True, verbose_name="活动开始时间")
-	activity_end_time = models.DateTimeField(default=datetime.now, editable=True, verbose_name="活动结束时间")
-	activity_address = models.CharField(max_length=255, blank=True, null=True, verbose_name="活动地址")
+	activity_title = models.CharField(max_length=200, verbose_name="活动名称", help_text="活动名称")
+	activity_posters = models.ImageField(upload_to="platform_activity/", blank=True, null=True, verbose_name="封面图片", help_text="封面图片")
+	activity_organizer = models.CharField(max_length=200, blank=True, null=True, verbose_name="活动发布人", help_text="活动发布人")
+	activity_start_time = models.DateTimeField(default=datetime.now, editable=True, verbose_name="活动开始时间", help_text="活动开始时间")
+	activity_end_time = models.DateTimeField(default=datetime.now, editable=True, verbose_name="活动结束时间", help_text="活动结束时间")
+	activity_address = models.CharField(max_length=255, blank=True, null=True, verbose_name="活动地址", help_text="活动地址")
 	activity_desc = UEditorField(default="", width=1000, height=300, filePath="platform_act/files/",
-	                       imagePath="platform_act/images/", verbose_name="活动详情")
-	activity_tickets = models.IntegerField(default=0, editable=True, verbose_name="门票价格")
-	meals_flag = models.BooleanField(default=False, editable=True, verbose_name="是否供餐")
-	accommodation_flag = models.BooleanField(default=False, editable=True, verbose_name="是否提供住宿")
-	add_time = models.DateTimeField(auto_now_add=True, verbose_name="添加时间")
+	                       imagePath="platform_act/images/", verbose_name="活动详情", help_text="活动详情")
+	activity_tickets = models.IntegerField(default=0, editable=True, verbose_name="门票价格", help_text="门票价格")
+	meals_flag = models.BooleanField(default=False, editable=True, verbose_name="是否供餐", help_text="是否供餐")
+	accommodation_flag = models.BooleanField(default=False, editable=True, verbose_name="是否提供住宿", help_text="是否提供住宿")
+	add_time = models.DateTimeField(auto_now_add=True, verbose_name="添加时间", help_text="添加时间")
 	
 	class Meta:
 		verbose_name = "平台活动"
@@ -171,10 +171,10 @@ class ActivityRegList(models.Model):
 
 	)
 	
-	name = models.CharField(max_length=50, verbose_name="姓名")
-	sex = models.CharField(max_length=10, choices=SEX_CHOICE, verbose_name="性别")
-	national = models.IntegerField(choices=NATIONAL_CHOICE, verbose_name="民族")
-	phone = models.CharField(max_length=11, blank=True, null=True, verbose_name="联系方式")
+	name = models.CharField(max_length=50, verbose_name="姓名", help_text="姓名")
+	sex = models.CharField(max_length=10, choices=SEX_CHOICE, verbose_name="性别", help_text="性别")
+	national = models.IntegerField(choices=NATIONAL_CHOICE, verbose_name="民族", help_text="民族")
+	phone = models.CharField(max_length=11, blank=True, null=True, verbose_name="联系方式", help_text="联系方式")
 	
 	class Meta:
 		verbose_name = "参加活动名单"
@@ -188,13 +188,13 @@ class ActivityRegistration(models.Model):
 	"""
 	活动报名
 	"""
-	reg_account = models.ForeignKey(UserInfo, on_delete=models.CASCADE, related_name="reg_account", verbose_name="报名帐号")
-	reg_company = models.CharField(max_length=200, blank=True, null=True, verbose_name="报名的公司")
-	reg_number = models.IntegerField(default=0, editable=False, verbose_name="报名人数")
-	meals_number = models.IntegerField(default=0, editable=True, verbose_name="用餐人数")
-	accommodation_number = models.IntegerField(default=0, editable=True, verbose_name="住宿人数")
+	reg_account = models.ForeignKey(UserInfo, on_delete=models.CASCADE, related_name="reg_account", verbose_name="报名帐号", help_text="报名帐号")
+	reg_company = models.CharField(max_length=200, blank=True, null=True, verbose_name="报名的公司", help_text="报名的公司")
+	reg_number = models.IntegerField(default=0, editable=False, verbose_name="报名人数", help_text="报名人数")
+	meals_number = models.IntegerField(default=0, editable=True, verbose_name="用餐人数", help_text="用餐人数")
+	accommodation_number = models.IntegerField(default=0, editable=True, verbose_name="住宿人数", help_text="住宿人数")
 	# 多对多字段，不会在后台显示，也不可在后台维护
-	reg_list = models.ManyToManyField(ActivityRegList, related_name="reg_list", verbose_name="活动名单")
+	reg_list = models.ManyToManyField(ActivityRegList, related_name="reg_list", verbose_name="活动名单", help_text="活动名单")
 	
 	class Meta:
 		verbose_name = "活动报名"

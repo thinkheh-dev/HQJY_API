@@ -29,7 +29,7 @@ class EnterpriseTypeLevel(models.Model):
 	"""
 	企业分类级别
 	"""
-	name = models.CharField(max_length=50, verbose_name="级别名称")
+	name = models.CharField(max_length=50, verbose_name="级别名称", help_text="级别名称")
 	level = models.IntegerField(editable=True, verbose_name="分类级别", help_text="只可填写1-5之间的数字")
 	
 	class Meta:
@@ -112,27 +112,27 @@ class BasicEnterpriseInfo(models.Model):
 		("其他省市", "其他省市"),
 	)
 	
-	name = models.CharField(max_length=50, blank=True, null=True, verbose_name="企业名称")
-	credit_no = models.CharField(max_length=18, blank=True, null=True, verbose_name="统一社会信用代码")
-	oper_name = models.CharField(max_length=20, blank=True, null=True, verbose_name="企业法人")
-	econ_kind = models.CharField(max_length=20, blank=True, null=True, verbose_name="公司类型")
-	regist_capi = models.IntegerField(blank=True, null=True, verbose_name="注册资金")
-	scope = models.CharField(max_length=255, blank=True, null=True, verbose_name="经营范围")
-	status = models.CharField(max_length=50, blank=True, null=True, verbose_name="公司状态(开业/注销)")
-	address = models.CharField(max_length=200, blank=True, null=True, verbose_name="企业地址")
-	start_date = models.DateField(blank=True, null=True, verbose_name="成立日期")
-	term_start = models.DateField(blank=True, null=True, verbose_name="营业开始日期")
-	term_end = models.DateField(blank=True, null=True, verbose_name="营业结束日期")
-	belong_org = models.CharField(max_length=50, blank=True, null=True, verbose_name="登记机关")
-	company_area = models.CharField(max_length=20, choices=COUNTY_CHOICES, verbose_name="企业归属地")
+	name = models.CharField(max_length=50, blank=True, null=True, verbose_name="企业名称", help_text="企业名称")
+	credit_no = models.CharField(max_length=18, blank=True, null=True, verbose_name="统一社会信用代码", help_text="统一社会信用代码")
+	oper_name = models.CharField(max_length=20, blank=True, null=True, verbose_name="企业法人", help_text="企业法人")
+	econ_kind = models.CharField(max_length=20, blank=True, null=True, verbose_name="公司类型", help_text="公司类型")
+	regist_capi = models.IntegerField(blank=True, null=True, verbose_name="注册资金", help_text="注册资金")
+	scope = models.CharField(max_length=255, blank=True, null=True, verbose_name="经营范围", help_text="经营范围")
+	status = models.CharField(max_length=50, blank=True, null=True, verbose_name="公司状态(开业/注销)", help_text="公司状态(开业/注销)")
+	address = models.CharField(max_length=200, blank=True, null=True, verbose_name="企业地址", help_text="企业地址")
+	start_date = models.DateField(blank=True, null=True, verbose_name="成立日期", help_text="成立日期")
+	term_start = models.DateField(blank=True, null=True, verbose_name="营业开始日期", help_text="营业开始日期")
+	term_end = models.DateField(blank=True, null=True, verbose_name="营业结束日期", help_text="营业结束日期")
+	belong_org = models.CharField(max_length=50, blank=True, null=True, verbose_name="登记机关", help_text="登记机关")
+	company_area = models.CharField(max_length=20, choices=COUNTY_CHOICES, verbose_name="企业归属地", help_text="企业归属地")
 	enterprise_type = models.ForeignKey(EnterpriseType, on_delete=models.CASCADE,
-	                                          related_name="entype_first", verbose_name="企业分类")
+	                                          related_name="entype_first", verbose_name="企业分类", help_text="企业分类")
 	enterprise_label = models.ForeignKey(EnterpriseLabel, on_delete=models.CASCADE, related_name="enlabel",
-	                                     verbose_name="企业标签")
-	oper_phone = models.CharField(max_length=11, blank=True, null=True, verbose_name="企业联系人")
+	                                     verbose_name="企业标签", help_text="企业标签")
+	oper_phone = models.CharField(max_length=11, blank=True, null=True, verbose_name="企业联系人", help_text="企业联系人")
 	scan_of_company_license = models.ImageField(upload_to="company_license/", blank=True, null=True,
-	                                            verbose_name="营业执照复印件")
-	scan_of_id_card = models.ImageField(upload_to="id_card/", blank=True, null=True, verbose_name="法人身份复印件")
+	                                            verbose_name="营业执照复印件", help_text="营业执照复印件")
+	scan_of_id_card = models.ImageField(upload_to="id_card/", blank=True, null=True, verbose_name="法人身份复印件", help_text="法人身份复印件")
 	
 	class Meta:
 		verbose_name = "企业基础信息"

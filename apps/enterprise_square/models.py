@@ -45,12 +45,12 @@ class EnterpriseSquareManager(models.Model):
 	"""
 	enterprise_name = models.ForeignKey(BasicEnterpriseInfo, null=True, blank=True, help_text="企业名称",
 	                                    related_name="en_name", on_delete=models.CASCADE)
-	enterprise_image = models.ImageField(upload_to="enp_img/%Y%M/", verbose_name="封面图片上传", null=True, blank=True)
-	enterprise_video = models.FileField(upload_to="enp_video/%Y%M/", verbose_name="封面视频上传", null=True, blank=True)
-	ens_content_title = models.CharField(max_length=200, null=True, blank=True, verbose_name="企业展示内容标题")
+	enterprise_image = models.ImageField(upload_to="enp_img/%Y%M/", verbose_name="封面图片上传", null=True, blank=True, help_text="封面图片上传")
+	enterprise_video = models.FileField(upload_to="enp_video/%Y%M/", verbose_name="封面视频上传", null=True, blank=True, help_text="封面视频上传")
+	ens_content_title = models.CharField(max_length=200, null=True, blank=True, verbose_name="企业展示内容标题", help_text="企业展示内容标题")
 	ens_content = UEditorField(verbose_name="企业展示详细内容", imagePath="enterprise_square/images/%Y%M/", width=1000,
-	                           height=300, filePath="enterprise_square/files/%Y%M/", default='')
-	create_time = models.DateTimeField(auto_now_add=True, verbose_name="添加时间")
+	                           height=300, filePath="enterprise_square/files/%Y%M/", default='', help_text="企业展示详细内容")
+	create_time = models.DateTimeField(auto_now_add=True, verbose_name="添加时间", help_text="企业展示详细内容")
 	
 	class Meta:
 		verbose_name = "企业广场管理"

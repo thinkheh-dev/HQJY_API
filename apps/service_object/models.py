@@ -20,20 +20,20 @@ class ServiceAbstractClass(models.Model):
 		sn_str = header + r_letter + str(r_num)
 		return sn_str
 		
-	service_sn = models.CharField(max_length=64, primary_key=True, default=create_sn, verbose_name="服务产品编号")
-	service_belong_to_company = models.ForeignKey(BasicEnterpriseInfo, on_delete=models.CASCADE, verbose_name="所属企业")
-	service_name = models.CharField(max_length=100, verbose_name="服务名称")
-	service_describe = models.CharField(max_length=200, blank=True, null=True, verbose_name="简短描述")
-	service_clicks = models.IntegerField(default=0, editable=True, verbose_name="被点击数")
-	service_sales = models.IntegerField(default=0, editable=True, verbose_name="销量")
-	service_fav_nums = models.IntegerField(default=0, editable=True, verbose_name="被收藏数")
+	service_sn = models.CharField(max_length=64, primary_key=True, default=create_sn, verbose_name="服务产品编号", help_text="服务产品编号")
+	service_belong_to_company = models.ForeignKey(BasicEnterpriseInfo, on_delete=models.CASCADE, verbose_name="所属企业", help_text="所属企业")
+	service_name = models.CharField(max_length=100, verbose_name="服务名称", help_text="服务名称")
+	service_describe = models.CharField(max_length=200, blank=True, null=True, verbose_name="简短描述", help_text="简短描述")
+	service_clicks = models.IntegerField(default=0, editable=True, verbose_name="被点击数", help_text="被点击数")
+	service_sales = models.IntegerField(default=0, editable=True, verbose_name="销量", help_text="销量")
+	service_fav_nums = models.IntegerField(default=0, editable=True, verbose_name="被收藏数", help_text="被收藏数")
 	service_detailed_description = UEditorField(verbose_name="详细描述", imagePath="service/images/", width=1000,
-	                                            height=300, filePath="service/files/", default='')
-	service_additional_costs = models.IntegerField(default=0, editable=True, verbose_name="额外费用")
-	service_cover_photo = models.ImageField(upload_to="service_cover/", blank=True, null=True, verbose_name="封面图片")
-	is_new = models.BooleanField(default=True, verbose_name="是否新品")
-	is_hot = models.BooleanField(default=False, verbose_name="是否热销品")
-	is_shelf = models.BooleanField(default=False, verbose_name="是否上架")
+	                                            height=300, filePath="service/files/", default='', help_text="详细描述")
+	service_additional_costs = models.IntegerField(default=0, editable=True, verbose_name="额外费用", help_text="额外费用")
+	service_cover_photo = models.ImageField(upload_to="service_cover/", blank=True, null=True, verbose_name="封面图片", help_text="封面图片")
+	is_new = models.BooleanField(default=True, verbose_name="是否新品", help_text="是否新品")
+	is_hot = models.BooleanField(default=False, verbose_name="是否热销品", help_text="是否热销品")
+	is_shelf = models.BooleanField(default=False, verbose_name="是否上架", help_text="是否上架")
 	add_time = models.DateTimeField(auto_now_add=True, verbose_name="添加时间")
 	
 	class Meta:
@@ -207,10 +207,10 @@ class ServiceBrand(models.Model):
 	"""
 	服务品牌
 	"""
-	brand_name = models.CharField(max_length=20, verbose_name="品牌名称")
-	brand_desc = models.CharField(max_length=255, blank=True, null=True, verbose_name="品牌描述")
-	brand_img = models.ImageField(upload_to="brand_image/", blank=True, null=True, verbose_name="品牌图片")
-	add_time = models.DateTimeField(auto_now_add=True, verbose_name="添加时间")
+	brand_name = models.CharField(max_length=20, verbose_name="品牌名称", help_text="品牌名称")
+	brand_desc = models.CharField(max_length=255, blank=True, null=True, verbose_name="品牌描述", help_text="品牌描述")
+	brand_img = models.ImageField(upload_to="brand_image/", blank=True, null=True, verbose_name="品牌图片", help_text="品牌图片")
+	add_time = models.DateTimeField(auto_now_add=True, verbose_name="添加时间", help_text="")
 	
 	class Meta:
 		verbose_name = "服务品牌"
@@ -224,10 +224,10 @@ class DefaultServicesPackage(models.Model):
 	"""
 	普适服务项目包
 	"""
-	package_name = models.CharField(max_length=200, verbose_name="普适服务包名称")
-	package_img = models.ImageField(upload_to="package_img/", blank=True, null=True, verbose_name="包封面图片")
+	package_name = models.CharField(max_length=200, verbose_name="普适服务包名称", help_text="普适服务包名称")
+	package_img = models.ImageField(upload_to="package_img/", blank=True, null=True, verbose_name="包封面图片", help_text="包封面图片")
 	package_desc = UEditorField(verbose_name="包详细描述", imagePath="service_package/images/", width=1000,
-	                                            height=300, filePath="service_package/files/", default='')
+	                                            height=300, filePath="service_package/files/", default='', help_text="包详细描述")
 	default_service = models.ManyToManyField(DefaultServices, related_name="default_service",
 	                                         through="ServicePackageMiddle")
 	
@@ -256,7 +256,7 @@ class DefaultCouponType(models.Model):
 	普适服务优惠券类型
 	"""
 	
-	name = models.CharField(max_length=50, verbose_name="类型名称")
+	name = models.CharField(max_length=50, verbose_name="类型名称", help_text="类型名称")
 	
 	class Meta:
 		verbose_name = "普适服务优惠券类型"
@@ -270,19 +270,19 @@ class DefaultServiceCoupon(models.Model):
 	"""
 	普适服务优惠券
 	"""
-	coupon_name = models.CharField(max_length=200, verbose_name="优惠券名称")
-	coupon_amount = models.IntegerField(default=0, verbose_name="优惠金额")
-	coupon_img = models.ImageField(upload_to="counpon_img/", blank=True, null=True, verbose_name="优惠券图片")
-	coupon_desc = models.CharField(max_length=200, blank=True, null=True, verbose_name="详细描述")
-	coupon_start_time = models.DateField(default=timezone.now, verbose_name="开始时间")
-	coupon_end_time = models.DateField(default=timezone.now, verbose_name="结束时间")
+	coupon_name = models.CharField(max_length=200, verbose_name="优惠券名称", help_text="优惠券名称")
+	coupon_amount = models.IntegerField(default=0, verbose_name="优惠金额", help_text="优惠金额")
+	coupon_img = models.ImageField(upload_to="counpon_img/", blank=True, null=True, verbose_name="优惠券图片", help_text="优惠券图片")
+	coupon_desc = models.CharField(max_length=200, blank=True, null=True, verbose_name="详细描述", help_text="详细描述")
+	coupon_start_time = models.DateField(default=timezone.now, verbose_name="开始时间", help_text="开始时间")
+	coupon_end_time = models.DateField(default=timezone.now, verbose_name="结束时间", help_text="结束时间")
 	belong_coupon = models.ForeignKey(DefaultServices, on_delete=models.CASCADE, related_name="belong_coupon",
-	                                  verbose_name="对应的普适项目")
+	                                  verbose_name="对应的普适项目", help_text="对应的普适项目")
 	default_coupon_type = models.ForeignKey(DefaultCouponType, on_delete=models.CASCADE,
-	                                        related_name="default_coupon_type", verbose_name="对应的普适项目类型")
-	add_time = models.DateTimeField(auto_now_add=True, verbose_name="添加时间")
-	default_num = models.IntegerField(default=0, editable=True, verbose_name="优惠券数量")
-	remain_num = models.IntegerField(default=0, editable=True, verbose_name="优惠券剩余数量")
+	                                        related_name="default_coupon_type", verbose_name="对应的普适项目类型", help_text="对应的普适项目类型")
+	add_time = models.DateTimeField(auto_now_add=True, verbose_name="添加时间", help_text="添加时间")
+	default_num = models.IntegerField(default=0, editable=True, verbose_name="优惠券数量", help_text="优惠券数量")
+	remain_num = models.IntegerField(default=0, editable=True, verbose_name="优惠券剩余数量", help_text="优惠券剩余数量")
 	
 	class Meta:
 		verbose_name = "普适服务优惠券"
@@ -296,9 +296,9 @@ class HotSearchWords(models.Model):
 	"""
 	热搜词
 	"""
-	keywords = models.CharField(max_length=30, verbose_name="热搜词")
-	key_index = models.IntegerField(default=1, editable=True, verbose_name="排序")
-	add_time = models.DateTimeField(auto_now_add=True, verbose_name="添加时间")
+	keywords = models.CharField(max_length=30, verbose_name="热搜词", help_text="热搜词")
+	key_index = models.IntegerField(default=1, editable=True, verbose_name="排序", help_text="排序")
+	add_time = models.DateTimeField(auto_now_add=True, verbose_name="添加时间", help_text="添加时间")
 	
 	class Meta:
 		verbose_name = "热搜词"
@@ -313,8 +313,8 @@ class DefaultServicesImage(models.Model):
     普适服务轮播图
     """
 	default_services = models.ForeignKey(DefaultServices, verbose_name="普适服务外键", on_delete=models.CASCADE,
-                                         related_name="default_images")
-	image = models.ImageField(upload_to="service/default_images", verbose_name="图片", null=True, blank=True)
+                                         related_name="default_images", help_text="普适服务外键")
+	image = models.ImageField(upload_to="service/default_images", verbose_name="图片", null=True, blank=True, help_text="图片")
 	add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 	
 	class Meta:
@@ -330,8 +330,8 @@ class FinancingServicesImage(models.Model):
     金融服务轮播图
 	"""
 	financing_services = models.ForeignKey(FinancingServices, verbose_name="金融服务外键", on_delete=models.CASCADE,
-                                           related_name="financing_images")
-	image = models.ImageField(upload_to="service/financing_images", verbose_name="图片", null=True, blank=True)
+                                           related_name="financing_images", help_text="金融服务外键")
+	image = models.ImageField(upload_to="service/financing_images", verbose_name="图片", null=True, blank=True, help_text="图片")
 	add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 
 	class Meta:
@@ -346,10 +346,10 @@ class DefaultServicesBanner(models.Model):
 	"""
     轮播的普适服务
 	"""
-	default_services = models.ForeignKey(DefaultServices, verbose_name="普适服务外键", on_delete=models.CASCADE)
-	image = models.ImageField(upload_to='service/default_banner/', verbose_name="轮播图片")
-	index = models.IntegerField(default=0, verbose_name="轮播顺序")
-	add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
+	default_services = models.ForeignKey(DefaultServices, verbose_name="普适服务外键", on_delete=models.CASCADE, help_text="普适服务外键")
+	image = models.ImageField(upload_to='service/default_banner/', verbose_name="轮播图片", help_text="轮播图片")
+	index = models.IntegerField(default=0, verbose_name="轮播顺序", help_text="轮播顺序")
+	add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间", help_text="添加时间")
 
 	class Meta:
 		verbose_name = '轮播的普适服务'
@@ -363,10 +363,10 @@ class FinancingServicesBanner(models.Model):
 	"""
     轮播的金融服务
 	"""
-	financing_services = models.ForeignKey(FinancingServices, verbose_name="金融服务外键", on_delete=models.CASCADE)
-	image = models.ImageField(upload_to='service/financing_banner/', verbose_name="轮播图片")
-	index = models.IntegerField(default=0, verbose_name="轮播顺序")
-	add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
+	financing_services = models.ForeignKey(FinancingServices, verbose_name="金融服务外键", on_delete=models.CASCADE, help_text="金融服务外键")
+	image = models.ImageField(upload_to='service/financing_banner/', verbose_name="轮播图片", help_text="轮播图片")
+	index = models.IntegerField(default=0, verbose_name="轮播顺序", help_text="轮播顺序")
+	add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间", help_text="添加时间")
 
 	class Meta:
 		verbose_name = '轮播的金融服务'
@@ -380,11 +380,11 @@ class EnterpriseDemandAbstract(models.Model):
 	"""
 	企业需求（父级）
 	"""
-	company_info = models.ForeignKey(BasicEnterpriseInfo, on_delete=models.CASCADE, verbose_name="关联的企业")
+	company_info = models.ForeignKey(BasicEnterpriseInfo, on_delete=models.CASCADE, verbose_name="关联的企业", help_text="关联的企业")
 	demand_desc = UEditorField(verbose_name='需求详细描述', height=300, width=1000, default='', blank=True,
-	                           imagePath="enterprise_demand/images/", toolbars='besttome', filePath='enterprise_demand/files/')
-	contact_name = models.CharField(max_length=20, blank=True, null=True, verbose_name="联系人姓名")
-	contact_phone = models.CharField(max_length=11, blank=True, null=True, verbose_name="联系人手机")
+	                           imagePath="enterprise_demand/images/", toolbars='besttome', filePath='enterprise_demand/files/', help_text="需求详细描述")
+	contact_name = models.CharField(max_length=20, blank=True, null=True, verbose_name="联系人姓名", help_text="联系人姓名")
+	contact_phone = models.CharField(max_length=11, blank=True, null=True, verbose_name="联系人手机", help_text="联系人手机")
 	
 	class Meta:
 		abstract = True
@@ -395,7 +395,7 @@ class EnterpriseDemand(EnterpriseDemandAbstract):
 	企业普适需求信息
 	"""
 	sv_class = models.ForeignKey(ServiceClassification, on_delete=models.CASCADE, related_name="sv_class",
-	                             verbose_name="普适服务需求分类")
+	                             verbose_name="普适服务需求分类", help_text="普适服务需求分类")
 	# sv_class_s = models.ForeignKey(ServiceClassificationSecond, on_delete=models.CASCADE, related_name="sv_class_s",
 	#                                verbose_name="普适服务需求二级分类")
 	
@@ -412,11 +412,11 @@ class CorporateFinanceDemand(EnterpriseDemandAbstract):
 	企业金融需求信息
 	"""
 	fsc = models.ForeignKey(FinancingServicesClassification, on_delete=models.CASCADE, verbose_name="金融服务需求分类",
-	                        related_name="fsc_class")
+	                        related_name="fsc_class", help_text="金融服务需求分类")
 	#fscs = models.ForeignKey(FinancingServicesClassificationSecond, on_delete=models.CASCADE, verbose_name="金融服务二级分类")
-	financing_amount = models.IntegerField(blank=True, null=True, verbose_name="融资金额")
-	financing_to = models.CharField(max_length=100, blank=True, null=True, verbose_name="融资投向")
-	financing_maturity = models.CharField(max_length=20, blank=True, null=True, verbose_name="融资期限")
+	financing_amount = models.IntegerField(blank=True, null=True, verbose_name="融资金额", help_text="融资金额")
+	financing_to = models.CharField(max_length=100, blank=True, null=True, verbose_name="融资投向", help_text="融资投向")
+	financing_maturity = models.CharField(max_length=20, blank=True, null=True, verbose_name="融资期限", help_text="融资期限")
 	
 	class Meta:
 		verbose_name = "企业金融需求"
