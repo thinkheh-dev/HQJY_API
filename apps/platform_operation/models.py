@@ -202,3 +202,27 @@ class ActivityRegistration(models.Model):
 	
 	def __str__(self):
 		return self.reg_company
+
+
+class Attach_Up_or_Down(models.Model):
+	"""
+	附件资源
+	"""
+	ATTACH_TYPE = (
+		(1, "认证-申请"),
+		(2, "政策文件"),
+		(3, "平台保密文件"),
+		(4, "平台普通文件")
+	)
+	
+	attach_name = models.CharField(max_length=200, verbose_name="附件名称", help_text="附件名称")
+	attach_type = models.IntegerField(choices=ATTACH_TYPE, default=1, verbose_name="附件类型", help_text="附件类型")
+	attach_desc = models.TextField(blank=True, null=True, verbose_name="附件用途描述", help_text="附件用途描述")
+	attach_file = models.FileField(upload_to="attach_file_path/", verbose_name="附件文件上传", help_text="附件文件上传")
+	
+	class Meta:
+		verbose_name = "附件资源"
+		verbose_name_plural = verbose_name
+	
+	def __str__(self):
+		return self.attach_name

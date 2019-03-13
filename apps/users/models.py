@@ -28,6 +28,7 @@ class UserLabels(models.Model):
 	用户模式
 	"""
 	label_name = models.CharField(max_length=20, verbose_name="模式名称", help_text="模式名称")
+	label_code = models.CharField(max_length=10, default="YHMS001", verbose_name="模式代码", help_text="模式代码")
 	label_img = models.ImageField(upload_to="label_img/", blank=True, null=True, verbose_name="用户模式标签图片", help_text="用户模式标签图片")
 	
 	class Meta:
@@ -66,8 +67,6 @@ class UserInfo(AbstractUser):
 	user_sex = models.CharField(max_length=10,choices=(("male", "男"), ("female", "女")), default="male", blank=True,
 	                            null=True, verbose_name="性别", help_text="性别")
 	user_phone = models.CharField(max_length=11, null=True, blank=True, verbose_name="用户手机号", help_text="用户手机号")
-	#user_ip = models.GenericIPAddressField(blank=True, null=True, verbose_name="最后一次登录IP地址")
-	#user_browser = models.CharField(max_length=200, blank=True, null=True, verbose_name="最一次登录用的浏览器")
 	user_id_card = models.CharField(max_length=18, blank=True, null=True, verbose_name="身份证号", help_text="身份证号")
 	user_birthday = models.DateField(blank=True, null=True, editable=False, verbose_name="用户生日", help_text="用户生日")
 	QQ_num = models.CharField(max_length=20, blank=True, null=True, verbose_name="QQ号码", help_text="QQ号码")
@@ -82,15 +81,13 @@ class UserInfo(AbstractUser):
 	user_permission_name = models.ForeignKey(UserPermissionsName,null=True, default=1, blank=True,
 	                                         on_delete=models.CASCADE, related_name="user_permission_userinfo",
 	                                         verbose_name="关联用户权限", help_text="关联用户权限")
-	user_home = models.CharField(max_length=10, choices=COUNTY_CHOICES, blank=True, null=True, verbose_name="用户归属地", help_text="用户归属地")
-	is_xs_admin = models.NullBooleanField(default=False, null=True, blank=True, verbose_name="是否县市管理员", help_text="是否县市管理员")
-	is_ableto_buy = models.NullBooleanField(default=True, null=True, blank=True, verbose_name="是否允许购买产品", help_text="是否允许购买产品")
-	
-	user_labels = models.ForeignKey(UserLabels, on_delete=models.CASCADE, null=True, blank=True,
-	                                related_name="user_labels_userinfo", verbose_name="关联用户模式标签", help_text="关联用户模式标签")
-	# disable_flag = models.CharField(max_length=10, choices=(("ENABLE", "启用"), ("DISABLE", "禁用")), default="ENABLE",
-	#                                 verbose_name="用户禁用标志")
+	user_home = models.CharField(max_length=10, choices=COUNTY_CHOICES, blank=True, null=True, verbose_name="用户归属地",
+	                             help_text="用户归属地")
+	user_labels = models.ManyToManyField(UserLabels, related_name="user_labels_userinfo", verbose_name="关联用户模式标签",
+	                                     help_text="关联用户模式标签")
+	service_provider = models.BooleanField(default=False, verbose_name="是否服务提供商", help_text="是否服务提供商")
 	user_protocol = models.BooleanField(default=False, verbose_name="是否同意用户协议", help_text="是否同意用户协议")
+	
 	class Meta:
 		verbose_name = "用户信息"
 		verbose_name_plural = verbose_name
@@ -128,3 +125,6 @@ class UserProtocol(models.Model):
 	class Meta:
 		verbose_name = "用户协议"
 		verbose_name_plural = verbose_name
+		
+		
+

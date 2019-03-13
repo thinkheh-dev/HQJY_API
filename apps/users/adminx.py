@@ -31,14 +31,14 @@ class UserPermissionsNameAdmin(object):
 
 
 class UserLabelsAdmin(object):
-	list_display = ['label_name', ]
+	list_display = ['label_name', 'label_code', 'label_img']
 
 
 class UserInfoAdmin(object):
 	list_display = ['user_name', 'user_logo', 'user_sex', 'user_phone', 'user_id_card', 'user_birthday', 'QQ_num',
 	                'wechat_num', 'contact_address', 'user_email', 'user_real_name_authentication',
 	                'user_to_company', 'enterprise_type_first', 'enterprise_type_second' 'user_permissions_name',
-	                'user_home', 'is_xs_admin', 'is_ableto_buy', 'user_labels', 'user_protocol']
+	                'user_home', 'service_provider', 'user_protocol']
 
 
 class VerifyCodeAdmin(object):
