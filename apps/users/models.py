@@ -73,14 +73,14 @@ class UserInfo(AbstractUser):
 	wechat_num = models.CharField(max_length=20, blank=True, null=True, verbose_name="微信号", help_text="微信号")
 	contact_address = models.CharField(max_length=200, blank=True, null=True, verbose_name="联系地址", help_text="联系地址")
 	user_email = models.EmailField(blank=True, null=True, verbose_name="电子邮件地址", help_text="电子邮件地址")
-	user_real_name_authentication = models.BooleanField(default=False, verbose_name="实名认证标志", help_text="实名认证标志")
+	#user_real_name_authentication = models.BooleanField(default=False, verbose_name="实名认证标志", help_text="实名认证标志")
 	user_to_company = models.ForeignKey(BasicEnterpriseInfo, blank=True, null=True, on_delete=models.CASCADE,
 	                                    related_name="user_to_company", verbose_name="关联的企业", help_text="关联的企业")
 	enterprise_type = models.ForeignKey(EnterpriseType, blank=True, null=True, on_delete=models.CASCADE,
 	                                          related_name="enterprise_type", verbose_name="企业分类", help_text="企业分类")
-	user_permission_name = models.ForeignKey(UserPermissionsName,null=True, default=1, blank=True,
-	                                         on_delete=models.CASCADE, related_name="user_permission_userinfo",
-	                                         verbose_name="关联用户权限", help_text="关联用户权限")
+	user_permission_name = models.ForeignKey(UserPermissionsName,null=True, blank=True, on_delete=models.CASCADE,
+	                                         related_name="user_permission_userinfo", verbose_name="关联用户权限",
+	                                         help_text="关联用户权限")
 	user_home = models.CharField(max_length=10, choices=COUNTY_CHOICES, blank=True, null=True, verbose_name="用户归属地",
 	                             help_text="用户归属地")
 	user_labels = models.ManyToManyField(UserLabels, related_name="user_labels_userinfo", verbose_name="关联用户模式标签",

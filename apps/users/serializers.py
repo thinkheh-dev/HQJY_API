@@ -18,8 +18,10 @@ from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from django.http import request
 
-from .models import VerifyCode, UserPermissionsName, UserProtocol
+from .models import VerifyCode, UserPermissionsName, UserProtocol, UserLabels
 from HQJY_API.settings import REGEX_MOBILE
+
+from drf_writable_nested import WritableNestedModelSerializer
 
 
 User = get_user_model()
@@ -91,20 +93,53 @@ class UserPermissionsNameSerializers(serializers.ModelSerializer):
 	class Meta:
 		model = UserPermissionsName
 		fields = "__all__"
+		
+class UserLabelsSerializers(serializers.ModelSerializer):
+	
+	label_name = serializers.CharField(max_length=20)
+	#label_code = serializers.CharField(max_length=10)
+	label_img = serializers.ImageField()
+	
+	class Meta:
+		model = UserLabels
+		fields = ("label_name", "label_img")
 
-class UserInfoDetailSerializers(serializers.ModelSerializer):
+class UserInfoDetailSerializers(WritableNestedModelSerializer):
 	"""
 	用户详情序列化
 	"""
 	
 	user_permission_name = UserPermissionsNameSerializers()
+	user_labels = UserLabelsSerializers(many=True)
 	
+	# def update(self, instance, validated_data):
+	# 	user_labels_data = validated_data.pop('user_labels')
+	# 	# Unless the application properly enforces that this field is
+	# 	# always set, the follow could raise a `DoesNotExist`, which
+	# 	# would need to be handled.
+	# 	user_labels = instance.user_labels
+	#
+	# 	instance.user_labels.set( validated_data.get('user_labels', instance.user_labels))
+	# 	instance.save()
+	#
+	# 	user_labels.is_premium_member = user_labels_data.get(
+	# 		'is_premium_member',
+	# 		user_labels.is_premium_member
+	# 	)
+	# 	user_labels.has_support_contract = user_labels_data.get(
+	# 		'has_support_contract',
+	# 		user_labels.has_support_contract
+	# 	)
+	# 	user_labels.save()
+	#
+	# 	return instance
+	#
 	class Meta:
 		model = User
 		fields = ('id', 'user_name', 'user_logo', 'user_sex', 'user_phone', 'user_id_card', 'user_birthday',
-		          'QQ_num', 'wechat_num', 'contact_address', 'user_email', 'user_real_name_authentication',
-		          'user_to_company', 'enterprise_type', 'user_permission_name', 'user_home', 'service_provider',
-		          'user_labels', 'service_provider', 'user_protocol')
+		          'QQ_num', 'wechat_num', 'contact_address', 'user_email','user_to_company', 'enterprise_type',
+		          'user_permission_name', 'user_home', 'service_provider', 'user_labels', 'service_provider',
+		          'user_protocol')
 		
 
 class UserPhoneSerializers(serializers.Serializer):

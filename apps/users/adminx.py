@@ -36,9 +36,8 @@ class UserLabelsAdmin(object):
 
 class UserInfoAdmin(object):
 	list_display = ['user_name', 'user_logo', 'user_sex', 'user_phone', 'user_id_card', 'user_birthday', 'QQ_num',
-	                'wechat_num', 'contact_address', 'user_email', 'user_real_name_authentication',
-	                'user_to_company', 'enterprise_type_first', 'enterprise_type_second' 'user_permissions_name',
-	                'user_home', 'service_provider', 'user_protocol']
+	                'wechat_num', 'contact_address', 'user_email', 'user_to_company', 'enterprise_type_first',
+	                'enterprise_type_second' 'user_permissions_name', 'user_home', 'service_provider', 'user_protocol']
 
 
 class VerifyCodeAdmin(object):
