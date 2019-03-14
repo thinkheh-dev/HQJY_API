@@ -63,7 +63,8 @@ class UserInfo(AbstractUser):
 	)
 	
 	user_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="用户姓名", help_text="用户姓名")
-	user_logo = models.ImageField(upload_to="user_logo/", blank=True, null=True, verbose_name="用户头像", help_text="用户头像")
+	user_logo = models.ImageField(upload_to="user_logo/", blank=True, null=True, verbose_name="用户头像",
+	                              help_text="用户头像", default="user_default_logo/default.svg")
 	user_sex = models.CharField(max_length=10,choices=(("male", "男"), ("female", "女")), default="male", blank=True,
 	                            null=True, verbose_name="性别", help_text="性别")
 	user_phone = models.CharField(max_length=11, null=True, blank=True, verbose_name="用户手机号", help_text="用户手机号")

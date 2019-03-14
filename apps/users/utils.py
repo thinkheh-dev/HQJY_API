@@ -20,12 +20,14 @@ User = get_user_model()
 
 def jwt_response_payload_handler(token, user=None, request=None):
 	"""为返回的结果添加用户相关信息"""
-	print(user.user_permission_name)
+
 	return {
 		'token': token,
 		'user_id': user.id,
 		'username': user.username,
-		'user_permission_name': user.user_permission_name.id
+		'user_permission_name': user.user_permission_name.permission_sn,
+		'user_logo': user.user_logo.url,
+		'user_home': user.user_home
 	}
 
 
