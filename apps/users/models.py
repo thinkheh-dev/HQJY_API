@@ -6,6 +6,33 @@ from enterprise_info.models import EnterpriseType, BasicEnterpriseInfo
 
 from DjangoUeditor.models import UEditorField
 
+import uuid
+import os
+
+
+class AuthAttachDown(models.Model):
+	"""
+	附件上传或下载资源类
+	"""
+	# ATTACH_TYPE = (
+	# 	(1, "认证-申请"),
+	# 	(2, "政策文件"),
+	# 	(3, "平台保密文件"),
+	# 	(4, "平台普通文件")
+	# )
+	
+	# attach_name = models.CharField(max_length=200, verbose_name="附件名称", help_text="附件名称")
+	# attach_type = models.IntegerField(choices=ATTACH_TYPE, default=1, verbose_name="附件类型", help_text="附件类型")
+	# attach_desc = models.TextField(blank=True, null=True, verbose_name="附件用途描述", help_text="附件用途描述")
+	attach_file = models.FileField(upload_to="attach_file_path/", verbose_name="用户认证附件", help_text="用户认证附件")
+	
+	class Meta:
+		verbose_name = "附件资源"
+		verbose_name_plural = verbose_name
+	
+	def __str__(self):
+		return self.attach_file.name
+	
 
 class UserPermissionsName(models.Model):
 	"""
@@ -38,12 +65,20 @@ class UserLabels(models.Model):
 	def __str__(self):
 		return self.label_name
 	
+	
+def user_directory_path(instance, filename):
+	ext = filename.split('.')[-1]
+	filename = '{}.{}'.format(uuid.uuid4().hex[:10], ext)
+	# return the whole path to the file
+	return os.path.join("user_auth_file", instance.username, filename)
+
 
 class UserInfo(AbstractUser):
 	"""
 	用户主信息
 	"""
 	COUNTY_CHOICES = (
+		
 		("个旧市", "个旧市"),
 		("开远市", "开远市"),
 		("蒙自市", "蒙自市"),
@@ -57,6 +92,7 @@ class UserInfo(AbstractUser):
 		("屏边县", "屏边县"),
 		("金平县", "金平县"),
 		("河口县", "河口县"),
+		("红河州", "红河州"),
 		("昆明市", "昆明市"),
 		("其他地州", "其他地州"),
 		("其他省市", "其他省市"),
@@ -64,9 +100,9 @@ class UserInfo(AbstractUser):
 	
 	user_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="用户姓名", help_text="用户姓名")
 	user_logo = models.ImageField(upload_to="user_logo/", blank=True, null=True, verbose_name="用户头像",
-	                              help_text="用户头像", default="user_default_logo/default.svg")
-	user_sex = models.CharField(max_length=10,choices=(("male", "男"), ("female", "女")), default="male", blank=True,
-	                            null=True, verbose_name="性别", help_text="性别")
+	                              help_text="用户头像", default="user_logo/default.svg")
+	user_sex = models.CharField(max_length=10,choices=(("male", "男"), ("female", "女")), blank=True, null=True,
+	                            verbose_name="性别", help_text="性别")
 	user_phone = models.CharField(max_length=11, null=True, blank=True, verbose_name="用户手机号", help_text="用户手机号")
 	user_id_card = models.CharField(max_length=18, blank=True, null=True, verbose_name="身份证号", help_text="身份证号")
 	user_birthday = models.DateField(blank=True, null=True, editable=False, verbose_name="用户生日", help_text="用户生日")
@@ -84,10 +120,13 @@ class UserInfo(AbstractUser):
 	                                         help_text="关联用户权限")
 	user_home = models.CharField(max_length=10, choices=COUNTY_CHOICES, blank=True, null=True, verbose_name="用户归属地",
 	                             help_text="用户归属地")
-	user_labels = models.ManyToManyField(UserLabels, related_name="user_labels_userinfo", verbose_name="关联用户模式标签",
-	                                     help_text="关联用户模式标签")
+	user_labels = models.ManyToManyField(UserLabels, related_name="user_labels_userinfo", blank=True, null=True,
+	                                     verbose_name="关联用户模式标签", help_text="关联用户模式标签")
 	service_provider = models.BooleanField(default=False, verbose_name="是否服务提供商", help_text="是否服务提供商")
 	user_protocol = models.BooleanField(default=False, verbose_name="是否同意用户协议", help_text="是否同意用户协议")
+	# user_auth_file_up = models.FileField(upload_to=user_directory_path, verbose_name="用户认证文件上传", help_text="用户认证文件上传")
+	# auth_attach_down = models.OneToOneField(AuthAttachDown, on_delete=models.CASCADE, verbose_name="认证附件下载",
+	#                                         help_text="认证附件下载")
 	
 	class Meta:
 		verbose_name = "用户信息"
@@ -126,6 +165,7 @@ class UserProtocol(models.Model):
 	class Meta:
 		verbose_name = "用户协议"
 		verbose_name_plural = verbose_name
-		
-		
+
+
+
 

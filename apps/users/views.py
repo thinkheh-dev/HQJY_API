@@ -21,7 +21,7 @@ from .serializers import SmsSerializer, FindPasswordSmsSerializer, UserRegSerial
 						 UserPhoneSerializers, UserFindPasswordSerizlizers, UserProtocolSerializers
 from HQJY_API.settings import API_KEY
 from apiutils.yunpiansms import YunPianSms
-from .models import VerifyCode, UserProtocol
+from .models import VerifyCode, UserProtocol, UserPermissionsName
 
 User = get_user_model()
 
@@ -147,13 +147,27 @@ class UserViewset(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.Retri
 	def create(self, request, *args, **kwargs):
 
 		serializer = self.get_serializer(data=request.data)
-		serializer.is_valid(raise_exception=True)
+		if serializer.is_valid(raise_exception=True):
+		
+			serializer.validated_data['user_permission_name'] = UserPermissionsName.objects.filter(
+				permission_sn="QX001").first()
+			
+			#print(serializer.validated_data['user_labels'])
+		
 		user = self.perform_create(serializer)
 		
 		re_dict = serializer.data
 		payload = jwt_payload_handler(user)
+		#获取token
 		re_dict["token"] = jwt_encode_handler(payload)
-		#re_dict["user_name"] = user.user_name if user.user_name else user.username
+		#获取用户id
+		re_dict['user_id'] = user.id
+		#获取用户权限
+		re_dict['user_permission_name'] = user.user_permission_name.permission_sn
+		#获取用户头像
+		re_dict['user_logo'] = user.user_logo.url
+		#获取用户归属地
+		re_dict['user_home'] = user.user_home
 		
 		
 		headers = self.get_success_headers(serializer.data)

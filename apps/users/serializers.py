@@ -110,30 +110,8 @@ class UserInfoDetailSerializers(WritableNestedModelSerializer):
 	"""
 	
 	user_permission_name = UserPermissionsNameSerializers()
-	user_labels = UserLabelsSerializers(many=True)
+	user_labels = UserLabelsSerializers(many=True, required=False)
 	
-	# def update(self, instance, validated_data):
-	# 	user_labels_data = validated_data.pop('user_labels')
-	# 	# Unless the application properly enforces that this field is
-	# 	# always set, the follow could raise a `DoesNotExist`, which
-	# 	# would need to be handled.
-	# 	user_labels = instance.user_labels
-	#
-	# 	instance.user_labels.set( validated_data.get('user_labels', instance.user_labels))
-	# 	instance.save()
-	#
-	# 	user_labels.is_premium_member = user_labels_data.get(
-	# 		'is_premium_member',
-	# 		user_labels.is_premium_member
-	# 	)
-	# 	user_labels.has_support_contract = user_labels_data.get(
-	# 		'has_support_contract',
-	# 		user_labels.has_support_contract
-	# 	)
-	# 	user_labels.save()
-	#
-	# 	return instance
-	#
 	class Meta:
 		model = User
 		fields = ('id', 'user_name', 'user_logo', 'user_sex', 'user_phone', 'user_id_card', 'user_birthday',
