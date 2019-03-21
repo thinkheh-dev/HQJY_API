@@ -21,7 +21,7 @@ from .filters import DefaultServicesFilter, FinancingServicesFilter, DefaultCate
 
 #分页
 class DefaultServicesPagination(PageNumberPagination):
-    page_size = 10
+    page_size = 12
     page_size_query_param = 'page_size'
     page_query_param = "p"
     max_page_size = 100
@@ -74,6 +74,8 @@ class DefaultCategoryViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, v
     """
     queryset = ServiceClassification.objects.filter(category_type=1)
     serializer_class = ServiceClassificationSerializers
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
+    filter_class = DefaultCategoryFilter
 
     
 class DefaultCategoryNavViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -97,6 +99,8 @@ class FinancingCategoryViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin,
     """
     queryset = FinancingServicesClassification.objects.filter(category_type=1)
     serializer_class = FinancingServicesClassificationSerializers
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
+    filter_class = FinancingCategoryFilter
     
 
 class FinancingCategoryNavViewset(mixins.ListModelMixin, viewsets.GenericViewSet):

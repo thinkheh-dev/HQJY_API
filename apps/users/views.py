@@ -179,6 +179,55 @@ class UserViewset(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.Retri
 	def perform_create(self, serializer):
 		return serializer.save()
 	
+	def update(self, request, *args, **kwargs):
+		print("开始更新")
+		partial = kwargs.pop('partial', False)
+		instance = self.get_object()
+		serializer = self.get_serializer(instance, data=request.data, partial=partial)
+		serializer.is_valid(raise_exception=True)
+		pupdate_data = self.perform_update(serializer)
+		
+		#获取用户头像文件所在的服务器路径
+		user_logo_path = pupdate_data.user_logo.path
+		print(user_logo_path)
+		
+		
+		import os
+		# 获取头像文件的文件名
+		dirs_logo_filename = os.path.basename(user_logo_path)
+		# 获取头像文件所在的绝对路径
+		dirs_logo = os.path.dirname(user_logo_path)
+		print(dirs_logo_filename)
+		
+		#列出头像文件所在目录的目录结构
+		for root, dirs, files in os.walk(dirs_logo):
+			print(root)
+			print(dirs)
+			print(files)
+			#遍历头像目录下的所有文件
+			for xfile in files:
+				#判断是否是本次上传的头像文件，如果是：跳过，如果不是：删除
+				if xfile == dirs_logo_filename:
+					print("{} 是本次上传，不做删除！".format(xfile))
+					pass
+				else:
+					print("删除以前的文件：{}".format(xfile))
+					os.remove(os.path.join(os.path.dirname(user_logo_path), xfile))
+		
+		if getattr(instance, '_prefetched_objects_cache', None):
+			# If 'prefetch_related' has been applied to a queryset, we need to
+			# forcibly invalidate the prefetch cache on the instance.
+			instance._prefetched_objects_cache = {}
+		
+		return Response(serializer.data)
+	
+	def perform_update(self, serializer):
+		return serializer.save()
+	
+	def partial_update(self, request, *args, **kwargs):
+		kwargs['partial'] = True
+		return self.update(request, *args, **kwargs)
+	
 
 class UserPhoneViewSet(CreateModelMixin, viewsets.GenericViewSet):
 	"""

@@ -9,7 +9,6 @@
 # @software: PyCharm
 
 from rest_framework import serializers
-from django.db.models import Q
 
 from .models import ServiceClassification, DefaultServices, FinancingServicesClassification, \
 	FinancingServices, ServiceBrand, DefaultServicesPackage, DefaultCouponType, DefaultServiceCoupon, HotSearchWords, \
@@ -63,7 +62,7 @@ class ServiceClassificationNavSerializers(serializers.ModelSerializer):
 	"""
 	class Meta:
 		model = ServiceClassification
-		fields = ('name', 'ico_str', 'ico_file', 'category_type')
+		fields = ('name', 'ico_str', 'ico_file', 'category_type', 'parent_category')
 
 
 class DefaultServicesImageSerializers(serializers.ModelSerializer):
@@ -79,7 +78,7 @@ class DefaultServicesSerializers(serializers.ModelSerializer):
 	"""
 	普适产品序列化
 	"""
-	service_classification = ServiceClassificationSerializers()
+	
 	default_images = DefaultServicesImageSerializers(many=True)
 	service_belong_to_company = BasicEnterpriseInfoNameSerializers()
 	class Meta:

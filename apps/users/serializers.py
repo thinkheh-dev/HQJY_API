@@ -109,7 +109,7 @@ class UserInfoDetailSerializers(WritableNestedModelSerializer):
 	用户详情序列化
 	"""
 	
-	user_permission_name = UserPermissionsNameSerializers()
+	user_permission_name = UserPermissionsNameSerializers(required=False)
 	user_labels = UserLabelsSerializers(many=True, required=False)
 	
 	class Meta:

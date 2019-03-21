@@ -31,6 +31,8 @@ from service_object.views import DefaultServicesListViewSet, FinancingServicesLi
 from users.views import SmsCodeViewset, FindPasswordSmsCodeViewset, UserViewset, UserPhoneViewSet, \
 						UserPasswordModifyViewSet, UserProtocolViewSet
 
+from file_repository.views import AttachLibraryManagerViewSet
+
 from enterprise_info.views import EnterpriseListViewSet, EnterpriseTypeListViewset
 
 from page_control.models import SystemAdminURL
@@ -85,6 +87,10 @@ router.register(r'change-password', UserPasswordModifyViewSet, base_name='change
 #配置企业信息理由
 router.register(r'enterprise-info', EnterpriseListViewSet, base_name='enterpriselist')
 router.register(r'enterprise-type', EnterpriseTypeListViewset, base_name='enterprisetype')
+
+#配置文件库路由
+router.register(r'file-repository', AttachLibraryManagerViewSet, base_name='filereplist')
+
 
 urlpatterns = [
 	#path('xadmin/', xadmin.site.urls),

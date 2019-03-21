@@ -106,8 +106,16 @@ class DefaultServices(ServiceAbstractClass):
 	"""
 	普适服务产品
 	"""
-	service_classification = models.ForeignKey(ServiceClassification, on_delete=models.CASCADE,
-	                                           verbose_name="普适服务分类")
+	service_classification1 = models.ForeignKey(ServiceClassification, null=True, blank=True, on_delete=models.CASCADE,
+	                                            verbose_name="普适服务一级分类", related_name="scxx1")
+	service_classification2 = models.ForeignKey(ServiceClassification, null=True, blank=True, on_delete=models.CASCADE,
+	                                            verbose_name="普适服务二级分类", related_name="scxx2")
+	service_classification3 = models.ForeignKey(ServiceClassification, null=True, blank=True, on_delete=models.CASCADE,
+	                                            verbose_name="普适服务三级分类", related_name="scxx3")
+	service_classification4 = models.ForeignKey(ServiceClassification, null=True, blank=True, on_delete=models.CASCADE,
+	                                            verbose_name="普适服务四级分类", related_name="scxx4")
+	service_classification5 = models.ForeignKey(ServiceClassification, null=True, blank=True, on_delete=models.CASCADE,
+	                                            verbose_name="普适服务五级分类", related_name="scxx5")
 	# service_classification_second = models.ForeignKey(ServiceClassificationSecond, on_delete=models.CASCADE,
 	#                                                   verbose_name="普适服务二级分类")
 	service_inventory = models.IntegerField(editable=True, verbose_name="库存数")

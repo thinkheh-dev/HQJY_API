@@ -54,6 +54,7 @@ INSTALLED_APPS = [
 	'platform_operation.apps.PlatformOperationConfig',
 	'user_operation.apps.UserOperationConfig',
 	'page_control.apps.PageControlConfig',
+	'file_repository.apps.FileRepositoryConfig',
 	'django_filters',
 	'rest_framework',
 	'corsheaders',
@@ -177,7 +178,6 @@ REST_FRAMEWORK = {
 	'DEFAULT_THROTTLE_RATES': {
 		'user_change_password_scope': '5/minute',
 	},
-	
 }
 
 

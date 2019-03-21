@@ -1,38 +1,15 @@
 from datetime import datetime
+import uuid
+import os
 
 from django.db import models
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from enterprise_info.models import EnterpriseType, BasicEnterpriseInfo
 
 from DjangoUeditor.models import UEditorField
 
-import uuid
-import os
 
-
-class AuthAttachDown(models.Model):
-	"""
-	附件上传或下载资源类
-	"""
-	# ATTACH_TYPE = (
-	# 	(1, "认证-申请"),
-	# 	(2, "政策文件"),
-	# 	(3, "平台保密文件"),
-	# 	(4, "平台普通文件")
-	# )
-	
-	# attach_name = models.CharField(max_length=200, verbose_name="附件名称", help_text="附件名称")
-	# attach_type = models.IntegerField(choices=ATTACH_TYPE, default=1, verbose_name="附件类型", help_text="附件类型")
-	# attach_desc = models.TextField(blank=True, null=True, verbose_name="附件用途描述", help_text="附件用途描述")
-	attach_file = models.FileField(upload_to="attach_file_path/", verbose_name="用户认证附件", help_text="用户认证附件")
-	
-	class Meta:
-		verbose_name = "附件资源"
-		verbose_name_plural = verbose_name
-	
-	def __str__(self):
-		return self.attach_file.name
-	
 
 class UserPermissionsName(models.Model):
 	"""
@@ -64,14 +41,30 @@ class UserLabels(models.Model):
 
 	def __str__(self):
 		return self.label_name
-	
-	
-def user_directory_path(instance, filename):
-	ext = filename.split('.')[-1]
-	filename = '{}.{}'.format(uuid.uuid4().hex[:10], ext)
-	# return the whole path to the file
-	return os.path.join("user_auth_file", instance.username, filename)
 
+
+def user_upload_path(instance, filename):
+	"""
+	文件上传路径拼装类
+	:param instance: 文件实例
+	:param filename: 文件名
+	:return: 拼装后的文件路径
+	"""
+	User = get_user_model()
+	
+	ext = filename.split('.')[-1]
+	filename = '{}.{}'.format(uuid.uuid4().hex[:8], ext)
+	
+	sub_folder = 'user_logo'
+	u_name = User.objects.filter(id=instance.id).values()[0]['username']
+	sub_folder_sub = ''
+	
+	if ext.lower() in ["jpg", "png", "gif", "svg", "jpeg"]:
+		sub_folder_sub = "avatar"
+	if ext.lower() in ["pdf", "docx", "doc", "xlsx", "xls"]:
+		raise IOError("请上传扩展名为：jpg, png, gif, svg, jpeg的图片，不支持其他格式的图片")
+	
+	return os.path.join(sub_folder, u_name, sub_folder_sub, filename)
 
 class UserInfo(AbstractUser):
 	"""
@@ -99,7 +92,7 @@ class UserInfo(AbstractUser):
 	)
 	
 	user_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="用户姓名", help_text="用户姓名")
-	user_logo = models.ImageField(upload_to="user_logo/", blank=True, null=True, verbose_name="用户头像",
+	user_logo = models.ImageField(upload_to=user_upload_path, blank=True, null=True, verbose_name="用户头像",
 	                              help_text="用户头像", default="user_logo/default.svg")
 	user_sex = models.CharField(max_length=10,choices=(("male", "男"), ("female", "女")), blank=True, null=True,
 	                            verbose_name="性别", help_text="性别")
@@ -115,18 +108,16 @@ class UserInfo(AbstractUser):
 	                                    related_name="user_to_company", verbose_name="关联的企业", help_text="关联的企业")
 	enterprise_type = models.ForeignKey(EnterpriseType, blank=True, null=True, on_delete=models.CASCADE,
 	                                          related_name="enterprise_type", verbose_name="企业分类", help_text="企业分类")
-	user_permission_name = models.ForeignKey(UserPermissionsName,null=True, blank=True, on_delete=models.CASCADE,
+	user_permission_name = models.ForeignKey(UserPermissionsName, null=True, blank=True, on_delete=models.CASCADE,
 	                                         related_name="user_permission_userinfo", verbose_name="关联用户权限",
 	                                         help_text="关联用户权限")
 	user_home = models.CharField(max_length=10, choices=COUNTY_CHOICES, blank=True, null=True, verbose_name="用户归属地",
 	                             help_text="用户归属地")
-	user_labels = models.ManyToManyField(UserLabels, related_name="user_labels_userinfo", blank=True, null=True,
+	user_labels = models.ManyToManyField(UserLabels, related_name="user_labels_userinfo", blank=True,
 	                                     verbose_name="关联用户模式标签", help_text="关联用户模式标签")
 	service_provider = models.BooleanField(default=False, verbose_name="是否服务提供商", help_text="是否服务提供商")
 	user_protocol = models.BooleanField(default=False, verbose_name="是否同意用户协议", help_text="是否同意用户协议")
-	# user_auth_file_up = models.FileField(upload_to=user_directory_path, verbose_name="用户认证文件上传", help_text="用户认证文件上传")
-	# auth_attach_down = models.OneToOneField(AuthAttachDown, on_delete=models.CASCADE, verbose_name="认证附件下载",
-	#                                         help_text="认证附件下载")
+	
 	
 	class Meta:
 		verbose_name = "用户信息"

@@ -17,13 +17,16 @@ class DefaultServicesFilter(django_filters.rest_framework.FilterSet):
 	"""
 	price_min = django_filters.NumberFilter(field_name='service_platform_price', help_text='平台最低价格', lookup_expr='gte')
 	price_max = django_filters.NumberFilter(field_name='service_platform_price', help_text='平台最高价格', lookup_expr='lte')
-	# service_name = django_filters.CharFilter(field_name='service_name', help_text='普适服务名称', lookup_expr='icontains')
-	# service_sn = django_filters.CharFilter(field_name='service_sn', help_text='服务编号', lookup_expr='icontains')
-
+	service_class1 = django_filters.CharFilter(field_name="service_classification1", lookup_expr='exact')
+	service_class2 = django_filters.CharFilter(field_name="service_classification2", lookup_expr='exact')
+	service_class3 = django_filters.CharFilter(field_name="service_classification3", lookup_expr='exact')
+	service_class4 = django_filters.CharFilter(field_name="service_classification4", lookup_expr='exact')
+	service_class5 = django_filters.CharFilter(field_name="service_classification5", lookup_expr='exact')
 	
 	class Meta:
 		model = DefaultServices
-		fields = ['price_min', 'price_max']
+		fields = ['price_min', 'price_max', 'service_class1', 'service_class2', 'service_class3', 'service_class4',
+		          'service_class5']
 
 
 class FinancingServicesFilter(django_filters.rest_framework.FilterSet):
@@ -36,17 +39,19 @@ class FinancingServicesFilter(django_filters.rest_framework.FilterSet):
 	class Meta:
 		model = FinancingServices
 		fields = ['price_min', 'price_max']
-		
+
+
 class DefaultCategoryFilter(django_filters.rest_framework.FilterSet):
 	"""
 	普适服务分类过滤类
 	"""
-	category_type = django_filters.NumberFilter(field_name='category_type', help_text = "普适服务分类级别", lookup_expr='exact')
+	category_type = django_filters.NumberFilter(field_name='category_type', help_text="普适服务分类级别", lookup_expr='exact')
 	
 	class Meta:
 		model = ServiceClassification
-		fields = ['category_type',]
-		
+		fields = ['category_type', ]
+
+
 class FinancingCategoryFilter(django_filters.rest_framework.FilterSet):
 	"""
 	金融服务分类过滤类
@@ -56,3 +61,5 @@ class FinancingCategoryFilter(django_filters.rest_framework.FilterSet):
 	class Meta:
 		model = FinancingServicesClassification
 		fields = ['category_type', ]
+		
+
