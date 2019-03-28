@@ -104,8 +104,8 @@ DATABASES = {
 		'NAME': 'hqjy_api_database',
 		'USER': 'root',
 		'PASSWORD': 'P@ssword',
-		#'HOST': 'localhost',
-		'HOST': '192.168.10.205',
+		#'HOST': 'localhost',        #本地测试数据库
+		'HOST': '192.168.10.205',  #开发用内部测试数据库
 		'PORT': '3306',
 		#'OPTIONS': { 'init_command': 'SET storage_engine=INNODB;' } ,
 	}

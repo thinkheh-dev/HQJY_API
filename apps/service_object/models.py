@@ -196,7 +196,18 @@ class FinancingServices(ServiceAbstractClass):
 	"""
 	金融服务产品
 	"""
-	fsc = models.ForeignKey(FinancingServicesClassification, on_delete=models.CASCADE, verbose_name="融资服务分类")
+	financing_service_classification1 = models.ForeignKey(FinancingServicesClassification, null=True, blank=True,
+	                                              on_delete=models.CASCADE,
+	                                            verbose_name="金融服务一级分类", related_name="fscxx1")
+	financing_service_classification2 = models.ForeignKey(FinancingServicesClassification, null=True, blank=True, on_delete=models.CASCADE,
+	                                            verbose_name="金融服务二级分类", related_name="fscxx2")
+	financing_service_classification3 = models.ForeignKey(FinancingServicesClassification, null=True, blank=True, on_delete=models.CASCADE,
+	                                            verbose_name="金融服务三级分类", related_name="fscxx3")
+	financing_service_classification4 = models.ForeignKey(FinancingServicesClassification, null=True, blank=True, on_delete=models.CASCADE,
+	                                            verbose_name="金融服务四级分类", related_name="fscxx4")
+	financing_service_classification5 = models.ForeignKey(FinancingServicesClassification, null=True, blank=True, on_delete=models.CASCADE,
+	                                            verbose_name="金融服务五级分类", related_name="scxx5")
+	#fsc = models.ForeignKey(FinancingServicesClassification, on_delete=models.CASCADE, verbose_name="融资服务分类")
 	service_market_price = models.FloatField(verbose_name="市场价格", default=0)
 	service_platform_price = models.FloatField(verbose_name="平台价格", default=0)
 	time_limit = models.CharField(max_length=10, verbose_name="期限")
@@ -279,6 +290,9 @@ class DefaultServiceCoupon(models.Model):
 	普适服务优惠券
 	"""
 	coupon_name = models.CharField(max_length=200, verbose_name="优惠券名称", help_text="优惠券名称")
+	default_coupon_type = models.ForeignKey(DefaultCouponType, on_delete=models.CASCADE,
+	                                        related_name="default_coupon_type", verbose_name="优惠券类型",
+	                                        help_text="优惠券类型id")
 	coupon_amount = models.IntegerField(default=0, verbose_name="优惠金额", help_text="优惠金额")
 	coupon_img = models.ImageField(upload_to="counpon_img/", blank=True, null=True, verbose_name="优惠券图片", help_text="优惠券图片")
 	coupon_desc = models.CharField(max_length=200, blank=True, null=True, verbose_name="详细描述", help_text="详细描述")
@@ -286,8 +300,6 @@ class DefaultServiceCoupon(models.Model):
 	coupon_end_time = models.DateField(default=timezone.now, verbose_name="结束时间", help_text="结束时间")
 	belong_coupon = models.ForeignKey(DefaultServices, on_delete=models.CASCADE, related_name="belong_coupon",
 	                                  verbose_name="对应的普适项目", help_text="对应的普适项目")
-	default_coupon_type = models.ForeignKey(DefaultCouponType, on_delete=models.CASCADE,
-	                                        related_name="default_coupon_type", verbose_name="对应的普适项目类型", help_text="对应的普适项目类型")
 	add_time = models.DateTimeField(auto_now_add=True, verbose_name="添加时间", help_text="添加时间")
 	default_num = models.IntegerField(default=0, editable=True, verbose_name="优惠券数量", help_text="优惠券数量")
 	remain_num = models.IntegerField(default=0, editable=True, verbose_name="优惠券剩余数量", help_text="优惠券剩余数量")

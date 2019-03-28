@@ -35,10 +35,12 @@ from file_repository.views import AttachLibraryManagerViewSet
 
 from enterprise_info.views import EnterpriseListViewSet, EnterpriseTypeListViewset
 
+from user_operation.views import UserFavViewSet, OrderViewSet, OrderDetailViewSet
+
 from page_control.models import SystemAdminURL
 
-
-admin_url = SystemAdminURL.objects.all().first()
+#获取最新的后台管理指定的管理地址
+admin_url = SystemAdminURL.objects.all().first() #无论后台地址有多少条，只取最后编辑保存的那一条（数据库记录）
 
 
 
@@ -91,11 +93,21 @@ router.register(r'enterprise-type', EnterpriseTypeListViewset, base_name='enterp
 #配置文件库路由
 router.register(r'file-repository', AttachLibraryManagerViewSet, base_name='filereplist')
 
+#配置用户收藏路由
+router.register(r'user-fav', UserFavViewSet, base_name='user-fav')
+
+#配置用户订单生成路由
+router.register(r'order-send', OrderViewSet, base_name='ordersend')
+router.register(r'order-detail', OrderDetailViewSet, base_name='orderdetail')
+
 
 urlpatterns = [
-	#path('xadmin/', xadmin.site.urls),
-    re_path(r'^%s/' % (admin_url), xadmin.site.urls),
-	#re_path(r'^%s/%s/' % (model._meta.app_label, model._meta.model_name), include(view_urls)) #例子 可删除
+	#后台管理地址（初始）
+	
+	# path('xadmin/', xadmin.site.urls), #第一次配置，请启用这一条
+	
+    re_path(r'^%s/' % (admin_url), xadmin.site.urls), #在后台修改过系统管理地址后，则可以启用这条
+	
 	path('ueditor/', include(DjangoUeditor_urls)),
 	path('', include(router.urls)),
 	path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),

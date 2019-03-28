@@ -149,8 +149,9 @@ class FinancingServicesSerializers(serializers.ModelSerializer):
 	"""
 	金融产品序列化
 	"""
-	fsc = FinancingServicesClassificationSerializers()
+	#fsc = FinancingServicesClassificationSerializers()
 	financing_images = FinancingServicesImageSerializers(many=True)
+	service_belong_to_company = BasicEnterpriseInfoNameSerializers()
 	class Meta:
 		model = FinancingServices
 		fields = "__all__"

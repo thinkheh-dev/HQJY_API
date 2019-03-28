@@ -35,10 +35,21 @@ class FinancingServicesFilter(django_filters.rest_framework.FilterSet):
 	"""
 	price_min = django_filters.NumberFilter(field_name='service_platform_price', help_text='平台最低价格', lookup_expr='gte')
 	price_max = django_filters.NumberFilter(field_name='service_platform_price', help_text='平台最高价格', lookup_expr='lte')
+	financing_service_classification1 = django_filters.CharFilter(field_name="financing_service_classification1",
+	                                                              lookup_expr='exact')
+	financing_service_classification2 = django_filters.CharFilter(field_name="financing_service_classification2",
+	                                                              lookup_expr='exact')
+	financing_service_classification3 = django_filters.CharFilter(field_name="financing_service_classification3",
+	                                                              lookup_expr='exact')
+	financing_service_classification4 = django_filters.CharFilter(field_name="financing_service_classification4",
+	                                                              lookup_expr='exact')
+	financing_service_classification5 = django_filters.CharFilter(field_name="financing_service_classification5",
+	                                                              lookup_expr='exact')
 	
 	class Meta:
 		model = FinancingServices
-		fields = ['price_min', 'price_max']
+		fields = ['price_min', 'price_max', 'financing_service_classification1', 'financing_service_classification2',
+		          'financing_service_classification3', 'financing_service_classification5']
 
 
 class DefaultCategoryFilter(django_filters.rest_framework.FilterSet):

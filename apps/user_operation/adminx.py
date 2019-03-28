@@ -9,22 +9,21 @@
 # @software: PyCharm
 
 import xadmin
-from user_operation.models import ShoppingCart, OrderInfo, OrderServiceDetail, WorkbenchNavConfiguration, \
+from user_operation.models import UserFav, OrderInfo, OrderServiceDetail, WorkbenchNavConfiguration, \
 	WorkbenchParameterConfiguration
 
 
-class ShoppingCartAdmin(object):
-	list_display = ['user_info', 'default_services', 'default_services_package', 'buy_nums']
+class UserFavAdmin(object):
+	list_display = ['user_info', 'default_services', 'default_services_package', 'financing_services', 'add_time']
 	
 
 class OrderInfoAdmin(object):
 	list_display = ['user_info', 'order_sn', 'order_status', 'order_message', 'order_message', 'order_amount',
-	                'default_service_coupon', 'pay_time', 'enterprise_info_service', 'order_contact_name',
-	                'order_contact_phone', 'order_remark', 'industry_commissioner']
+	                'order_contact_name','order_contact_phone', 'order_remark', 'industry_commissioner']
 
 
 class OrderServiceDetailAdmin(object):
-	list_display = ['order_info', 'default_services', 'default_services_package', 'service_num', 'add_time']
+	list_display = ['order_info', 'default_services', 'default_services_package', 'financing_services', 'add_time']
 
 
 class WorkbenchNavConfigurationAdmin(object):
@@ -35,7 +34,7 @@ class WorkbenchParameterConfigurationAdmin(object):
 	list_display = ['name', 'workbench_img', 'workbench_css']
 
 
-xadmin.site.register(ShoppingCart, ShoppingCartAdmin)
+xadmin.site.register(UserFav, UserFavAdmin)
 xadmin.site.register(OrderInfo, OrderInfoAdmin)
 xadmin.site.register(OrderServiceDetail, OrderServiceDetailAdmin)
 xadmin.site.register(WorkbenchNavConfiguration, WorkbenchNavConfigurationAdmin)

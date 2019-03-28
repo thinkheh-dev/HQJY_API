@@ -52,7 +52,9 @@ class FinancingServicesClassificationAdmin(object):
 
 
 class FinancingServicesAdmin(object):
-	list_display = ['service_sn','service_belong_to_company','service_name', 'fsc', 'time_limit',
+	list_display = ['service_sn','service_belong_to_company','service_name', 'financing_service_classification1',
+	                'financing_service_classification2', 'financing_service_classification3',
+	                'financing_service_classification4', 'financing_service_classification5', 'time_limit',
 	                'annual_interest_rate', 'approval_lines']
 	search_fields = ['service_name', ]
 	list_editable = ['is_hot', ]
@@ -66,6 +68,12 @@ class FinancingServicesAdmin(object):
 		extra = 1
 	
 	inlines = [FinancingServicesImageInline]
+
+
+class DefaultServicesPackageAdmin(object):
+	list_display = ['package_name', 'package_img', 'package_desc', 'default_service']
+	style_fields = {"package_desc": "ueditor"}
+	
 	
 class ServiceBrandAdmin(object):
 	list_display = ['brand_name', 'brand_desc', 'brand_img', 'add_time']
@@ -73,11 +81,6 @@ class ServiceBrandAdmin(object):
 	
 class DefaultCouponTypeAdmin(object):
 	list_display = ['name', ]
-	
-
-class DefaultServicesPackageAdmin(object):
-	list_display = ['package_name', 'package_img', 'package_desc', 'default_service']
-	style_fields = {"package_desc": "ueditor"}
 
 	
 class DefaultServiceCouponAdmin(object):
@@ -121,9 +124,9 @@ xadmin.site.register(DefaultServices, DefaultServicesAdmin)
 xadmin.site.register(FinancingServicesClassification, FinancingServicesClassificationAdmin)
 # xadmin.site.register(FinancingServicesClassificationSecond, FinancingServicesClassificationSecondAdmin) 已舍弃
 xadmin.site.register(FinancingServices, FinancingServicesAdmin)
+xadmin.site.register(DefaultServicesPackage, DefaultServicesPackageAdmin)
 xadmin.site.register(ServiceBrand, ServiceBrandAdmin)
 xadmin.site.register(DefaultCouponType, DefaultCouponTypeAdmin)
-xadmin.site.register(DefaultServicesPackage, DefaultServicesPackageAdmin)
 xadmin.site.register(DefaultServiceCoupon, DefaultServiceCouponAdmin)
 xadmin.site.register(HotSearchWords, HotSearchWordsAdmin)
 xadmin.site.register(DefaultServicesImage, DefaultServicesImageAdmin)
