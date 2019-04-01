@@ -95,7 +95,7 @@ class OrderInfoSerializers(serializers.ModelSerializer):
 	order_status = serializers.CharField(read_only=True)
 	order_remark = serializers.CharField(read_only=True)
 	industry_commissioner = serializers.CharField(read_only=True)
-	
+	order_add_time = serializers.DateTimeField(read_only=True)
 	
 	class Meta:
 		model = OrderInfo
@@ -113,4 +113,4 @@ class OrderServiceDetailSerialziers(serializers.ModelSerializer):
 	
 	class Meta:
 		model = OrderServiceDetail
-		fields = ['order_info', 'default_services', 'financing_services', 'default_services_package']
+		fields = "__all__"

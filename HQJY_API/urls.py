@@ -31,11 +31,9 @@ from service_object.views import DefaultServicesListViewSet, FinancingServicesLi
 from users.views import SmsCodeViewset, FindPasswordSmsCodeViewset, UserViewset, UserPhoneViewSet, \
 						UserPasswordModifyViewSet, UserProtocolViewSet
 
-from file_repository.views import AttachLibraryManagerViewSet
-
 from enterprise_info.views import EnterpriseListViewSet, EnterpriseTypeListViewset
 
-from user_operation.views import UserFavViewSet, OrderViewSet, OrderDetailViewSet
+from user_operation.views import UserFavViewSet, OrderViewSet, OrderDetailViewSet, OrderImageViewSet
 
 from page_control.models import SystemAdminURL
 
@@ -91,7 +89,7 @@ router.register(r'enterprise-info', EnterpriseListViewSet, base_name='enterprise
 router.register(r'enterprise-type', EnterpriseTypeListViewset, base_name='enterprisetype')
 
 #配置文件库路由
-router.register(r'file-repository', AttachLibraryManagerViewSet, base_name='filereplist')
+# router.register(r'file-repository', OrderImageViewSet, base_name='filereplist')
 
 #配置用户收藏路由
 router.register(r'user-fav', UserFavViewSet, base_name='user-fav')
@@ -99,6 +97,7 @@ router.register(r'user-fav', UserFavViewSet, base_name='user-fav')
 #配置用户订单生成路由
 router.register(r'order-send', OrderViewSet, base_name='ordersend')
 router.register(r'order-detail', OrderDetailViewSet, base_name='orderdetail')
+router.register(r'order-file-upload', OrderImageViewSet, base_name='orderfileupload')
 
 
 urlpatterns = [

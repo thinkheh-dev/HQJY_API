@@ -19,11 +19,12 @@ class UserFavAdmin(object):
 
 class OrderInfoAdmin(object):
 	list_display = ['user_info', 'order_sn', 'order_status', 'order_message', 'order_message', 'order_amount',
-	                'order_contact_name','order_contact_phone', 'order_remark', 'industry_commissioner']
+	                'order_remark', 'industry_commissioner', 'order_add_time', 'order_end_time']
 
 
 class OrderServiceDetailAdmin(object):
-	list_display = ['order_info', 'default_services', 'default_services_package', 'financing_services', 'add_time']
+	list_display = ['order_info', 'default_services', 'default_services_package', 'financing_services',
+	                'contract_attach_file', 'add_time']
 
 
 class WorkbenchNavConfigurationAdmin(object):

@@ -2,17 +2,21 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.authentication import SessionAuthentication
-from rest_framework import mixins, status
+from rest_framework import mixins, status, filters
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 
 from apiutils.permissions import IsOwnerOrReadOnly
 
 
 from .serializers import UserFavSerializers, UserFavDetailSerializers, OrderInfoSerializers, \
 	OrderServiceDetailSerialziers
+from file_repository.serializers import AttachResourceListSerializers
 
 from .models import UserFav, OrderInfo, OrderServiceDetail
+from file_repository.models import AttachResources, AttachLibraryManager
 from service_object.models import DefaultServices, FinancingServices, DefaultServicesPackage
+from .filters import OrderInfoFilter
 
 
 
@@ -55,6 +59,9 @@ class OrderViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.Destro
 	permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
 	authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
 	serializer_class = OrderInfoSerializers
+	
+	filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
+	filter_class = OrderInfoFilter
 	
 	def get_queryset(self):
 		return OrderInfo.objects.filter(user_info=self.request.user)
@@ -111,7 +118,9 @@ class OrderViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.Destro
 				pk=default_services_package_tmp)
 		else:
 			raise ValueError("出错啦！必须传任意一个服务的值")
-			
+		
+		order_service_detail.allow_upload_file = True
+		
 		order_service_detail.save()
 		
 		re_dict = {}
@@ -153,8 +162,15 @@ class OrderDetailViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, views
 	def get_queryset(self):
 		return OrderServiceDetail.objects.all()
 
+
+#此视图方法暂时不考虑
+class OrderImageViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
+	"""
+	订单上传图片视图
+	"""
+	permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
+	authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+	serializer_class = AttachResourceListSerializers
 	
-	
-	
-	
-	
+	def get_queryset(self):
+		return AttachResources.objects.filter(attach_author=self.request.user)

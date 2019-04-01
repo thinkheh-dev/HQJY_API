@@ -7,30 +7,31 @@ from django.contrib.auth import get_user_model
 from service_object.models import DefaultServices, DefaultServicesPackage, DefaultServiceCoupon, FinancingServices
 from enterprise_info.models import BasicEnterpriseInfo
 
+import os
+
 User = get_user_model()
 
-# class ShoppingCart(models.Model):
-# 	"""
-# 	购物车模型
-# 	"""
-# 	user_info = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="用户", help_text="用户")
-# 	default_services = models.ForeignKey(DefaultServices,blank=True, null=True, on_delete=models.CASCADE,
-# 	                                     verbose_name="普适服务", help_text="普适服务")
-# 	default_services_package = models.ForeignKey(DefaultServicesPackage, blank=True, null=True,
-# 	                                             on_delete=models.CASCADE, verbose_name="普适项目包", help_text="普适项目包")
-# 	financing_services = models.ForeignKey(FinancingServices, blank=True, null=True, on_delete=models.CASCADE,
-# 	                                       verbose_name="金融服务", help_text="金融服务")
-# 	#buy_nums = models.IntegerField(default=1, editable=True, verbose_name="购买数量", help_text="购买数量")
-# 	add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
-#
-# 	class Meta:
-# 		verbose_name = "用户收藏"
-# 		verbose_name_plural = verbose_name
-# 		unique_together = (("user_info", "default_services"),("user_info", "default_services_package"),
-# 		                   ("user_info", "financing_services"),)
-#
-# 	def __str__(self):
-# 		return self.user_info.username
+
+def user_upload_path(instance, filename):
+	"""
+	文件上传路径拼装类
+	:param instance: 文件实例
+	:param filename: 文件名
+	:return: 拼装后的文件路径
+	"""
+	ext = filename.split('.')[-1]
+	filename = '{}.{}'.format(uuid.uuid4().hex[:8], ext)
+	
+	sub_folder = 'file_repository'
+	u_name = User.objects.filter(id=instance.id).values()[0]['username']
+	#sub_folder_sub = ''
+	
+	if ext.lower() in ["pdf", ]:
+		sub_folder_sub = "file_repository_document"
+		return os.path.join(sub_folder, sub_folder_sub, u_name, filename)
+	else:
+		raise ValueError("您上传的文件有误，请检查，必须是PDF文件！")
+	
 
 class UserFav(models.Model):
 	"""
@@ -61,9 +62,10 @@ class OrderInfo(models.Model):
 	"""
 	ORDER_STATUS = (
 
-		('TRADE_SUCCESS', '交易成功'),
-		('TRADE_cancel', '交易取消'),
-		('WAIT_TRADE_BY', '创建交易'),
+		('TRADE_SUCCESS', '服务成功'),
+		('TRADE_CANCEL', '申请取消'),
+		('TRADING_IN', '服务中'),
+		('WAIT_TRADE_BY', '创建申请'),
 
 	)
 
@@ -78,14 +80,18 @@ class OrderInfo(models.Model):
 	# default_service_coupon = models.ManyToManyField(DefaultServiceCoupon, blank=True, verbose_name="可用优惠券",
 	#                                                 help_text="可用优惠券")
 	#pay_time = models.DateTimeField(default=datetime.now(), verbose_name="支付时间", help_text="支付时间")
-	#enterprise_info_service = models.ForeignKey(BasicEnterpriseInfo, on_delete=models.CASCADE,
-	# verbose_name="企业信息外键", help_text="企业信息外键")
-	order_contact_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="订单联系人姓名", help_text="订单联系人姓名")
-	order_contact_phone = models.CharField(max_length=11, blank=True, null=True, verbose_name="联系人电话", help_text="联系人电话")
+	# enterprise_info_service = models.ForeignKey(BasicEnterpriseInfo, blank=True, null=True, on_delete=models.CASCADE,
+	#                                             verbose_name="企业信息外键", help_text="企业信息外键")
+	#order_contact_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="订单联系人姓名",
+	# help_text="订单联系人姓名")
+	#order_contact_phone = models.CharField(max_length=11, blank=True, null=True, verbose_name="联系人电话",
+	# help_text="联系人电话")
 	order_remark = models.TextField(blank=True, null=True, verbose_name="订单备注", help_text="订单备注") #不由客户填写，由平台工作人员在后台填写
 	industry_commissioner = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE,
 	                                          related_name="industry_order_info", verbose_name="分配行业专员",
 	                                          help_text="分配行业专员")
+	order_add_time = models.DateTimeField(default=datetime.now, verbose_name="订单添加时间", help_text="订单添加时间")
+	order_end_time = models.DateTimeField(auto_now=True, verbose_name="订单更新时间", help_text="订单更新时间")
 
 	class Meta:
 		verbose_name = "订单信息"
@@ -93,6 +99,7 @@ class OrderInfo(models.Model):
 
 	def __str__(self):
 		return "{}的订单{}".format(self.user_info, self.order_sn)
+
 
 # class OrderCouponRelation(models.Model):
 # 	"""
@@ -114,7 +121,8 @@ class OrderServiceDetail(models.Model):
 	                                             null=True, verbose_name="普适服务包外键", help_text="普适服务包外键id")
 	financing_services = models.ForeignKey(FinancingServices, blank=True, null=True, on_delete=models.CASCADE,
 	                                       verbose_name="金融服务", help_text="金融服务外键id")
-	#service_num = models.IntegerField(default=1, verbose_name="商品数量", help_text="商品数量")
+	contract_attach_file = models.FileField(upload_to=user_upload_path, blank=True, null=True,
+	                                        verbose_name="合同及附件文件上传", help_text="合同及附件文件上传")
 	add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 
 	class Meta:
@@ -123,6 +131,7 @@ class OrderServiceDetail(models.Model):
 
 	def __str__(self):
 		return "{}".format(self.order_info)
+
 
 class WorkbenchParameterConfiguration(models.Model):
 	"""

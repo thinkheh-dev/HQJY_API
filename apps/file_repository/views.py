@@ -24,6 +24,7 @@ from .models import AttachResources, AttachLibraryManager
 
 User = get_user_model()
 
+
 class AttachLibraryManagerViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
 	"""
 	资源库序列化视图

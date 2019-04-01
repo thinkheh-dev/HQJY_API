@@ -62,7 +62,7 @@ def user_upload_path(instance, filename):
 	if ext.lower() in ["jpg", "png", "gif", "svg", "jpeg"]:
 		sub_folder_sub = "avatar"
 	if ext.lower() in ["pdf", "docx", "doc", "xlsx", "xls"]:
-		raise IOError("请上传扩展名为：jpg, png, gif, svg, jpeg的图片，不支持其他格式的图片")
+		raise ValueError("请上传扩展名为：jpg, png, gif, svg, jpeg的图片，不支持其他格式的图片")
 	
 	return os.path.join(sub_folder, u_name, sub_folder_sub, filename)
 

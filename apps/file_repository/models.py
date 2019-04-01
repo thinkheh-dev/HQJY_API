@@ -4,8 +4,10 @@ from django.contrib.auth import get_user_model
 import uuid
 import os
 
+from user_operation.models import OrderServiceDetail
 
 User = get_user_model()
+
 
 def user_upload_path(instance, filename):
 	"""
@@ -24,11 +26,11 @@ def user_upload_path(instance, filename):
 		sub_folder_sub = "file_repository_avatar"
 	if ext.lower() in ["pdf", "docx", "doc", "xlsx", "xls"]:
 		sub_folder_sub = "file_repository_document"
-		
-		
+	
 	return os.path.join(sub_folder, sub_folder_sub, filename)
 
-#此方法已弃用
+
+# 此方法已弃用
 def user_authfile_path(instance, filename):
 	ext = filename.split('.')[-1]
 	filename = '{}.{}'.format(uuid.uuid4().hex[:10], ext)
@@ -36,16 +38,23 @@ def user_authfile_path(instance, filename):
 	return os.path.join("user_auth_file", instance.username, filename)
 
 
-
 class AttachLibraryManager(models.Model):
 	"""
 	附件库管理
 	"""
-	library_name = models.CharField(max_length=200, verbose_name="附件库名称", help_text="附件库名称")
-	# attach_resource = models.ForeignKey(AttachResources, on_delete=models.CASCADE, related_name="attach_lib",
-	#                                     verbose_name="附件资源", help_text="附件资源")
-	attach_author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="附件上传者", help_text="附件上传者",
-	                                  related_name="attach_to_author")
+	LIB_NAME = (
+		(1, "公司认证库"),
+		(2, "政策文件库"),
+		(3, "平台保密文件库"),
+		(4, "平台普通文件库"),
+		(5, "个人证件库"),
+		(6, "公司证件库"),
+		(7, "普通文件库"),
+		(8, "合同文件库"),
+		(9, "其他文件库")
+	)
+	library_name = models.IntegerField(choices=LIB_NAME, default=7, verbose_name="附件库名称", help_text="附件库名称")
+	
 	add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 	
 	class Meta:
@@ -53,7 +62,7 @@ class AttachLibraryManager(models.Model):
 		verbose_name_plural = verbose_name
 	
 	def __str__(self):
-		return self.library_name
+		return str(self.library_name)
 
 
 class AttachResources(models.Model):
@@ -67,19 +76,22 @@ class AttachResources(models.Model):
 		(4, "平台普通文件"),
 		(5, "个人证件"),
 		(6, "公司证件"),
-		(7, "普通文件")
+		(7, "普通文件"),
+		(8, "合同文件"),
+		(9, "其他文件")
 	)
 	
-	attach_name = models.CharField(max_length=200, verbose_name="附件名称", help_text="附件名称")
+	attach_author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="附件上传者", help_text="附件上传者",
+									  related_name="attach_to_author")
 	attach_type = models.IntegerField(choices=ATTACH_TYPE, default=7, verbose_name="附件类型", help_text="附件类型")
-	attach_desc = models.TextField(blank=True, null=True, verbose_name="附件用途描述", help_text="附件用途描述")
-	attach_file = models.FileField(upload_to=user_upload_path, verbose_name="用户附件", help_text="用户附件")
+	attach_file = models.ImageField(upload_to=user_upload_path, verbose_name="用户附件", help_text="用户附件")
 	attach_library_manager = models.ForeignKey(AttachLibraryManager, on_delete=models.CASCADE,
-	                                           related_name="attach_lib_man", verbose_name="附件资源", help_text="附件资源")
-	
+											   related_name="attach_lib_man", verbose_name="附件资源", help_text="附件资源")
+	order_info = models.ForeignKey(OrderServiceDetail, on_delete=models.CASCADE, blank=True, null=True,
+	                               verbose_name="关联的订单外键", help_text="关联的订单外键id")
 	class Meta:
 		verbose_name = "附件资源"
 		verbose_name_plural = verbose_name
 	
 	def __str__(self):
-		return self.attach_name
+		return str(self.attach_library_manager.library_name)
