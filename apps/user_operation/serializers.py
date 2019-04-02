@@ -95,6 +95,7 @@ class OrderInfoSerializers(serializers.ModelSerializer):
 	order_status = serializers.CharField(read_only=True)
 	order_remark = serializers.CharField(read_only=True)
 	industry_commissioner = serializers.CharField(read_only=True)
+	cancel_order = serializers.BooleanField(read_only=True)
 	order_add_time = serializers.DateTimeField(read_only=True)
 	
 	class Meta:
@@ -102,7 +103,7 @@ class OrderInfoSerializers(serializers.ModelSerializer):
 		fields = "__all__"
 
 
-class OrderServiceDetailSerialziers(serializers.ModelSerializer):
+class OrderServiceDetailSerializers(serializers.ModelSerializer):
 	"""
 	订单商品详情序列化
 	"""
@@ -114,3 +115,22 @@ class OrderServiceDetailSerialziers(serializers.ModelSerializer):
 	class Meta:
 		model = OrderServiceDetail
 		fields = "__all__"
+		
+class OrderCancelSerializers(serializers.Serializer):
+	"""
+	取消订单序列化
+	"""
+	user_info = serializers.HiddenField(default=serializers.CurrentUserDefault())
+	#order_info = serializers.PrimaryKeyRelatedField(required=True, queryset=OrderInfo.objects.all())
+	
+	def update(self, instance, validated_data):
+		user = self.context['request'].user
+		order_info_id = instance.id
+		OrderInfo.objects.filter(user_info=user, id=order_info_id).update(cancel_order=True,
+		                                                                                   order_status='TRADE_CANCEL')
+		OrderServiceDetail.objects.filter(order_info=order_info_id).update(cancel_order_detail=True)
+		
+		return Response({"message": "订单已取消"})
+		
+		
+		

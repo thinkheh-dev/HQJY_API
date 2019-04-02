@@ -10,7 +10,7 @@ from apiutils.permissions import IsOwnerOrReadOnly
 
 
 from .serializers import UserFavSerializers, UserFavDetailSerializers, OrderInfoSerializers, \
-	OrderServiceDetailSerialziers
+	OrderServiceDetailSerializers, OrderCancelSerializers
 from file_repository.serializers import AttachResourceListSerializers
 
 from .models import UserFav, OrderInfo, OrderServiceDetail
@@ -45,7 +45,7 @@ class UserFavViewSet(viewsets.ModelViewSet):
 		return UserFav.objects.filter(user_info=self.request.user)
 
 
-class OrderViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin,
+class OrderViewSet(mixins.ListModelMixin, mixins.UpdateModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin,
                    viewsets.GenericViewSet):
 	"""
 	用户订单管理视图
@@ -143,11 +143,11 @@ class OrderViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.Destro
 		
 		headers = self.get_success_headers(serializer.data)
 		return Response(re_dict, status=status.HTTP_201_CREATED, headers=headers)
-
+		
+		
 	def perform_create(self, serializer):
 		return serializer.save()
 	
-
 
 class OrderDetailViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
 	"""
@@ -156,14 +156,26 @@ class OrderDetailViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, views
 	
 	permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
 	authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
-	serializer_class = OrderServiceDetailSerialziers
+	serializer_class = OrderServiceDetailSerializers
 	
 	
 	def get_queryset(self):
 		return OrderServiceDetail.objects.all()
+	
+
+class OrderCancelViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
+	"""
+	取消订单视图
+	"""
+	permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
+	authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+	serializer_class = OrderCancelSerializers
+
+	def get_queryset(self):
+		return OrderInfo.objects.filter(cancel_order=False)
 
 
-#此视图方法暂时不考虑
+#此视图方法暂时不启用
 class OrderImageViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
 	"""
 	订单上传图片视图

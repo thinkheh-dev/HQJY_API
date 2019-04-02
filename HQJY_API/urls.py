@@ -33,7 +33,7 @@ from users.views import SmsCodeViewset, FindPasswordSmsCodeViewset, UserViewset,
 
 from enterprise_info.views import EnterpriseListViewSet, EnterpriseTypeListViewset
 
-from user_operation.views import UserFavViewSet, OrderViewSet, OrderDetailViewSet
+from user_operation.views import UserFavViewSet, OrderViewSet, OrderDetailViewSet, OrderCancelViewSet
 
 from page_control.models import SystemAdminURL
 
@@ -97,6 +97,7 @@ router.register(r'user-fav', UserFavViewSet, base_name='user-fav')
 #配置用户订单生成路由
 router.register(r'order-send', OrderViewSet, base_name='ordersend')
 router.register(r'order-detail', OrderDetailViewSet, base_name='orderdetail')
+router.register(r'order-cancel', OrderCancelViewSet, base_name='ordercancel')
 
 
 urlpatterns = [

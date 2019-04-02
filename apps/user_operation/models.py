@@ -124,6 +124,7 @@ class OrderServiceDetail(models.Model):
 	                                       verbose_name="金融服务", help_text="金融服务外键id")
 	contract_attach_file = models.FileField(upload_to=user_upload_path, blank=True, null=True,
 	                                        verbose_name="合同及附件文件上传", help_text="合同及附件文件上传")
+	cancel_order_detail = models.BooleanField(default=False, verbose_name="是否取消了订单", help_text="是否取消了订单")
 	add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 
 	class Meta:

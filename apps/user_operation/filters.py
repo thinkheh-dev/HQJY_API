@@ -16,7 +16,7 @@ class OrderInfoFilter(django_filters.rest_framework.FilterSet):
 	"""
 	订单信息过滤类
 	"""
-	order_status = django_filters.CharFilter(field_name='order_status', help_text='订单状态',
+	order_status = django_filters.ChoiceFilter(choices=OrderInfo.ORDER_STATUS, help_text='订单状态',
 	                                          lookup_expr='exact')
 	order_sn  = django_filters.CharFilter(field_name='order_sn', help_text='订单编号', lookup_expr='exact')
 	order_amount_min = django_filters.NumberFilter(field_name='order_amount', lookup_expr='gte')

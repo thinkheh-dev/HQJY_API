@@ -13,7 +13,7 @@ from django.contrib.auth import get_user_model
 
 from .models import AttachLibraryManager, AttachResources
 from user_operation.models import OrderServiceDetail
-from user_operation.serializers import OrderServiceDetailSerialziers, OrderInfoSerializers
+from user_operation.serializers import OrderServiceDetailSerializers, OrderInfoSerializers
 
 User = get_user_model()
 
@@ -30,7 +30,7 @@ class AttachResourcesSerializers(serializers.ModelSerializer):
 	"""
 	附件资源序列化
 	"""
-	order_info = OrderServiceDetailSerialziers(many=True)
+	order_info = OrderServiceDetailSerializers(many=True)
 	attach_author = serializers.HiddenField(default=serializers.CurrentUserDefault())
 	attach_library_manager = AttachLibraryManagerSerializers()
 	
