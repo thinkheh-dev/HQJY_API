@@ -90,6 +90,7 @@ class OrderViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.Destro
 			del serializer.validated_data['default_services']
 			del serializer.validated_data['financing_services']
 			del serializer.validated_data['default_services_package']
+			
 
 		order_info = self.perform_create(serializer)
 		
@@ -119,7 +120,6 @@ class OrderViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.Destro
 		else:
 			raise ValueError("出错啦！必须传任意一个服务的值")
 		
-		order_service_detail.allow_upload_file = True
 		
 		order_service_detail.save()
 		

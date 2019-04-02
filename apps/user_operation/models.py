@@ -63,9 +63,9 @@ class OrderInfo(models.Model):
 	ORDER_STATUS = (
 
 		('TRADE_SUCCESS', '服务成功'),
-		('TRADE_CANCEL', '申请取消'),
+		('TRADE_CANCEL', '申请已取消'),
 		('TRADING_IN', '服务中'),
-		('WAIT_TRADE_BY', '创建申请'),
+		('TRADE_ACCEPTED', '96158已受理'),
 
 	)
 
@@ -73,23 +73,24 @@ class OrderInfo(models.Model):
 	                              help_text="用户")
 	order_sn = models.UUIDField(auto_created=True, default=uuid.uuid4, verbose_name="订单号uuid", help_text="订单号uuid")
 	#trade_sn = models.CharField(max_length=200, verbose_name="交易号") -- 用于网上支付的交易号，目前暂不启用
-	order_status = models.CharField(max_length=50, default='WAIT_TRADE_BY', choices=ORDER_STATUS,
+	order_status = models.CharField(max_length=50, default='TRADE_ACCEPTED', choices=ORDER_STATUS,
 	                                verbose_name="交易状态", help_text="交易状态")
 	order_message = models.TextField(default="", verbose_name="订单留言", help_text="订单留言")
 	order_amount = models.IntegerField(default=0, editable=True, verbose_name="订单金额", help_text="订单金额")
 	# default_service_coupon = models.ManyToManyField(DefaultServiceCoupon, blank=True, verbose_name="可用优惠券",
 	#                                                 help_text="可用优惠券")
-	#pay_time = models.DateTimeField(default=datetime.now(), verbose_name="支付时间", help_text="支付时间")
+	# pay_time = models.DateTimeField(default=datetime.now(), verbose_name="支付时间", help_text="支付时间")
 	# enterprise_info_service = models.ForeignKey(BasicEnterpriseInfo, blank=True, null=True, on_delete=models.CASCADE,
 	#                                             verbose_name="企业信息外键", help_text="企业信息外键")
-	#order_contact_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="订单联系人姓名",
+	# order_contact_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="订单联系人姓名",
 	# help_text="订单联系人姓名")
-	#order_contact_phone = models.CharField(max_length=11, blank=True, null=True, verbose_name="联系人电话",
+	# order_contact_phone = models.CharField(max_length=11, blank=True, null=True, verbose_name="联系人电话",
 	# help_text="联系人电话")
 	order_remark = models.TextField(blank=True, null=True, verbose_name="订单备注", help_text="订单备注") #不由客户填写，由平台工作人员在后台填写
 	industry_commissioner = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE,
 	                                          related_name="industry_order_info", verbose_name="分配行业专员",
 	                                          help_text="分配行业专员")
+	cancel_order = models.BooleanField(default=False, verbose_name="是否取消订单", help_text="是否取消订单")
 	order_add_time = models.DateTimeField(default=datetime.now, verbose_name="订单添加时间", help_text="订单添加时间")
 	order_end_time = models.DateTimeField(auto_now=True, verbose_name="订单更新时间", help_text="订单更新时间")
 
