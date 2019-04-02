@@ -118,8 +118,8 @@ class UserInfoDetailSerializers(WritableNestedModelSerializer):
 	class Meta:
 		model = User
 		fields = ('id', 'user_name', 'user_logo', 'user_sex', 'user_phone', 'user_id_card', 'user_birthday',
-		          'QQ_num', 'wechat_num', 'contact_address', 'user_email','user_to_company', 'enterprise_type',
-		          'user_permission_name', 'user_home', 'service_provider', 'user_labels', 'service_provider',
+		          'QQ_num', 'wechat_num', 'contact_address', 'user_email','user_to_company', 'user_permission_name',
+		          'user_home', 'service_provider', 'user_labels', 'service_provider',
 		          'user_protocol')
 		
 
