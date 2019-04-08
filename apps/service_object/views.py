@@ -37,13 +37,13 @@ class DefaultServicesListViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixi
         普适服务详情
     """
 
-    queryset = DefaultServices.objects.all()
+    queryset = DefaultServices.objects.filter(is_shelf=True)
     serializer_class = DefaultServicesSerializers
     pagination_class = DefaultServicesPagination
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
     filter_class = DefaultServicesFilter
     search_fields = ('service_name', 'service_sn', 'service_describe', 'service_detailed_description')
-    ordering_fields = ('service_sales', 'service_platform_price')
+    ordering_fields = ('service_sales', 'service_platform_price', 'add_time')
 
 
 class FinancingServicesListViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
@@ -62,7 +62,7 @@ class FinancingServicesListViewSet(mixins.ListModelMixin, mixins.RetrieveModelMi
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
     filter_class = FinancingServicesFilter
     search_fields = ('service_name', 'service_sn', 'service_describe', 'service_detailed_description')
-    ordering_fields = ('service_sales', 'service_platform_price')
+    ordering_fields = ('service_sales', 'service_platform_price', 'add_time')
 
 
 class DefaultCategoryViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):

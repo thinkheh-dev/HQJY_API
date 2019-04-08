@@ -22,11 +22,12 @@ class DefaultServicesFilter(django_filters.rest_framework.FilterSet):
 	service_class3 = django_filters.CharFilter(field_name="service_classification3", lookup_expr='exact')
 	service_class4 = django_filters.CharFilter(field_name="service_classification4", lookup_expr='exact')
 	service_class5 = django_filters.CharFilter(field_name="service_classification5", lookup_expr='exact')
+	is_hot = django_filters.BooleanFilter(field_name='is_hot', lookup_expr='exact')
 	
 	class Meta:
 		model = DefaultServices
 		fields = ['price_min', 'price_max', 'service_class1', 'service_class2', 'service_class3', 'service_class4',
-		          'service_class5']
+		          'service_class5', 'is_hot']
 
 
 class FinancingServicesFilter(django_filters.rest_framework.FilterSet):
@@ -45,11 +46,12 @@ class FinancingServicesFilter(django_filters.rest_framework.FilterSet):
 	                                                              lookup_expr='exact')
 	financing_service_classification5 = django_filters.CharFilter(field_name="financing_service_classification5",
 	                                                              lookup_expr='exact')
+	is_hot = django_filters.BooleanFilter(field_name='is_hot', lookup_expr='exact')
 	
 	class Meta:
 		model = FinancingServices
 		fields = ['price_min', 'price_max', 'financing_service_classification1', 'financing_service_classification2',
-		          'financing_service_classification3', 'financing_service_classification5']
+		          'financing_service_classification3', 'financing_service_classification5', 'is_hot']
 
 
 class DefaultCategoryFilter(django_filters.rest_framework.FilterSet):
