@@ -56,7 +56,7 @@ class FinancingServicesListViewSet(mixins.ListModelMixin, mixins.RetrieveModelMi
         金融服务详情
     """
 
-    queryset = FinancingServices.objects.all()
+    queryset = FinancingServices.objects.filter(is_shelf=True)
     serializer_class = FinancingServicesSerializers
     pagination_class = DefaultServicesPagination
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
