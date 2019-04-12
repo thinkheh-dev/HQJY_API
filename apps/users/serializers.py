@@ -19,9 +19,11 @@ from django.contrib.auth import get_user_model
 from django.http import request
 
 from .models import VerifyCode, UserPermissionsName, UserProtocol, UserLabels
-from HQJY_API.settings import REGEX_MOBILE
+from HQJY_API.settings import REGEX_MOBILE, REGEX_IDCARD
 
 from drf_writable_nested import WritableNestedModelSerializer
+
+from enterprise_info.serializers import EnterpriseAuthManuallyReviewSerializers
 
 
 User = get_user_model()
@@ -112,15 +114,21 @@ class UserInfoDetailSerializers(WritableNestedModelSerializer):
 	用户详情序列化
 	"""
 	
-	user_permission_name = UserPermissionsNameSerializers(required=False)
+	user_permission_name = UserPermissionsNameSerializers(required=False, read_only=True)
 	user_labels = UserLabelsSerializers(many=True, required=False)
+	eps_auth_manually_review = EnterpriseAuthManuallyReviewSerializers(many=False, read_only=True)
+	
+	user_name = serializers.CharField(read_only=True)
+	user_phone = serializers.CharField(read_only=True)
+	user_id_card = serializers.CharField(read_only=True)
+	user_birthday = serializers.CharField(read_only=True)
+	user_to_company = serializers.PrimaryKeyRelatedField(read_only=True)
 	
 	class Meta:
 		model = User
 		fields = ('id', 'user_name', 'user_logo', 'user_sex', 'user_phone', 'user_id_card', 'user_birthday',
 		          'QQ_num', 'wechat_num', 'contact_address', 'user_email','user_to_company', 'user_permission_name',
-		          'user_home', 'service_provider', 'user_labels', 'service_provider',
-		          'user_protocol')
+		          'user_home', 'service_provider', 'user_labels', 'user_protocol', 'eps_auth_manually_review')
 		
 
 class UserPhoneSerializers(serializers.Serializer):
@@ -260,5 +268,45 @@ class UserProtocolSerializers(serializers.ModelSerializer):
 	class Meta:
 		model = UserProtocol
 		fields = ('id', 'protocol_title', 'protocol_subtitle', 'protocol_content')
-	
+		
 
+class UserRealNameAuthSerializers(serializers.Serializer):
+	"""
+	用户实名认证序列化
+	"""
+	user_name = serializers.CharField(max_length=20, min_length=2, label="用户真实姓名", required=True,
+	                                  help_text="请务必填写您的真实姓名，否则可能验证无法通过！", error_messages={
+																							"blank": "请输入您的真实姓名",
+																							"required": "请输入您的真实姓名",
+																							"max_length": "名字超长",
+																							"min_length": "名字长度不足"})
+	user_id_card = serializers.CharField(max_length=18, min_length=18, label="用户身份证号", required=True,
+	                                     help_text="用户身份证号", error_messages={
+																 "blank": "身份证号不能为空",
+																 "required": "必须填写身份证号",
+																 "max_length": "身份证号超过18位",
+																 "min_length": "身份证号不足18位"})
+	user_phone = serializers.CharField(label="手机号", required=True, max_length=11, min_length=11,
+	                                   help_text="这里请使用用户注册时使用的手机号，不要让用户填写",
+	                                   error_messages={
+														"blank": "请输入您的手机号",
+														"required": "请输入您的手机号",
+														"max_length": "手机格式不正确",
+														"min_length": "手机格式不正确"})
+	
+	def validate_user_id_card(self, user_id_card):
+		
+		# 验证身份证号是否已经被验证过
+		if User.objects.filter(user_id_card=user_id_card).count():
+			raise serializers.ValidationError(detail={"error_message": "该身份证已经被实名认证", "error_code":
+				status.HTTP_400_BAD_REQUEST})
+		
+		# 验证身份证号是否合法
+		if not re.match(REGEX_IDCARD, user_id_card):
+			print("验证不通过")
+			raise serializers.ValidationError(detail={"error_message": "身份证号不合法", "error_code":
+				status.HTTP_400_BAD_REQUEST})
+		else:
+			print("{}验证通过".format(user_id_card))
+	
+		return user_id_card

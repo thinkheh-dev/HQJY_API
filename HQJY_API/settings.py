@@ -177,6 +177,7 @@ REST_FRAMEWORK = {
 	
 	'DEFAULT_THROTTLE_RATES': {
 		'user_change_password_scope': '5/minute',
+		'user_realname_auth_scope': '2/day',
 	},
 }
 
@@ -196,6 +197,9 @@ API_KEY = "04049cb7d221836ae7eb5eb5150f3417"
 
 # 手机号码正则表达式
 REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
+
+# 18位身份证号码正则表达式
+REGEX_IDCARD = "^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$"
 
 # 支付宝相关配置
 # private_key_path = os.path.join(BASE_DIR, 'apps/trade/keys/private_2048.txt')

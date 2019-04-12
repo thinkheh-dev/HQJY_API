@@ -1,5 +1,10 @@
 from django.db import models
 from datetime import datetime
+from rest_framework.response import Response
+
+import uuid
+import os
+
 
 class EnterpriseLabel(models.Model):
 	"""
@@ -60,33 +65,96 @@ class EnterpriseType(models.Model):
 	
 	def __str__(self):
 		return self.name
-# class EnterpriseTypeFirst(models.Model):
-# 	"""
-# 	企业行业一级分类py
-# 	"""
-# 	first_type_name = models.CharField(max_length=20, verbose_name="分类名称")
-#
-# 	class Meta:
-# 		verbose_name = "企业行业一级分类"
-# 		verbose_name_plural = verbose_name
-#
-# 	def __str__(self):
-# 		return self.first_type_name
-#
-#
-# class EnterpriseTypeSecond(models.Model):
-# 	"""
-# 	企业行业二级分类
-# 	"""
-# 	second_type_name = models.CharField(max_length=20, verbose_name="分类名称")
-# 	enterprise_type_first = models.ForeignKey(EnterpriseTypeFirst, on_delete=models.CASCADE, verbose_name="一级分类外键")
-#
-# 	class Meta:
-# 		verbose_name = "企业行业二级分类"
-# 		verbose_name_plural = verbose_name
-#
-# 	def __str__(self):
-# 		return self.second_type_name
+
+
+def auth_review_path(instance, filename):
+	"""
+	文件上传路径拼装类
+	:param instance: 文 件实例
+	:param filename: 文件名
+	:return: 拼装后的文件路径
+	"""
+	ext = filename.split('.')[-1]
+	filename = '{}.{}'.format(uuid.uuid4().hex[:8], ext)
+	
+	sub_folder = 'enterprise_auth_file'
+	u_name = instance.enterprise_name
+	
+	if ext.lower() in ["jpg", "jpeg", "png"]:
+		return os.path.join(sub_folder, u_name, filename)
+	else:
+		return Response({"error_message": "请上传jpg/jpeg/png格式的图片！"})
+	
+
+class EnterpriseReviewFile(models.Model):
+	"""
+	企业认证申请文件模板
+	"""
+	eps_review_template_file = models.FileField(upload_to="eps_review_template/", verbose_name="企业认证申请文件模板",
+	                                       help_text="企业认证申请文件模板")
+	add_time = models.DateTimeField(default=datetime.now, verbose_name="文件上传时间")
+	
+	class Meta:
+		verbose_name = "企业认证申请文件模板上传"
+		verbose_name_plural = verbose_name
+		
+	def __str__(self):
+		return "模板-{}".format(self.eps_review_template.name)
+	
+
+class EnterpriseAuthManuallyReview(models.Model):
+	"""
+	企业认证人工审核
+	"""
+	
+	STATUS = (
+		(1, "审核成功"),
+		(2, "审核未通过"),
+		(3, "待审核")
+	)
+	
+	user_id = models.CharField(max_length=20, blank=True, null=True, verbose_name="被审核用户id", help_text="被审核用户id")
+	enterprise_name = models.CharField(max_length=50, verbose_name="企业名称", help_text="企业名称")
+	enterprise_oper_name = models.CharField(max_length=20, verbose_name="企业法人姓名", help_text="企业法人姓名")
+	enterprise_oper_idcard = models.ImageField(upload_to=auth_review_path, blank=True, verbose_name="企业法人身份证正面照片",
+	                                           help_text="企业法人身份证正面照片")
+	enterprise_license = models.ImageField(upload_to=auth_review_path, verbose_name="企业营业执照正面照片", blank=True,
+	                                       help_text="企业营业执照正面照片")
+	enterprise_review = models.ImageField(upload_to=auth_review_path, verbose_name="企业认证申请扫描件",
+	                                      blank=True, help_text="企业认证申请扫描件")
+	apply_audit_status = models.IntegerField(choices=STATUS, default=3, verbose_name="申请审核状态", help_text="申请审核状态")
+	auth_failure_reason = models.TextField(max_length=200, blank=True, null=True, verbose_name="审核不通过的原因",
+	                                       help_text="如果审核不通过，请填写原因")
+	add_time = models.DateTimeField(default=datetime.now, verbose_name="申请提交时间", help_text="申请提交时间")
+	update_time = models.DateTimeField(auto_now=True, verbose_name="审核更新时间", help_text="审核更新时间")
+	
+	class Meta:
+		verbose_name = "企业认证人工审核"
+		verbose_name_plural = verbose_name
+		ordering = ['-add_time', ]
+		unique_together = (('user_id', 'enterprise_name'))
+	
+	def __str__(self):
+		return "{} -- 企业认证信息".format(self.enterprise_name)
+
+
+def eps_info_path(instance, filename):
+	"""
+	文件上传路径拼装类
+	:param instance: 文 件实例
+	:param filename: 文件名
+	:return: 拼装后的文件路径
+	"""
+	ext = filename.split('.')[-1]
+	filename = '{}.{}'.format(uuid.uuid4().hex[:8], ext)
+	
+	sub_folder = 'eps_info_file'
+	u_name = instance.name
+	
+	if ext.lower() in ["jpg", "jpeg", "png"]:
+		return os.path.join(sub_folder, u_name, filename)
+	else:
+		return Response({"error_message": "请上传jpg/jpeg/png格式的图片！"})
 
 
 class BasicEnterpriseInfo(models.Model):
@@ -116,23 +184,26 @@ class BasicEnterpriseInfo(models.Model):
 	credit_no = models.CharField(max_length=18, blank=True, null=True, verbose_name="统一社会信用代码", help_text="统一社会信用代码")
 	oper_name = models.CharField(max_length=20, blank=True, null=True, verbose_name="企业法人", help_text="企业法人")
 	econ_kind = models.CharField(max_length=20, blank=True, null=True, verbose_name="公司类型", help_text="公司类型")
-	regist_capi = models.IntegerField(blank=True, null=True, verbose_name="注册资金", help_text="注册资金")
+	regist_capi = models.IntegerField(blank=True, null=True, verbose_name="注册资金（万元）", help_text="注册资金（万元）")
 	scope = models.CharField(max_length=255, blank=True, null=True, verbose_name="经营范围", help_text="经营范围")
-	status = models.CharField(max_length=50, blank=True, null=True, verbose_name="公司状态(开业/注销)", help_text="公司状态(开业/注销)")
+	status = models.CharField(max_length=20, choices=(("开业", "开业"), ("注销", "注销")), default="开业",
+	                          verbose_name="公司状态(开业/注销)", help_text="公司状态(开业/注销)")
 	address = models.CharField(max_length=200, blank=True, null=True, verbose_name="企业地址", help_text="企业地址")
 	start_date = models.DateField(blank=True, null=True, verbose_name="成立日期", help_text="成立日期")
 	term_start = models.DateField(blank=True, null=True, verbose_name="营业开始日期", help_text="营业开始日期")
 	term_end = models.DateField(blank=True, null=True, verbose_name="营业结束日期", help_text="营业结束日期")
 	belong_org = models.CharField(max_length=50, blank=True, null=True, verbose_name="登记机关", help_text="登记机关")
-	company_area = models.CharField(max_length=20, choices=COUNTY_CHOICES, verbose_name="企业归属地", help_text="企业归属地")
-	enterprise_type = models.ForeignKey(EnterpriseType, on_delete=models.CASCADE,
-	                                          related_name="entype_first", verbose_name="企业分类", help_text="企业分类")
+	company_area = models.CharField(max_length=20, choices=COUNTY_CHOICES, default="蒙自市", verbose_name="企业归属地",
+	                                help_text="企业归属地")
+	enterprise_type = models.ForeignKey(EnterpriseType, on_delete=models.CASCADE, related_name="entype_first",
+	                                    blank=True, null=True, verbose_name="企业分类", help_text="企业分类")
 	enterprise_label = models.ForeignKey(EnterpriseLabel, on_delete=models.CASCADE, related_name="enlabel",
-	                                     verbose_name="企业标签", help_text="企业标签")
+	                                     blank=True, null=True, verbose_name="企业标签", help_text="企业标签")
 	oper_phone = models.CharField(max_length=11, blank=True, null=True, verbose_name="企业联系人", help_text="企业联系人")
-	scan_of_company_license = models.ImageField(upload_to="company_license/", blank=True, null=True,
-	                                            verbose_name="营业执照复印件", help_text="营业执照复印件")
-	scan_of_id_card = models.ImageField(upload_to="id_card/", blank=True, null=True, verbose_name="法人身份复印件", help_text="法人身份复印件")
+	scan_of_company_license = models.ImageField(upload_to=eps_info_path, blank=True, null=True,
+	                                            verbose_name="营业执照正面清晰扫描件", help_text="营业执照正面清晰扫描件")
+	scan_of_id_card = models.ImageField(upload_to=eps_info_path, blank=True, null=True, verbose_name="法人身份清晰彩色扫描件",
+	                                    help_text="法人身份清晰彩色扫描件")
 	
 	class Meta:
 		verbose_name = "企业基础信息"

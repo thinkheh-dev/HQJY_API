@@ -2,6 +2,7 @@ from datetime import datetime
 import uuid
 from DjangoUeditor.models import UEditorField
 from django.db import models
+from rest_framework.response import Response
 
 from django.contrib.auth import get_user_model
 from service_object.models import DefaultServices, DefaultServicesPackage, DefaultServiceCoupon, FinancingServices
@@ -30,7 +31,7 @@ def user_upload_path(instance, filename):
 		sub_folder_sub = "file_repository_document"
 		return os.path.join(sub_folder, sub_folder_sub, u_name, filename)
 	else:
-		raise ValueError("您上传的文件有误，请检查，必须是PDF文件！")
+		return Response({"error_message": "请上传pdf格式的文件！"})
 	
 
 class UserFav(models.Model):

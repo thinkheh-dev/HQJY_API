@@ -59,7 +59,8 @@ class GroupAdmin(object):
 
 class UserAdmin(object):
     change_user_password_template = None
-    list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff')
+    list_display = ('username', 'is_staff', 'is_active', 'user_name', 'eps_auth_manually_review', 'user_to_company',
+                    'user_permission_name', 'user_home', 'service_provider')
     list_filter = ('is_staff', 'is_superuser', 'is_active')
     search_fields = ('username', 'first_name', 'last_name', 'email')
     ordering = ('username',)

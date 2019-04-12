@@ -8,10 +8,12 @@
 # @file    : serializers.py
 # @software: PyCharm
 
-from rest_framework import serializers
+from rest_framework import serializers, status
 from django.db.models import Q
 
-from .models import EnterpriseTypeLevel, EnterpriseType, BasicEnterpriseInfo, EnterpriseLabel
+from .models import EnterpriseTypeLevel, EnterpriseType, BasicEnterpriseInfo, EnterpriseLabel, \
+	EnterpriseAuthManuallyReview, EnterpriseReviewFile
+from users.models import UserInfo
 
 
 class EnterpriseLabelSerializers(serializers.ModelSerializer):
@@ -55,6 +57,47 @@ class EnterpriseTypeSerializers(serializers.ModelSerializer):
 #企业类型序列化 -- 结束
 
 
+class EnterpriseReviewFileSerializers(serializers.ModelSerializer):
+	"""
+	企业认证文件序列化
+	"""
+	class Meta:
+		model = EnterpriseReviewFile
+		fields = ['eps_review_template_file', ]
+		
+		
+class EnterpriseAuthManuallyReviewSerializers(serializers.ModelSerializer):
+	"""
+	企业认证人工审核序列化
+	"""
+	
+	apply_audit_status = serializers.CharField(default=3, required=False, read_only=True,label="审核状态")
+	
+	#检测用户是否存在，不存在则报错
+	def validate_user_id(self, user_id):
+		user = UserInfo.objects.filter(id=user_id).count()
+		if not user:
+			raise serializers.ValidationError(detail={"error_message": "该用户不存在,请刷新页面重试！", "error_code":
+				status.HTTP_400_BAD_REQUEST})
+			
+	
+	class Meta:
+		model = EnterpriseAuthManuallyReview
+		fields = ['id', 'user_id', 'enterprise_name', 'enterprise_oper_name', 'enterprise_oper_idcard',
+		          'enterprise_license', 'enterprise_review', 'apply_audit_status']
+		
+		
+class EnterpriseAuthUpdateSerializers(serializers.ModelSerializer):
+	"""
+	企业认证人工审核（完成审核）序列化
+	"""
+	apply_audit_status = serializers.ChoiceField(choices=[1, 2], label="审核状态", help_text="1是审核通过 2是审核不通过")
+	
+	class Meta:
+		model = EnterpriseAuthManuallyReview
+		fields = ['id', 'user_id', 'enterprise_name', 'enterprise_oper_name', 'enterprise_oper_idcard',
+		          'enterprise_license', 'enterprise_review', 'apply_audit_status', 'auth_failure_reason']
+
 class BasicEnterpriseInfoSerializers(serializers.ModelSerializer):
 	"""
 	企业基本信息序列化
@@ -65,6 +108,7 @@ class BasicEnterpriseInfoSerializers(serializers.ModelSerializer):
 	class Meta:
 		model = BasicEnterpriseInfo
 		fields = "__all__"
+		
 
 class BasicEnterpriseInfoNameSerializers(serializers.ModelSerializer):
 	"""

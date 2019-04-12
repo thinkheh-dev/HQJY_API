@@ -34,10 +34,10 @@ class UserLabelsAdmin(object):
 	list_display = ['label_name', 'label_code', 'label_img']
 
 
-class UserInfoAdmin(object):
-	list_display = ['user_name', 'user_logo', 'user_sex', 'user_phone', 'user_id_card', 'user_birthday', 'QQ_num',
-	                'wechat_num', 'contact_address', 'user_email', 'user_to_company', 'user_permissions_name',
-	                'user_home', 'service_provider', 'user_protocol']
+# class UserInfoAdmin(object):
+# 	list_display = ['user_name', 'user_logo', 'user_sex', 'user_phone', 'user_id_card', 'user_birthday', 'QQ_num',
+# 	                'wechat_num', 'contact_address', 'user_email', 'user_to_company', 'user_permission_name',
+# 	                'user_home', 'service_provider', 'user_protocol']
 
 
 class VerifyCodeAdmin(object):

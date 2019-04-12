@@ -5,7 +5,7 @@ import os
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
-from enterprise_info.models import EnterpriseType, BasicEnterpriseInfo
+from enterprise_info.models import BasicEnterpriseInfo, EnterpriseAuthManuallyReview
 
 from DjangoUeditor.models import UEditorField
 
@@ -66,6 +66,7 @@ def user_upload_path(instance, filename):
 	
 	return os.path.join(sub_folder, u_name, sub_folder_sub, filename)
 
+
 class UserInfo(AbstractUser):
 	"""
 	用户主信息
@@ -103,10 +104,11 @@ class UserInfo(AbstractUser):
 	wechat_num = models.CharField(max_length=20, blank=True, null=True, verbose_name="微信号", help_text="微信号")
 	contact_address = models.CharField(max_length=200, blank=True, null=True, verbose_name="联系地址", help_text="联系地址")
 	user_email = models.EmailField(blank=True, null=True, verbose_name="电子邮件地址", help_text="电子邮件地址")
-	user_to_company = models.ForeignKey(BasicEnterpriseInfo, blank=True, null=True, on_delete=models.CASCADE,
+	user_to_company = models.OneToOneField(BasicEnterpriseInfo, blank=True, null=True, on_delete=models.CASCADE,
 	                                    related_name="user_to_company", verbose_name="关联的企业", help_text="关联的企业")
-	# enterprise_type = models.ForeignKey(EnterpriseType, blank=True, null=True, on_delete=models.CASCADE,
-	#                                           related_name="enterprise_type", verbose_name="企业分类", help_text="企业分类")
+	eps_auth_manually_review = models.OneToOneField(EnterpriseAuthManuallyReview, blank=True, null=True,
+	                                                on_delete=models.CASCADE, related_name="eps_amr",
+	                                                verbose_name="企业认证人工审核关联", help_text="企业认证人工审核关联")
 	user_permission_name = models.ForeignKey(UserPermissionsName, null=True, blank=True, on_delete=models.CASCADE,
 	                                         related_name="user_permission_userinfo", verbose_name="关联用户权限",
 	                                         help_text="关联用户权限")
@@ -155,7 +157,4 @@ class UserProtocol(models.Model):
 	class Meta:
 		verbose_name = "用户协议"
 		verbose_name_plural = verbose_name
-
-
-
-
+		

@@ -10,6 +10,8 @@ from rest_framework.response import Response
 from random import choice
 from rest_framework import permissions
 from rest_framework import authentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.throttling import SimpleRateThrottle
 
@@ -18,9 +20,11 @@ from rest_framework.decorators import action
 from django.views.decorators.csrf import csrf_exempt
 
 from .serializers import SmsSerializer, FindPasswordSmsSerializer, UserRegSerializer, UserInfoDetailSerializers, \
-						 UserPhoneSerializers, UserFindPasswordSerizlizers, UserProtocolSerializers
+						 UserPhoneSerializers, UserFindPasswordSerizlizers, UserProtocolSerializers, \
+						 UserRealNameAuthSerializers
 from HQJY_API.settings import API_KEY
 from apiutils.yunpiansms import YunPianSms
+from apiutils.realnameauth import RealNameAuthInterface
 from .models import VerifyCode, UserProtocol, UserPermissionsName
 
 User = get_user_model()
@@ -224,6 +228,7 @@ class UserViewset(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.Retri
 	def perform_update(self, serializer):
 		return serializer.save()
 	
+	
 	def partial_update(self, request, *args, **kwargs):
 		kwargs['partial'] = True
 		return self.update(request, *args, **kwargs)
@@ -308,4 +313,88 @@ class UserProtocolViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, view
 	
 	serializer_class = UserProtocolSerializers
 	queryset = UserProtocol.objects.all()
+
+
+class UserRealNameAuthThrottle(SimpleRateThrottle):
+	"""
+	限制用户实名认证每天的尝试次数-阀值类
+	"""
+	scope = 'user_realname_auth_scope'  # 显示频率的Key,在配置文件里需要有个跟这个同名
+	
+	def get_cache_key(self, request, view):
+		return self.get_ident(request)  # 获取请求IP
+	
+
+class UserRealNameAuthViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
+	"""
+	用户实名认证视图
+	"""
+	permission_classes = (IsAuthenticated, )
+	authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+	serializer_class = UserRealNameAuthSerializers
+	
+	throttle_classes = [UserRealNameAuthThrottle, ]
+	
+	def get_user_birth(self, idcard):
+		
+		useridcard = idcard
+		
+		user_year = useridcard[6:10]
+		user_month = useridcard[10:12]
+		user_day = useridcard[12:14]
+		
+		user_birth = "{}-{}-{}".format(user_year, user_month, user_day)
+		
+		return user_birth
+		
+		
+	def get_queryset(self):
+		return User.objects.all()
+	
+	def update(self, request, *args, **kwargs):
+		partial = kwargs.pop('partial', True)
+		user = self.get_object()
+		serializer = self.get_serializer(user, data=request.data, partial=partial)
+		if serializer.is_valid(raise_exception=True):
+			user_name = serializer.validated_data['user_name']
+			user_id_card = serializer.validated_data['user_id_card']
+			user_phone = serializer.validated_data['user_phone']
+			
+			real_name_auth = RealNameAuthInterface(API_KEY)
+			auth_status = real_name_auth.send_auth(user_phone=user_phone, realname=user_name, idcard=user_id_card)
+			
+			if auth_status['error_code'] != 0:
+				return Response({
+					"error_message": auth_status["result"]['resmsg']
+				}, status=status.HTTP_400_BAD_REQUEST)
+			else:
+				user.user_name = user_name
+				user.user_id_card = user_id_card
+				user.user_permission_name = UserPermissionsName.objects.filter(permission_sn="QX002").first()
+				
+				#判断身份证性别
+				if int(list(user_id_card)[-2]) % 2 :
+					user.user_sex = "male"
+				else:
+					user.user_sex = "female"
+				
+				#调用获取身份证生日的函数
+				user.user_birthday = self.get_user_birth(idcard=user_id_card)
+				user.save()
+				
+				return Response({
+					"success":"验证完成",
+					"auth_status": auth_status['result']['resmsg']
+				})
+		
+	def throttled(self, request, wait):
+		"""
+		访问次数被限制时，定制错误信息
+		"""
+		class Throttled(exceptions.Throttled):
+			default_detail = '实名认证每天只能提交1次，'
+			extra_detail_singular = '请在 {wait} 秒之后再操作.'
+			extra_detail_plural = '请在 {wait} 秒之后再操作.'
+		
+		raise Throttled(wait)
 	

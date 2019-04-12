@@ -29,9 +29,11 @@ from service_object.views import DefaultServicesListViewSet, FinancingServicesLi
 	 FinancingCategoryNavViewset
 
 from users.views import SmsCodeViewset, FindPasswordSmsCodeViewset, UserViewset, UserPhoneViewSet, \
-						UserPasswordModifyViewSet, UserProtocolViewSet
+						UserPasswordModifyViewSet, UserProtocolViewSet, UserRealNameAuthViewSet
 
-from enterprise_info.views import EnterpriseListViewSet, EnterpriseTypeListViewset
+from enterprise_info.views import EnterpriseListViewSet, EnterpriseTypeListViewset, \
+	EnterpriseAuthFileDownloadViewSet, EnterpriseAuthManuallyReviewViewSet, EnterpriseAuthUpdateViewSet, \
+	EnterpriseDetailUpdateViewSet
 
 from user_operation.views import UserFavViewSet, OrderViewSet, OrderDetailViewSet, OrderCancelViewSet
 
@@ -79,14 +81,21 @@ router.register(r'userphone', UserPhoneViewSet, base_name='userphone')
 router.register(r'codes', SmsCodeViewset, base_name='codes')
 router.register(r'users', UserViewset, base_name='users')
 router.register(r'user-protocol', UserProtocolViewSet, base_name='userprotocol')
+router.register(r'user_real_name', UserRealNameAuthViewSet, base_name='userrealname')
 
 #用户忘记密码相关路由
 router.register(r'change-password-code', FindPasswordSmsCodeViewset, base_name='changepasswordcode')
 router.register(r'change-password', UserPasswordModifyViewSet, base_name='changepassword')
 
-#配置企业信息理由
+#配置企业信息路由
 router.register(r'enterprise-info', EnterpriseListViewSet, base_name='enterpriselist')
 router.register(r'enterprise-type', EnterpriseTypeListViewset, base_name='enterprisetype')
+router.register(r'enterprise_update', EnterpriseDetailUpdateViewSet, base_name='enterpriseupdate')
+
+#配置企业认证相关路由
+router.register(r'eps-auth-fdownload', EnterpriseAuthFileDownloadViewSet, base_name='epsafdown')
+router.register(r'eps-auth-review', EnterpriseAuthManuallyReviewViewSet, base_name='epsar')
+router.register(r'eps-auth-update', EnterpriseAuthUpdateViewSet, base_name='epsau')
 
 #配置文件库路由
 # router.register(r'file-repository', OrderImageViewSet, base_name='filereplist')
