@@ -99,7 +99,7 @@ class EnterpriseReviewFile(models.Model):
 		verbose_name_plural = verbose_name
 		
 	def __str__(self):
-		return "模板-{}".format(self.eps_review_template.name)
+		return "模板-{}".format(self.eps_review_template_file.name)
 	
 
 class EnterpriseAuthManuallyReview(models.Model):
