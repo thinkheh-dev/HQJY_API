@@ -55,7 +55,7 @@ class EnterpriseListViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, vi
         企业详情
     """
     
-    queryset = BasicEnterpriseInfo.objects.all()
+    queryset = BasicEnterpriseInfo.objects.all().order_by('id')
     serializer_class = BasicEnterpriseInfoSerializers
     pagination_class = EnterpriseInfoPagination
 
@@ -94,13 +94,7 @@ class EnterpriseDetailUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelM
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         
-        #企业信息补全后，更新用户权限为：企业VIP用户（QX005）
-        user = get_user_model()
-        user_permission_name_id = UserPermissionsName.objects.get(permission_sn="QX005").id
-        user.objects.filter(id=self.request.user.id).update(user_permission_name=user_permission_name_id)
-        
-        return Response({"message":"恭喜，企业认证完成，您的权限已经变更为 {}".format(UserPermissionsName.objects.get(
-            permission_sn="QX005").permission_name)})
+        return Response({"message":"恭喜，{} 企业信息更新完成".format(instance.enterprise_name)})
         
         
     def perform_update(self, serializer):
@@ -212,10 +206,13 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
         if eps_auth_data.apply_audit_status == 1:
             print("审核通过")
             auth_status = "审核通过"
+            user_permission_name_id = UserPermissionsName.objects.get(permission_sn="QX004").id
+            
             basic_info = BasicEnterpriseInfo.objects.create(name=eps_auth_data.enterprise_name,
                                                             oper_name=eps_auth_data.enterprise_oper_name)
-            user.objects.filter(id=eps_auth_data.user_id).update(user_to_company=basic_info.id)
-            
+            # 企业认证完成，更新用户权限为：企业用户（QX004)
+            user.objects.filter(id=eps_auth_data.user_id).update(user_to_company=basic_info.id,
+                                                                 user_permission_name=user_permission_name_id)
         else:
             print("审核不通过")
             auth_status = "审核未通过"
@@ -224,13 +221,18 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
         
         #根据申请结果发送短信
         # yun_pian = YunPianSmsSend(API_KEY)
-        #
+		#
         # if eps_auth_data.apply_audit_status == 1:
         #     print("审核通过")
         #     auth_status = "审核通过"
+        #     user_permission_name_id = UserPermissionsName.objects.get(permission_sn="QX004").id
+		#
         #     basic_info = BasicEnterpriseInfo.objects.create(name=eps_auth_data.enterprise_name,
-        #                                                     oper_name=eps_auth_data.enterprise_oper_name)
-        #     user_info = user.objects.filter(id=eps_auth_data.user_id).update(user_to_company=basic_info.id)
+	    #                                                     oper_name=eps_auth_data.enterprise_oper_name)
+        #     # 企业认证完成，更新用户权限为：企业用户（QX004)
+        #     user.objects.filter(id=eps_auth_data.user_id).update(user_to_company=basic_info.id,
+	    #                                                          user_permission_name=user_permission_name_id)
+	    #
         #     sms_send_code = yun_pian.send_sms(username=username, company_name=company_name, success="成功",
         #                                               user_phone=user_phone)
         #     if sms_send_code["code"] != 0:
@@ -246,6 +248,7 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
         #         sms_send_result = "审核短信发送失败！原因：{}".format(sms_send_code['msg'])
         #     else:
         #         sms_send_result = "审核短信发送成功！"
+        
         
         #拼接返回的json数据
         re_dict = {}

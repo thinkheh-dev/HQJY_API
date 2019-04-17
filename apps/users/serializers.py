@@ -259,6 +259,18 @@ class UserFindPasswordSerizlizers(serializers.Serializer):
 	class Meta:
 		model = User
 		fields = ("code", "user_phone", "password")
+
+
+class UserChangPasswordSerizlizers(serializers.Serializer):
+	"""
+	用户修改密码
+	"""
+	
+	password = serializers.CharField(style={'input_type': 'password'}, label="密码")
+
+	class Meta:
+		model = User
+		fields = ("user_phone", "password")
 		
 		
 class UserProtocolSerializers(serializers.ModelSerializer):

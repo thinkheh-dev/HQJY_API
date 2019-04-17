@@ -27,10 +27,8 @@ from service_object.views import DefaultServicesListViewSet, FinancingServicesLi
 	 FinancingCategoryViewset, HotSearchsViewset, DefaultServicesBannerViewset, FinancingServicesBannerViewset, \
 	 ServicesBrandViewset, EnterpriseDemandViewset, CorporateFinanceDemandViewset, DefaultCategoryNavViewset, \
 	 FinancingCategoryNavViewset
-
 from users.views import SmsCodeViewset, FindPasswordSmsCodeViewset, UserViewset, UserPhoneViewSet, \
-						UserPasswordModifyViewSet, UserProtocolViewSet, UserRealNameAuthViewSet
-
+						UserPasswordModifyViewSet, UserProtocolViewSet, UserRealNameAuthViewSet, UserPasswordOwnerViewSet
 from enterprise_info.views import EnterpriseListViewSet, EnterpriseTypeListViewset, \
 	EnterpriseAuthFileDownloadViewSet, EnterpriseAuthManuallyReviewViewSet, EnterpriseAuthUpdateViewSet, \
 	EnterpriseDetailUpdateViewSet
@@ -83,9 +81,11 @@ router.register(r'users', UserViewset, base_name='users')
 router.register(r'user-protocol', UserProtocolViewSet, base_name='userprotocol')
 router.register(r'user_real_name', UserRealNameAuthViewSet, base_name='userrealname')
 
-#用户忘记密码相关路由
+#用户密码相关路由
 router.register(r'change-password-code', FindPasswordSmsCodeViewset, base_name='changepasswordcode')
 router.register(r'change-password', UserPasswordModifyViewSet, base_name='changepassword')
+router.register(r'change-password-owner', UserPasswordOwnerViewSet, base_name="changepasswordowner")
+
 
 #配置企业信息路由
 router.register(r'enterprise-info', EnterpriseListViewSet, base_name='enterpriselist')

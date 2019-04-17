@@ -35,21 +35,6 @@ class InfoCategories(models.Model):
 		return self.name
 
 
-# class InfoCategoriesSecond(models.Model):
-# 	"""
-# 	信息版块二级分类
-# 	"""
-# 	section_name = models.CharField(max_length=50, verbose_name="二级分类名称")
-# 	info_categories = models.ForeignKey(InfoCategories, on_delete=models.CASCADE, verbose_name="所属一级分类")
-#
-# 	class Meta:
-# 		verbose_name = "信息二级分类"
-# 		verbose_name_plural = verbose_name
-#
-# 	def __str__(self):
-# 		return self.section_name
-
-
 class WeMediaArticles(models.Model):
 	"""
 	平台自媒体文章
@@ -58,14 +43,15 @@ class WeMediaArticles(models.Model):
 	subtitle = models.CharField(max_length=200, blank=True, null=True, verbose_name="副标题", help_text="副标题")
 	info_categories = models.ForeignKey(InfoCategories, on_delete=models.CASCADE, verbose_name="信息版块分类",
 	                                    help_text="信息版块分类")
-	#info_categories_second = models.ForeignKey(InfoCategoriesSecond, on_delete=models.CASCADE, verbose_name="信息板块二级分类")
 	abstract = models.TextField(max_length=200, blank=True, null=True, verbose_name="摘要", help_text="摘要")
 	content = UEditorField(default="", width=1000, height=300, filePath="platform_op/files/",
 	                       imagePath="platform_op/images/", verbose_name="正文", help_text="正文")
 	attachment = models.FileField(upload_to="we_media_articles/", verbose_name="附件", help_text="附件")
 	publish_time = models.DateTimeField(auto_now_add=True, verbose_name="发布时间", help_text="发布时间")
 	author = models.ForeignKey(UserInfo, on_delete=models.CASCADE, verbose_name="作者", help_text="作者")
+	#用于相关计数的字段
 	read_nums = models.IntegerField(default=0, editable=True, verbose_name="阅读计数", help_text="阅读计数")
+	fav_nums = models.IntegerField(default=0, editable=True, verbose_name="被收藏计数", help_text="被收藏计数")
 	
 	class Meta:
 		verbose_name = "平台自媒体文章"
@@ -73,6 +59,25 @@ class WeMediaArticles(models.Model):
 	
 	def __str__(self):
 		return self.title
+	
+	
+class WeMediaArticleFav(models.Model):
+	"""
+	平台自媒体文章收藏记录
+	"""
+	user_info = models.ForeignKey(UserInfo, on_delete=models.CASCADE, related_name="user_wemedia_fav",
+	                              verbose_name="收藏的用户", help_text="收藏的用户")
+	wemedia_article = models.ForeignKey(WeMediaArticles, on_delete=models.CASCADE, related_name="wemedia_fav",
+	                                    verbose_name="收藏的平台自媒体文章", help_text="收藏的平台自媒体文章")
+	add_time = models.DateTimeField(auto_now_add=True, verbose_name="收藏时间", help_text="收藏时间")
+	
+	class Meta:
+		verbose_name = "平台自媒体文章收藏管理"
+		verbose_name_plural = verbose_name
+		unique_together = "user_info", "wemedia_article"
+		
+	def __str__(self):
+		return "{}收藏的{}".format(self.user_info.username, self.wemedia_article.title)
 
 
 class PlatformActivity(models.Model):

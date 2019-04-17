@@ -21,7 +21,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .serializers import SmsSerializer, FindPasswordSmsSerializer, UserRegSerializer, UserInfoDetailSerializers, \
 						 UserPhoneSerializers, UserFindPasswordSerizlizers, UserProtocolSerializers, \
-						 UserRealNameAuthSerializers
+						 UserRealNameAuthSerializers, UserChangPasswordSerizlizers
 from HQJY_API.settings import API_KEY
 from apiutils.yunpiansms import YunPianSms
 from apiutils.realnameauth import RealNameAuthInterface
@@ -258,9 +258,7 @@ class UserChangePasswordThrottle(SimpleRateThrottle):
 		return self.get_ident(request)  # 获取请求IP
 	
 	
-class UserPasswordModifyViewSet(mixins.RetrieveModelMixin,
-                                mixins.UpdateModelMixin,
-                                mixins.DestroyModelMixin,
+class UserPasswordModifyViewSet(mixins.UpdateModelMixin,
                                 viewsets.GenericViewSet):
 	"""
 	用户通过手机号修改密码
@@ -300,6 +298,31 @@ class UserPasswordModifyViewSet(mixins.RetrieveModelMixin,
 			extra_detail_plural = '请在 {wait} 秒之后再操作.'
 		
 		raise Throttled(wait)
+
+
+class UserPasswordOwnerViewSet(mixins.UpdateModelMixin,
+                                viewsets.GenericViewSet):
+	"""
+	登录用户修改密码
+	update:
+		更新用户信息
+	partial：
+		部分更新用户信息
+	"""
+	serializer_class = UserChangPasswordSerizlizers
+	queryset = User.objects.all()
+	
+	@action(detail=True, methods=['post'])
+	def set_password(self, request, pk=None):
+		user = self.get_object()
+		serializer = UserChangPasswordSerizlizers(data=request.data)
+		print(serializer)
+		if serializer.is_valid():
+			user.set_password(serializer.data['password'])
+			user.save()
+			return Response({"user_id": pk}, status=status.HTTP_202_ACCEPTED)
+		else:
+			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 	
 
 class UserProtocolViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
