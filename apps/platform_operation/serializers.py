@@ -27,7 +27,7 @@ class InfoCategoriesSerializers5(serializers.ModelSerializer):
 	
 	class Meta:
 		model = InfoCategories
-		field = "__all__"
+		fields = "__all__"
 		
 		
 class InfoCategoriesSerializers4(serializers.ModelSerializer):
@@ -36,7 +36,7 @@ class InfoCategoriesSerializers4(serializers.ModelSerializer):
 	
 	class Meta:
 		model = InfoCategories
-		field = "__all__"
+		fields = "__all__"
 
 
 class InfoCategoriesSerializers3(serializers.ModelSerializer):
@@ -45,7 +45,7 @@ class InfoCategoriesSerializers3(serializers.ModelSerializer):
 	
 	class Meta:
 		model = InfoCategories
-		field = "__all__"
+		fields = "__all__"
 		
 		
 class InfoCategoriesSerializers2(serializers.ModelSerializer):
@@ -54,7 +54,7 @@ class InfoCategoriesSerializers2(serializers.ModelSerializer):
 	
 	class Meta:
 		model = InfoCategories
-		field = "__all__"
+		fields = "__all__"
 		
 	
 class InfoCategoriesSerializers(serializers.ModelSerializer):
@@ -63,7 +63,7 @@ class InfoCategoriesSerializers(serializers.ModelSerializer):
 	
 	class Meta:
 		model = InfoCategories
-		field = "__all__"
+		fields = "__all__"
 		
 #信息分类序列化 -- 结束
 
@@ -76,7 +76,7 @@ class WeMediaArticlesSerializers(serializers.ModelSerializer):
 	
 	class Meta:
 		model = WeMediaArticles
-		field = "__all__"
+		fields = "__all__"
 		
 
 class WeMediaArticlesCreateSerializers(serializers.ModelSerializer):
@@ -84,7 +84,7 @@ class WeMediaArticlesCreateSerializers(serializers.ModelSerializer):
 	平台自媒体文章编辑序列化
 	"""
 	
-	title = serializers.CharField(required=True, label="文章标题", max_length=20, min_length=5,
+	title = serializers.CharField(required=True, label="文章标题", max_length=100, min_length=5,
 	                              error_messages=({
 													"blank": "文章标题不能为空",
 													"required": "文章标题必须填写",
@@ -99,7 +99,10 @@ class WeMediaArticlesCreateSerializers(serializers.ModelSerializer):
 	publish_time = serializers.DateTimeField(read_only=True)
 	read_nums = serializers.IntegerField(read_only=True)
 	fav_nums = serializers.IntegerField(read_only=True)
-
+	
+	class Meta:
+		model = WeMediaArticles
+		fields = "__all__"
 
 class WeMediaArticleFavDetailSerializers(serializers.ModelSerializer):
 	"""

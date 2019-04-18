@@ -204,6 +204,7 @@ class BasicEnterpriseInfo(models.Model):
 	                                            verbose_name="营业执照正面清晰扫描件", help_text="营业执照正面清晰扫描件")
 	scan_of_id_card = models.ImageField(upload_to=eps_info_path, blank=True, null=True, verbose_name="法人身份清晰彩色扫描件",
 	                                    help_text="法人身份清晰彩色扫描件")
+	add_time = models.DateTimeField(default=datetime.now, verbose_name="企业信息创建时间", help_text="企业信息创建时间")
 	
 	class Meta:
 		verbose_name = "企业基础信息"

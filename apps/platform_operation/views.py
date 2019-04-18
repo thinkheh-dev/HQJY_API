@@ -14,7 +14,7 @@ from apiutils.permissions import IsOwnerOrReadOnly, IsServiceProvider
 
 from .models import InfoCategories, WeMediaArticles, WeMediaArticleFav
 from .serializers import InfoCategoriesSerializers, WeMediaArticlesSerializers, WeMediaArticleFavDetailSerializers, \
-    WeMediaArticleFavSerializers
+    WeMediaArticleFavSerializers, WeMediaArticlesCreateSerializers
 
 
 #分页
@@ -46,6 +46,7 @@ class WeMediaArticlesDetailViewSet(mixins.ListModelMixin,
 
 class WeMediaArticlesCreateViewSet(mixins.ListModelMixin,
                                    mixins.RetrieveModelMixin,
+                                   mixins.CreateModelMixin,
                                    mixins.UpdateModelMixin,
                                    mixins.DestroyModelMixin,
                                    viewsets.GenericViewSet):
@@ -58,7 +59,7 @@ class WeMediaArticlesCreateViewSet(mixins.ListModelMixin,
     """
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly, IsServiceProvider)
     authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
-    serializer_class = WeMediaArticlesSerializers
+    serializer_class = WeMediaArticlesCreateSerializers
     
     def get_queryset(self):
         return WeMediaArticles.objects.all()

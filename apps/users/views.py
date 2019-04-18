@@ -172,6 +172,8 @@ class UserViewset(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.Retri
 		re_dict['user_logo'] = user.user_logo.url
 		#获取用户归属地
 		re_dict['user_home'] = user.user_home
+		#获取管理员模式
+		re_dict['is_staff'] = user.is_staff
 		
 		
 		headers = self.get_success_headers(serializer.data)

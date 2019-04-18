@@ -35,6 +35,9 @@ from enterprise_info.views import EnterpriseListViewSet, EnterpriseTypeListViews
 
 from user_operation.views import UserFavViewSet, OrderViewSet, OrderDetailViewSet, OrderCancelViewSet
 
+from platform_operation.views import WeMediaArticlesCreateViewSet, WeMediaArticlesDetailViewSet, \
+	WeMediaArticlesFavViewSet
+
 from page_control.models import SystemAdminURL
 
 #获取最新的后台管理指定的管理地址
@@ -107,6 +110,10 @@ router.register(r'user-fav', UserFavViewSet, base_name='user-fav')
 router.register(r'order-send', OrderViewSet, base_name='ordersend')
 router.register(r'order-detail', OrderDetailViewSet, base_name='orderdetail')
 router.register(r'order-cancel', OrderCancelViewSet, base_name='ordercancel')
+
+#配置平台自媒体文章相关路由
+router.register(r'wemedia-detail', WeMediaArticlesDetailViewSet, base_name='wemediadetail')
+router.register(r'wemedia-create', WeMediaArticlesCreateViewSet, base_name='wemediacreate')
 
 
 urlpatterns = [

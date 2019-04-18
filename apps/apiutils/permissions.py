@@ -33,6 +33,6 @@ class IsServiceProvider(permissions.BasePermission):
     
     def has_permission(self, request, view):
         return bool(
-            request.method in SAFE_METHODS or
+            request.method in permissions.SAFE_METHODS or
             request.user and request.user.service_provider
         )

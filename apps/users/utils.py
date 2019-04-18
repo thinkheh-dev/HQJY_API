@@ -27,7 +27,8 @@ def jwt_response_payload_handler(token, user=None, request=None):
 		'username': user.username,
 		'user_permission_name': user.user_permission_name.permission_sn,
 		'user_logo': user.user_logo.url,
-		'user_home': user.user_home
+		'user_home': user.user_home,
+		'is_staff': user.is_staff
 	}
 
 

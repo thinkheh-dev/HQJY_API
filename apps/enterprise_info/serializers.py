@@ -108,7 +108,17 @@ class BasicEnterpriseInfoSerializers(serializers.ModelSerializer):
 	class Meta:
 		model = BasicEnterpriseInfo
 		fields = "__all__"
-		
+
+
+class BasicEnterpriseInfoUpdateSerializers(serializers.ModelSerializer):
+	"""
+	企业基本信息序列化
+	"""
+	
+	class Meta:
+		model = BasicEnterpriseInfo
+		fields = "__all__"
+	
 
 class BasicEnterpriseInfoNameSerializers(serializers.ModelSerializer):
 	"""

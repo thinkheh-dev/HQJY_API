@@ -177,7 +177,7 @@ REST_FRAMEWORK = {
 	
 	'DEFAULT_THROTTLE_RATES': {
 		'user_change_password_scope': '5/minute',
-		'user_realname_auth_scope': '5/day',
+		'user_realname_auth_scope': '100/day',
 	},
 }
 

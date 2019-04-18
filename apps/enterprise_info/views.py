@@ -15,7 +15,8 @@ from apiutils.permissions import IsOwnerOrReadOnly
 from .models import EnterpriseType, EnterpriseTypeLevel, BasicEnterpriseInfo, EnterpriseReviewFile, \
     EnterpriseAuthManuallyReview
 from .serializers import EnterpriseTypeSerializers, BasicEnterpriseInfoSerializers, \
-    EnterpriseAuthManuallyReviewSerializers, EnterpriseReviewFileSerializers, EnterpriseAuthUpdateSerializers
+    EnterpriseAuthManuallyReviewSerializers, EnterpriseReviewFileSerializers, EnterpriseAuthUpdateSerializers, \
+    BasicEnterpriseInfoUpdateSerializers
 from users.serializers import UserInfoDetailSerializers
 from HQJY_API.settings import API_KEY
 from apiutils.yunpiansms import YunPianSmsSend
@@ -66,7 +67,7 @@ class EnterpriseListViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, vi
     
 
 class EnterpriseDetailUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
-                              viewsets.GenericViewSet):
+                                    viewsets.GenericViewSet):
     """
     企业详情更新视图
     注意：此视图只能用于更新企业详情，无法创建，创建过程在审核时就已经完成
@@ -81,7 +82,7 @@ class EnterpriseDetailUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelM
     """
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
     authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
-    serializer_class = BasicEnterpriseInfoSerializers
+    serializer_class = BasicEnterpriseInfoUpdateSerializers
     
     def get_queryset(self):
         user = self.request.user
