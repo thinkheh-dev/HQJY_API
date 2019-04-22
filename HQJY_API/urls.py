@@ -123,17 +123,17 @@ urlpatterns = [
 	
     re_path(r'^%s/' % (admin_url), xadmin.site.urls), #在后台修改过系统管理地址后，则可以启用这条
 	
-	path('ueditor/', include(DjangoUeditor_urls)),
-	path('', include(router.urls)),
-	path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+	path('api/ueditor/', include(DjangoUeditor_urls)),
+	path('api/', include(router.urls)),
+	path('api/api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 	
 	#drf自带的认证模式
 	#path('api-token-auth/', views.obtain_auth_token),
 	
 	#jwt认证模式
-	path('login/', obtain_jwt_token),
+	path('api/login/', obtain_jwt_token),
 	
-    path('docs/', include_docs_urls(title='红企家园后端API')),
+    path('api/docs/', include_docs_urls(title='红企家园后端API')),
 
 	#path('default-services/', DefaultServicesListView.as_view(), name='ds-list')
 ]
