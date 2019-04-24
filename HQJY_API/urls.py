@@ -119,9 +119,9 @@ router.register(r'wemedia-create', WeMediaArticlesCreateViewSet, base_name='weme
 urlpatterns = [
 	#后台管理地址（初始）
 	
-	path('xadmin/', xadmin.site.urls), #第一次配置，请启用这一条
+	#path('api/xadmin/', xadmin.site.urls), #第一次配置，请启用这一条
 	
-    # re_path(r'^%s/' % (admin_url), xadmin.site.urls), #在后台修改过系统管理地址后，则可以启用这条
+	re_path(r'^api/%s/' % (admin_url), xadmin.site.urls), #在后台修改过系统管理地址后，则可以启用这条
 	
 	path('api/ueditor/', include(DjangoUeditor_urls)),
 	path('api/', include(router.urls)),
