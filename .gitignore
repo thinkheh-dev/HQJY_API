@@ -8,4 +8,7 @@ static/rest_framework/
 static/xadmin/
 uwsgi_hqjy.ini
 uwsgi_params
+hqjy_uwsgi.log
+uwsgi/
+
 
