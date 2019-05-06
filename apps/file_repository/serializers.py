@@ -11,7 +11,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
-from .models import AttachLibraryManager, AttachResources
+from .models import AttachLibraryManager, AttachResources, TinyMCEAttach
 from user_operation.models import OrderServiceDetail
 from user_operation.serializers import OrderServiceDetailSerializers, OrderInfoSerializers
 
@@ -69,7 +69,42 @@ class AttachResourceListSerializers(serializers.Serializer):
 			
 		OrderServiceDetail.objects.filter(order_info=order_info_id).update(allow_upload_file=False)
 		return {'attach_images': images}
-	
+
+
+class TinyMCEAttachSerializers(serializers.ModelSerializer):
+	"""
+	TinyMCE富文本编辑器图片序列化
+	"""
+	user_info = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+
+	class Meta:
+		model = TinyMCEAttach
+		fields = ('user_info', 'url')
+
+
+class TinyMCEAttachListSerializers(serializers.Serializer):
+	"""
+	TinyMCE富文本编辑器图片列表序列化
+	"""
+	imgs = serializers.ListField(child=serializers.ImageField(max_length=100000,
+								 allow_empty_file=True,
+								 allow_null=True, use_url=True),
+								 write_only=True,
+								 allow_empty=True,
+								 allow_null=True)
+
+	def create(self, validated_data):
+		image_files = validated_data.get('imgs')
+
+		images = []
+
+		for index, url in enumerate(image_files):
+			image = AttachResources.objects.create(url=url, user_info=User.objects.get(id=self.context['request'].user.id))
+			tiny_attach = TinyMCEAttachSerializers(image, context=self.context)
+			images.append(tiny_attach.data['url'])
+
+		return {'tiny_imgs': images}
 
 
 

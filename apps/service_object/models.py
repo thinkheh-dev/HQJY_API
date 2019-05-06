@@ -121,6 +121,7 @@ class DefaultServices(ServiceAbstractClass):
 	service_inventory = models.IntegerField(editable=True, verbose_name="库存数")
 	service_market_price = models.FloatField(verbose_name="市场价格")
 	service_platform_price = models.FloatField(verbose_name="平台价格")
+	service_unit = models.CharField(max_length=50, verbose_name="价格单位", help_text="价格单位", blank=True, null=True)
 	
 	class Meta:
 		verbose_name = "普适服务产品管理"
@@ -210,6 +211,7 @@ class FinancingServices(ServiceAbstractClass):
 	#fsc = models.ForeignKey(FinancingServicesClassification, on_delete=models.CASCADE, verbose_name="融资服务分类")
 	service_market_price = models.FloatField(verbose_name="市场价格", default=0)
 	service_platform_price = models.FloatField(verbose_name="平台价格", default=0)
+	service_unit = models.CharField(max_length=50, verbose_name="价格单位", help_text="价格单位", blank=True, null=True)
 	time_limit = models.CharField(max_length=10, verbose_name="期限")
 	annual_interest_rate = models.CharField(max_length=10, verbose_name="年利率")
 	approval_lines = models.CharField(max_length=10, verbose_name="审批额度")

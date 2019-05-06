@@ -46,7 +46,7 @@ class WeMediaArticles(models.Model):
     abstract = models.TextField(max_length=200, blank=True, null=True, verbose_name="摘要", help_text="摘要")
     content = UEditorField(default="", width=1000, height=300, filePath="platform_op/files/",
                            imagePath="platform_op/images/", verbose_name="正文", help_text="正文")
-    attachment = models.FileField(upload_to="we_media_articles/", verbose_name="附件", help_text="附件")
+    attachment = models.FileField(upload_to="we_media_articles/", blank=True, null=True, verbose_name="附件", help_text="附件")
     publish_time = models.DateTimeField(auto_now_add=True, verbose_name="发布时间", help_text="发布时间")
     user_info = models.ForeignKey(UserInfo, on_delete=models.CASCADE, verbose_name="作者", help_text="作者")
     #用于相关计数的字段
@@ -59,6 +59,11 @@ class WeMediaArticles(models.Model):
     
     def __str__(self):
         return self.title
+
+# class WeMediaContentImg(models.Model):
+#     """
+#     平台自媒体文章正文
+#     """
 
 
 class WeMediaArticleFav(models.Model):

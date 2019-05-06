@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import datetime
 from django.contrib.auth import get_user_model
+from rest_framework.response import Response
 import uuid
 import os
 
@@ -19,15 +20,15 @@ def user_upload_path(instance, filename):
 	ext = filename.split('.')[-1]
 	filename = '{}.{}'.format(uuid.uuid4().hex[:8], ext)
 	
-	sub_folder = 'file_repository'
-	sub_folder_sub = 'file_repository_other'
+	sub_folder = 'file_repository %s '
+	sub_folder_sub = ''
 	
 	if ext.lower() in ["jpg", "png", "gif", "svg", "jpeg"]:
 		sub_folder_sub = "file_repository_avatar"
-	if ext.lower() in ["pdf", "docx", "doc", "xlsx", "xls"]:
-		sub_folder_sub = "file_repository_document"
+	else:
+		return Response({"您上传的文件{}不是图片类型，请重新上传！", filename})
 	
-	return os.path.join(sub_folder, sub_folder_sub, filename)
+	return os.path.join(sub_folder, instance.username, filename)
 
 
 # 此方法已弃用
@@ -95,3 +96,18 @@ class AttachResources(models.Model):
 	
 	def __str__(self):
 		return str(self.attach_library_manager.library_name)
+
+
+class TinyMCEAttach(models.Model):
+	"""
+	富文本编辑器TinyMCE图片上传模型-支持多文件
+	"""
+	user_info = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="图片上传者", help_text="图片上传者", related_name="tinymce_author")
+	url = models.ImageField(upload_to=user_upload_path, null=True, blank=True, verbose_name="图片url", help_text="图片url")
+
+	class Meta:
+		verbose_name = "TinyMCE图片上传"
+		verbose_name_plural = verbose_name
+
+	def __str__(self):
+		return self.url

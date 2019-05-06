@@ -38,21 +38,21 @@ from user_operation.views import UserFavViewSet, OrderViewSet, OrderDetailViewSe
 from platform_operation.views import WeMediaArticlesCreateViewSet, WeMediaArticlesDetailViewSet, \
 	WeMediaArticlesFavViewSet
 
+from file_repository.views import TinyMCEImageViewSet
+
 from page_control.models import SystemAdminURL
 
-#获取最新的后台管理指定的管理地址
-admin_url = SystemAdminURL.objects.all().first() #无论后台地址有多少条，只取最后编辑保存的那一条（数据库记录）
+# 获取最新的后台管理指定的管理地址
+admin_url = SystemAdminURL.objects.all().first() # 无论后台地址有多少条，只取最后编辑保存的那一条（数据库记录）
 
 
-
-
-#实例化Router对象，用于配置路由
+# 实例化Router对象，用于配置路由
 router = DefaultRouter()
 
-#配置路由
-#下面这些router很重要，不要随便修改，不然你会后悔！！
+# 配置路由
+# 下面这些router很重要，不要随便修改，不然你会后悔！！
 
-#配置服务接口路由
+# 配置服务接口路由
 router.register(r'default-services', DefaultServicesListViewSet, base_name='dslist')
 router.register(r'financing-services', FinancingServicesListViewSet, base_name='fnlist')
 
@@ -102,6 +102,7 @@ router.register(r'eps-auth-update', EnterpriseAuthUpdateViewSet, base_name='epsa
 
 #配置文件库路由
 # router.register(r'file-repository', OrderImageViewSet, base_name='filereplist')
+router.register(r'tiny_mce_imageupload', TinyMCEImageViewSet, base_name='tinymceimageupload')
 
 #配置用户收藏路由
 router.register(r'user-fav', UserFavViewSet, base_name='user-fav')
@@ -123,7 +124,7 @@ urlpatterns = [
 	
 	re_path(r'^api/%s/' % (admin_url), xadmin.site.urls), #在后台修改过系统管理地址后，则可以启用这条
 	
-	path('api/ueditor/', include(DjangoUeditor_urls)),
+	path('ueditor/', include(DjangoUeditor_urls)),
 	path('api/', include(router.urls)),
 	path('api/api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 	

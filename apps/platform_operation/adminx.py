@@ -23,7 +23,7 @@ class InfoCategoriesAdmin(object):
 
 class WeMediaArticlesAdmin(object):
 	list_display = ['title', 'subtitle', 'info_categories', 'abstract', 'content',
-	                'attachment', 'publish_time', 'author', 'read_nums', 'fav_nums']
+	                'attachment', 'publish_time', 'user_info', 'read_nums', 'fav_nums']
 	style_fields = {"content": "ueditor"}
 	
 
