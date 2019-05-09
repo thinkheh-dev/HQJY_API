@@ -37,7 +37,7 @@ class DefaultServicesListViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixi
         普适服务详情
     """
 
-    queryset = DefaultServices.objects.filter(is_shelf=True).order_by('-add_time')
+    queryset = DefaultServices.objects.filter(is_shelf=True).order_by('?')
     serializer_class = DefaultServicesSerializers
     pagination_class = DefaultServicesPagination
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
@@ -56,7 +56,7 @@ class FinancingServicesListViewSet(mixins.ListModelMixin, mixins.RetrieveModelMi
         金融服务详情
     """
 
-    queryset = FinancingServices.objects.filter(is_shelf=True).order_by('-add_time')
+    queryset = FinancingServices.objects.filter(is_shelf=True).order_by('?')
     serializer_class = FinancingServicesSerializers
     pagination_class = DefaultServicesPagination
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
