@@ -16,12 +16,12 @@ from .models import EnterpriseType, EnterpriseTypeLevel, BasicEnterpriseInfo, En
     EnterpriseAuthManuallyReview
 from .serializers import EnterpriseTypeSerializers, BasicEnterpriseInfoSerializers, \
     EnterpriseAuthManuallyReviewSerializers, EnterpriseReviewFileSerializers, EnterpriseAuthUpdateSerializers, \
-    BasicEnterpriseInfoUpdateSerializers
+    BasicEnterpriseInfoUpdateSerializers, EnterpriseInfoOperatorDetailSerializers
 from users.serializers import UserInfoDetailSerializers
-from HQJY_API.settings import API_KEY
+from HQJY_API.settings import SMS_API_KEY, REAL_API_KEY
 from apiutils.yunpiansms import YunPianSmsSend
 from .filters import BasicEnterpriseInfoFilter
-from users.models import UserPermissionsName
+from users.models import UserPermissionsName, UserInfo
 
 
 #分页
@@ -268,3 +268,14 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
     def perform_update(self, serializer):
         return serializer.save()
 
+class EnterpriseInfoOperatorDetailViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    """
+    企业信息及负责人组合信息接口
+    """
+
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+    serializer_class = EnterpriseInfoOperatorDetailSerializers
+
+    def get_queryset(self):
+        return UserInfo.objects.all(), BasicEnterpriseInfo.objects.all()

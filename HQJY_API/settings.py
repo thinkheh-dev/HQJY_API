@@ -192,9 +192,11 @@ JWT_AUTH = {
     'JWT_RESPONSE_PAYLOAD_HANDLER': 'users.utils.jwt_response_payload_handler',  # response中token的payload部分处理函数
 }
 
-# 云片网短信发送API-KEY：
-#API_KEY = "ff2cf8283b3eb184e767c7c21dd5c165"
-API_KEY = "04049cb7d221836ae7eb5eb5150f3417"
+# 聚合网短信发送API-KEY：
+SMS_API_KEY = "95adec9c39fc720b44d7932cdb9a6851"
+
+# 聚合网三网手机实名认证API-KEY：
+REAL_API_KEY = "c06b67b14e7fde9dcc99c651d4c024be"
 
 
 # 手机号码正则表达式

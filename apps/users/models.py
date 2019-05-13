@@ -117,6 +117,12 @@ class UserInfo(AbstractUser):
 	user_labels = models.ManyToManyField(UserLabels, related_name="user_labels_userinfo", blank=True,
 	                                     verbose_name="关联用户模式标签", help_text="关联用户模式标签")
 	service_provider = models.BooleanField(default=False, verbose_name="是否服务提供商", help_text="是否服务提供商")
+
+	#来源于聚合三方手机认证API
+	user_phone_type = models.CharField(max_length=20, blank=True, null=True, verbose_name="用户手机运营商", help_text="来源于聚合三方手机认证API")
+	user_phone_province = models.CharField(max_length=20, blank=True, null=True, verbose_name="用户手机归属省市", help_text="来源于聚合三方手机认证API")
+	user_phone_city = models.CharField(max_length=30, blank=True, null=True, verbose_name="用户手机归属城市", help_text="来源于聚合三方手机认证API")
+
 	user_protocol = models.BooleanField(default=False, verbose_name="是否同意用户协议", help_text="是否同意用户协议")
 	
 	

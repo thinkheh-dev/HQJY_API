@@ -126,6 +126,17 @@ class BasicEnterpriseInfoNameSerializers(serializers.ModelSerializer):
 	"""
 	class Meta:
 		model = BasicEnterpriseInfo
-		fields = ("name", )
+		fields = ("id", "name" )
+
+
+class EnterpriseInfoOperatorDetailSerializers(serializers.Serializer):
+	"""
+	企业信息及负责人组合序列化
+	"""
+
+	id = serializers.IntegerField(label="企业ID", help_text="请输入正确的企业ID")
+
+
+
 		
 

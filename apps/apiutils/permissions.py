@@ -36,3 +36,14 @@ class IsServiceProvider(permissions.BasePermission):
             request.method in permissions.SAFE_METHODS or
             request.user and request.user.service_provider
         )
+
+class IsRealNameUser(permissions.BasePermission):
+    """
+    验证是否是实名认证用户
+    """
+
+    def has_permission(self, request, view):
+        return bool(
+            request.method in permissions.SAFE_METHODS or
+            request.user and (request.user.user_permission_name.permission_sn is "QX002")
+        )

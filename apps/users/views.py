@@ -22,7 +22,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .serializers import SmsSerializer, FindPasswordSmsSerializer, UserRegSerializer, UserInfoDetailSerializers, \
 						 UserPhoneSerializers, UserFindPasswordSerizlizers, UserProtocolSerializers, \
 						 UserRealNameAuthSerializers, UserChangPasswordSerizlizers
-from HQJY_API.settings import API_KEY
+from HQJY_API.settings import SMS_API_KEY, REAL_API_KEY
 from apiutils.yunpiansms import YunPianSms
 from apiutils.realnameauth import RealNameAuthInterface
 from .models import VerifyCode, UserProtocol, UserPermissionsName
@@ -53,16 +53,17 @@ class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
 		
 		mobile = serializer.validated_data["user_phone"]
 		
-		yun_pian = YunPianSms(API_KEY)
+		yun_pian = YunPianSms(SMS_API_KEY)
 		
 		code = self.generate_code()
 		
 		sms_status = yun_pian.send_sms(code=code, user_phone=mobile)
-		
 
-		if sms_status["code"] != 0:
+		# print(sms_status)
+
+		if sms_status["error_code"] != 0:
 			return Response({
-				"user_phone": sms_status["msg"]
+				"user_phone": sms_status["reason"]
 			}, status=status.HTTP_400_BAD_REQUEST)
 		else:
 			code_record = VerifyCode(code=code, user_phone=mobile)
@@ -97,7 +98,7 @@ class FindPasswordSmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
 		mobile = serializer.validated_data["user_phone"]
 		user_id = list(User.objects.filter(user_phone=mobile).values('id'))[0]['id']
 		
-		yun_pian = YunPianSms(API_KEY)
+		yun_pian = YunPianSms(SMS_API_KEY)
 		
 		code = self.generate_code()
 		
@@ -140,6 +141,7 @@ class UserViewset(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.Retri
 			return UserRegSerializer
 
 		return UserInfoDetailSerializers
+
 
 	def get_permissions(self):
 		if self.action == "retrieve":
@@ -385,11 +387,13 @@ class UserRealNameAuthViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
 			user_id_card = serializer.validated_data['user_id_card']
 			user_phone = serializer.validated_data['user_phone']
 			
-			real_name_auth = RealNameAuthInterface(API_KEY)
+			real_name_auth = RealNameAuthInterface(REAL_API_KEY)
 			auth_status = real_name_auth.send_auth(user_phone=user_phone, realname=user_name, idcard=user_id_card)
+			print(auth_status)
 			
 			if auth_status['error_code'] != 0:
 				return Response({
+					"fail": 0,
 					"error_message": auth_status["result"]['resmsg']
 				}, status=status.HTTP_400_BAD_REQUEST)
 			else:
@@ -405,12 +409,17 @@ class UserRealNameAuthViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
 				
 				#调用获取身份证生日的函数
 				user.user_birthday = self.get_user_birth(idcard=user_id_card)
+
+				user.user_phone_type = auth_status["result"]['type']
+				user.user_phone_province = auth_status["result"]['province']
+				user.user_phone_city = auth_status["result"]['city']
+
 				user.save()
 				
 				return Response({
-					"success":"验证完成",
+					"success": 1,
 					"auth_status": auth_status['result']['resmsg']
-				})
+				}, status=status.HTTP_200_OK)
 		
 	def throttled(self, request, wait):
 		"""
