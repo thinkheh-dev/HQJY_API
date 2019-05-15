@@ -94,8 +94,7 @@ class EnterpriseAuthUpdateSerializers(serializers.ModelSerializer):
 	
 	class Meta:
 		model = EnterpriseAuthManuallyReview
-		fields = ['id', 'user_id', 'enterprise_code', 'enterprise_oper_idcard', 'enterprise_license',
-				  'enterprise_review', 'apply_audit_status', 'auth_failure_reason']
+		fields = ['id', 'apply_audit_status', 'auth_failure_reason']
 
 class BasicEnterpriseInfoSerializers(serializers.ModelSerializer):
 	"""
@@ -132,8 +131,11 @@ class EnterpriseInfoOperatorDetailSerializers(serializers.Serializer):
 	"""
 	企业信息及负责人组合序列化
 	"""
+	id = serializers.IntegerField()
+	user_name = serializers.CharField()
+	user_logo = serializers.FileField()
+	user_to_company = BasicEnterpriseInfoSerializers(many=False)
 
-	id = serializers.IntegerField(label="企业ID", help_text="请输入正确的企业ID")
 
 
 

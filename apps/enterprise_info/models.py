@@ -78,7 +78,7 @@ def auth_review_path(instance, filename):
 	filename = '{}.{}'.format(uuid.uuid4().hex[:8], ext)
 	
 	sub_folder = 'enterprise_auth_file'
-	u_name = instance.enterprise_name
+	u_name = instance.enterprise_code
 	
 	if ext.lower() in ["jpg", "jpeg", "png"]:
 		return os.path.join(sub_folder, u_name, filename)
@@ -167,7 +167,8 @@ class BasicEnterpriseInfo(models.Model):
 	oper_name = models.CharField(max_length=20, blank=True, null=True, verbose_name="法人姓名", help_text="法人姓名")
 	reg_no = models.CharField(max_length=20, blank=True, null=True, verbose_name="工商注册号", help_text="工商注册号")
 	econ_kind = models.CharField(max_length=20, blank=True, null=True, verbose_name="企业(机构)类型", help_text="企业(机构)类型")
-	regist_capi = models.IntegerField(blank=True, null=True, verbose_name="注册资金（万元）", help_text="注册资金(单位:万元)")
+	regist_capi = models.CharField(max_length=20, blank=True, null=True, verbose_name="注册资金（万元）",
+								   help_text="注册资金(单位:万元)")
 	reg_capcur = models.CharField(max_length=20, blank=True, null=True, verbose_name="注册币种", help_text="注册币种")
 	# scope = models.CharField(max_length=255, blank=True, null=True, verbose_name="经营范围", help_text="经营范围")
 	status = models.CharField(max_length=20, blank=True, null=True, verbose_name="经营状态", help_text="经营状态(在营、注销、吊销、其他)")

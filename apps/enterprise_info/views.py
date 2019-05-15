@@ -216,6 +216,7 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
             #人工审核通过后，使用第三方接口获取企业工商数据，并存储到数据库
             juhe_eps_info = EnterpriseInfoAuthInterface(EPS_API_KEY)
             eps_info_result = juhe_eps_info.send_auth(name=eps_auth_data.enterprise_code)
+            print(eps_info_result)
 
             #判断接口是否成功获取数据
             if eps_info_result['error_code'] != 0:
@@ -226,6 +227,7 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
                     "error_message": eps_info_result['reason']
                 }, status=status.HTTP_400_BAD_REQUEST)
             else:
+                print("创建企业信息--({})".format(eps_info_result["result"]["enterpriseName"]))
                 #根据获取的工商数据创建企业信息
                 basic_info = BasicEnterpriseInfo.objects.create(name=eps_info_result["result"]["enterpriseName"],
                                                                 credit_no=eps_info_result["result"]["creditCode"],
@@ -259,13 +261,16 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
                                                                                  "industryPhyName"],
                                                                 industry_code=eps_info_result["result"]["industryCode"],
                                                                 industry_name=eps_info_result["result"]["industryName"])
+                # basic_info = BasicEnterpriseInfo.objects.create(name=eps_info_result["result"]["enterpriseName"],
+                #                                                 credit_no=eps_info_result["result"]["creditCode"])
+                print("创建企业信息完成！")
 
                 # 企业认证完成，更新用户权限为：企业用户（QX004)
                 user.objects.filter(id=eps_auth_data.user_id).update(user_to_company=basic_info.id,
                                                                      user_permission_name=user_permission_name_id)
                 # 发送审核成功短信
                 sms_success_send = juhe.send_success_sms(user_phone=user_phone)
-                if sms_success_send["code"] != 0:
+                if sms_success_send["error_code"] != 0:
                     sms_send_result = "审核短信发送失败！原因：{}".format(sms_success_send["result"]['resmsg'])
                 else:
                     sms_send_result = "审核短信发送成功！"
@@ -274,7 +279,7 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
             print("审核不通过")
             auth_status = "审核未通过"
             sms_fail_send = juhe.send_fail_sms(user_phone=user_phone)
-            if sms_send_code["code"] != 0:
+            if sms_send_code["error_code"] != 0:
                 sms_send_result = "审核短信发送失败！原因：{}".format(sms_fail_send["result"]['resmsg'])
             else:
                 sms_send_result = "审核短信发送成功！"
@@ -307,4 +312,4 @@ class EnterpriseInfoOperatorDetailViewSet(mixins.ListModelMixin, mixins.Retrieve
     serializer_class = EnterpriseInfoOperatorDetailSerializers
 
     def get_queryset(self):
-        return UserInfo.objects.all(), BasicEnterpriseInfo.objects.all()
+        return UserInfo.objects.all()
