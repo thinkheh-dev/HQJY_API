@@ -36,8 +36,8 @@ class EnterpriseAuthManuallyReviewAdmin(object):
 	
 	
 class BasicEnterpriseInfoAdmin(object):
-	list_display = ['name', 'credit_no', 'oper_name', 'reg_no', 'econ_kind', 'regist_capi', 'reg_capcur', 'scope',
-					'status', 'cancel_date', 'revoke_date', 'start_date', 'term_start', 'term_end', 'belong_org',
+	list_display = ['name', 'credit_no', 'oper_name', 'reg_no', 'econ_kind', 'regist_capi', 'reg_capcur', 'status',
+					'cancel_date', 'revoke_date', 'start_date', 'term_start', 'term_end', 'belong_org',
 					'abu_item', 'cbu_item', 'operate_scope', 'operate_scope_and_form', 'org_code', 'appr_date',
 					'province', 'city', 'county', 'area_code', 'industry_phycode', 'industry_phyname', 'industry_code',
 					'industry_name', 'enterprise_label', 'contact_name', 'contact_phone', 'scan_of_company_license',

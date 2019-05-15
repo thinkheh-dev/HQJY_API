@@ -48,8 +48,8 @@ class EnterpriseListViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, vi
 
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
     filter_class = BasicEnterpriseInfoFilter
-    search_fields = ('name', 'credit_no', 'oper_name', 'oper_phone', 'company_area')
-    ordering_fields = ('name', 'company_area')
+    search_fields = ('name', 'credit_no', 'oper_name', 'oper_phone', 'province', 'city', 'county')
+    ordering_fields = ('name', 'city')
     
 
 class EnterpriseDetailUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
