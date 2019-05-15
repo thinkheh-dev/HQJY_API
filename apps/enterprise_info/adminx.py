@@ -30,16 +30,18 @@ class EnterpriseReviewFileAdmin(object):
 	
 
 class EnterpriseAuthManuallyReviewAdmin(object):
-	list_display = ['user_id', 'enterprise_name', 'enterprise_oper_name', 'enterprise_oper_idcard',
+	list_display = ['user_id', 'enterprise_code', 'enterprise_oper_name', 'enterprise_oper_idcard',
 	                'enterprise_license', 'enterprise_review', 'apply_audit_status', 'add_time', 'update_time']
 	
 	
 	
 class BasicEnterpriseInfoAdmin(object):
-	list_display = ['name', 'credit_no', 'oper_name', 'econ_kind', 'regist_capi', 'scope', 'status', 'address',
-	                'start_date', 'term_start', 'term_end', 'belong_org', 'company_area', 'enterprise_type',
-	                'enterprise_label', 'oper_phone', 'scan_of_company_license',
-	                'scan_of_id_card']
+	list_display = ['name', 'credit_no', 'oper_name', 'reg_no', 'econ_kind', 'regist_capi', 'reg_capcur', 'scope',
+					'status', 'cancel_date', 'revoke_date', 'start_date', 'term_start', 'term_end', 'belong_org',
+					'abu_item', 'cbu_item', 'operate_scope', 'operate_scope_and_form', 'org_code', 'appr_date',
+					'province', 'city', 'county', 'area_code', 'industry_phycode', 'industry_phyname', 'industry_code',
+					'industry_name', 'enterprise_label', 'contact_name', 'contact_phone', 'scan_of_company_license',
+					'scan_of_id_card', 'add_time']
 
 
 xadmin.site.register(EnterpriseLabel, EnterpriseLabelAdmin)

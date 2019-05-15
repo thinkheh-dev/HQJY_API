@@ -114,7 +114,7 @@ class EnterpriseAuthManuallyReview(models.Model):
 	)
 	
 	user_id = models.CharField(max_length=20, blank=True, null=True, verbose_name="被审核用户id", help_text="被审核用户id")
-	enterprise_name = models.CharField(max_length=50, verbose_name="企业名称", help_text="企业名称")
+	enterprise_code = models.CharField(max_length=18, verbose_name="统一社会信用代码", help_text="统一社会信用代码")
 	enterprise_oper_name = models.CharField(max_length=20, verbose_name="企业法人姓名", help_text="企业法人姓名")
 	enterprise_oper_idcard = models.ImageField(upload_to=auth_review_path, blank=True, verbose_name="企业法人身份证正面照片",
 	                                           help_text="企业法人身份证正面照片")
@@ -132,10 +132,10 @@ class EnterpriseAuthManuallyReview(models.Model):
 		verbose_name = "企业认证人工审核"
 		verbose_name_plural = verbose_name
 		ordering = ['-add_time', ]
-		unique_together = (('user_id', 'enterprise_name'))
+		unique_together = (('user_id', 'enterprise_code'))
 	
 	def __str__(self):
-		return "{} -- 企业认证信息".format(self.enterprise_name)
+		return "{} -- 企业认证信息".format(self.enterprise_code)
 
 
 def eps_info_path(instance, filename):
@@ -161,45 +161,42 @@ class BasicEnterpriseInfo(models.Model):
 	"""
 	企业基础信息
 	"""
-	COUNTY_CHOICES = (
-		("个旧市", "个旧市"),
-		("开远市", "开远市"),
-		("蒙自市", "蒙自市"),
-		("建水县", "建水县"),
-		("石屏县", "石屏县"),
-		("弥勒市", "弥勒市"),
-		("泸西县", "泸西县"),
-		("红河县", "红河县"),
-		("元阳县", "元阳县"),
-		("绿春县", "绿春县"),
-		("屏边县", "屏边县"),
-		("金平县", "金平县"),
-		("河口县", "河口县"),
-		("昆明市", "昆明市"),
-		("其他地州", "其他地州"),
-		("其他省市", "其他省市"),
-	)
 	
 	name = models.CharField(max_length=50, blank=True, null=True, verbose_name="企业名称", help_text="企业名称")
 	credit_no = models.CharField(max_length=18, blank=True, null=True, verbose_name="统一社会信用代码", help_text="统一社会信用代码")
-	oper_name = models.CharField(max_length=20, blank=True, null=True, verbose_name="企业法人", help_text="企业法人")
-	econ_kind = models.CharField(max_length=20, blank=True, null=True, verbose_name="公司类型", help_text="公司类型")
-	regist_capi = models.IntegerField(blank=True, null=True, verbose_name="注册资金（万元）", help_text="注册资金（万元）")
-	scope = models.CharField(max_length=255, blank=True, null=True, verbose_name="经营范围", help_text="经营范围")
-	status = models.CharField(max_length=20, choices=(("开业", "开业"), ("注销", "注销")), default="开业",
-	                          verbose_name="公司状态(开业/注销)", help_text="公司状态(开业/注销)")
-	address = models.CharField(max_length=200, blank=True, null=True, verbose_name="企业地址", help_text="企业地址")
-	start_date = models.DateField(blank=True, null=True, verbose_name="成立日期", help_text="成立日期")
-	term_start = models.DateField(blank=True, null=True, verbose_name="营业开始日期", help_text="营业开始日期")
-	term_end = models.DateField(blank=True, null=True, verbose_name="营业结束日期", help_text="营业结束日期")
+	oper_name = models.CharField(max_length=20, blank=True, null=True, verbose_name="法人姓名", help_text="法人姓名")
+	reg_no = models.CharField(max_length=20, blank=True, null=True, verbose_name="工商注册号", help_text="工商注册号")
+	econ_kind = models.CharField(max_length=20, blank=True, null=True, verbose_name="企业(机构)类型", help_text="企业(机构)类型")
+	regist_capi = models.IntegerField(blank=True, null=True, verbose_name="注册资金（万元）", help_text="注册资金(单位:万元)")
+	reg_capcur = models.CharField(max_length=20, blank=True, null=True, verbose_name="注册币种", help_text="注册币种")
+	# scope = models.CharField(max_length=255, blank=True, null=True, verbose_name="经营范围", help_text="经营范围")
+	status = models.CharField(max_length=20, blank=True, null=True, verbose_name="经营状态", help_text="经营状态(在营、注销、吊销、其他)")
+	cancel_date = models.CharField(max_length=20, blank=True, null=True, verbose_name="注销日期", help_text="注销日期")
+	revoke_date = models.CharField(max_length=20, blank=True, null=True, verbose_name="吊销日期", help_text="吊销日期")
+	address = models.CharField(max_length=200, blank=True, null=True, verbose_name="注册地址", help_text="注册地址")
+	start_date = models.DateField(blank=True, null=True, verbose_name="开业日期", help_text="开业日期(YYYY-MM-DD)")
+	term_start = models.DateField(blank=True, null=True, verbose_name="经营期限自", help_text="经营期限自(YYYY-MM-DD)")
+	term_end = models.DateField(blank=True, null=True, verbose_name="经营期限至", help_text="经营期限至(YYYY-MM-DD)")
 	belong_org = models.CharField(max_length=50, blank=True, null=True, verbose_name="登记机关", help_text="登记机关")
-	company_area = models.CharField(max_length=20, choices=COUNTY_CHOICES, default="蒙自市", verbose_name="企业归属地",
-	                                help_text="企业归属地")
-	enterprise_type = models.ForeignKey(EnterpriseType, on_delete=models.CASCADE, related_name="entype_first",
-	                                    blank=True, null=True, verbose_name="企业分类", help_text="企业分类")
+	abu_item = models.CharField(max_length=255, blank=True, null=True, verbose_name="许可经营项目", help_text="许可经营项目")
+	cbu_item = models.CharField(max_length=255, blank=True, null=True, verbose_name="一般经营项目", help_text="一般经营项目")
+	operate_scope = models.CharField(max_length=255, blank=True, null=True, verbose_name="经营(业务)范围", help_text="经营(业务)范围")
+	operate_scope_and_form = models.CharField(max_length=255, blank=True, null=True, verbose_name="经营(业务)范围及方式", help_text="经营(业务)范围及方式")
+	org_code = models.CharField(max_length=20, blank=True, null=True, verbose_name="组织机构代码", help_text="组织机构代码")
+	appr_date = models.CharField(max_length=20, blank=True, null=True, verbose_name="核准时间", help_text="核准时间")
+	province = models.CharField(max_length=20, blank=True, null=True, verbose_name="省", help_text="省")
+	city = models.CharField(max_length=20, blank=True, null=True, verbose_name="地级市", help_text="地级市")
+	county = models.CharField(max_length=20, blank=True, null=True, verbose_name="区\县", help_text="区\县")
+	area_code = models.CharField(max_length=20, blank=True, null=True, verbose_name="住所所在行政区划代码", help_text="住所所在行政区划代码")
+	industry_phycode = models.CharField(max_length=20, blank=True, null=True, verbose_name="行业门类代码", help_text="行业门类代码")
+	industry_phyname = models.CharField(max_length=20, blank=True, null=True, verbose_name="行业门类名称", help_text="行业门类名称")
+	industry_code = models.CharField(max_length=20, blank=True, null=True, verbose_name="国民经济行业代码", help_text="国民经济行业代码")
+	industry_name = models.CharField(max_length=20, blank=True, null=True, verbose_name="国民经济行业名称", help_text="国民经济行业名称")
+
 	enterprise_label = models.ForeignKey(EnterpriseLabel, on_delete=models.CASCADE, related_name="enlabel",
 	                                     blank=True, null=True, verbose_name="企业标签", help_text="企业标签")
-	oper_phone = models.CharField(max_length=11, blank=True, null=True, verbose_name="企业联系人", help_text="企业联系人")
+	contact_name = models.CharField(max_length=20, blank=True, null=True, verbose_name="企业联系人姓名", help_text="企业联系人姓名")
+	contact_phone = models.CharField(max_length=11, blank=True, null=True, verbose_name="企业联系人电话", help_text="企业联系人电话")
 	scan_of_company_license = models.ImageField(upload_to=eps_info_path, blank=True, null=True,
 	                                            verbose_name="营业执照正面清晰扫描件", help_text="营业执照正面清晰扫描件")
 	scan_of_id_card = models.ImageField(upload_to=eps_info_path, blank=True, null=True, verbose_name="法人身份清晰彩色扫描件",
@@ -212,5 +209,4 @@ class BasicEnterpriseInfo(models.Model):
 	
 	def __str__(self):
 		return self.name
-
 

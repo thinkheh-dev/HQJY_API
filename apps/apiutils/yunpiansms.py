@@ -44,17 +44,28 @@ class YunPianSmsSend(object):
 
 	def __init__(self, api_key):
 		self.api_key = api_key
-		self.single_send_url = "https://sms.yunpian.com/v2/sms/single_send.json"
+		self.success_value = 158221
+		self.fail_value = 158222
+		self.single_send_url = "http://v.juhe.cn/sms/send"
 
-	def send_sms(self, username, company_name, success, user_phone):
-		parmas = {
-			"apikey": self.api_key,
-			"mobile": user_phone,
-			# "text": "【姚运旭】尊敬的{username}您提交的{company_name}企业认证审核{success},请登录红企家园继续操作！".format(username=username,
-			#                                                                                   company_name=company_name, success=success)
-			"text": "【姚运旭】{username}{company_name}{success}".format(username=username,company_name=company_name,success=success)
-		}
+	def send_success_sms(self, user_phone):
+		tpl_id = self.success_value
+		tpl_value = ""
+		params = 'key=%s&mobile=%s&tpl_id=%s&tpl_value=%s' % \
+				 (self.api_key, user_phone, tpl_id, tpl_value)  # 组合参数
 
-		response = requests.post(self.single_send_url, data=parmas)
-		re_dict = json.loads(response.text)
+		wp = urllib.request.urlopen(self.single_send_url + "?" + params)
+		content = wp.read()  # 获取接口返回内容
+		re_dict = json.loads(content)
+		return re_dict
+
+	def send_fail_sms(self, user_phone):
+		tpl_id = self.fail_value
+		tpl_value = ""
+		params = 'key=%s&mobile=%s&tpl_id=%s&tpl_value=%s' % \
+				 (self.api_key, user_phone, tpl_id, tpl_value)  # 组合参数
+
+		wp = urllib.request.urlopen(self.single_send_url + "?" + params)
+		content = wp.read()  # 获取接口返回内容
+		re_dict = json.loads(content)
 		return re_dict

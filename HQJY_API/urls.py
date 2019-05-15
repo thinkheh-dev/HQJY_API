@@ -29,9 +29,9 @@ from service_object.views import DefaultServicesListViewSet, FinancingServicesLi
 	 FinancingCategoryNavViewset
 from users.views import SmsCodeViewset, FindPasswordSmsCodeViewset, UserViewset, UserPhoneViewSet, \
 						UserPasswordModifyViewSet, UserProtocolViewSet, UserRealNameAuthViewSet, UserPasswordOwnerViewSet
-from enterprise_info.views import EnterpriseListViewSet, EnterpriseTypeListViewset, \
-	EnterpriseAuthFileDownloadViewSet, EnterpriseAuthManuallyReviewViewSet, EnterpriseAuthUpdateViewSet, \
-	EnterpriseDetailUpdateViewSet, EnterpriseInfoOperatorDetailViewSet
+from enterprise_info.views import EnterpriseListViewSet, EnterpriseAuthFileDownloadViewSet, \
+	EnterpriseAuthManuallyReviewViewSet, EnterpriseAuthUpdateViewSet, EnterpriseDetailUpdateViewSet, \
+	EnterpriseInfoOperatorDetailViewSet
 
 from user_operation.views import UserFavViewSet, OrderViewSet, OrderDetailViewSet, OrderCancelViewSet
 
@@ -92,7 +92,6 @@ router.register(r'change-password-owner', UserPasswordOwnerViewSet, base_name="c
 
 #配置企业信息路由
 router.register(r'enterprise-info', EnterpriseListViewSet, base_name='enterpriselist')
-router.register(r'enterprise-type', EnterpriseTypeListViewset, base_name='enterprisetype')
 router.register(r'enterprise_update', EnterpriseDetailUpdateViewSet, base_name='enterpriseupdate')
 
 #配置企业认证相关路由

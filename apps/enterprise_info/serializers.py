@@ -11,8 +11,7 @@
 from rest_framework import serializers, status
 from django.db.models import Q
 
-from .models import EnterpriseTypeLevel, EnterpriseType, BasicEnterpriseInfo, EnterpriseLabel, \
-	EnterpriseAuthManuallyReview, EnterpriseReviewFile
+from .models import EnterpriseTypeLevel, BasicEnterpriseInfo, EnterpriseLabel, EnterpriseAuthManuallyReview, EnterpriseReviewFile
 from users.models import UserInfo
 
 
@@ -33,28 +32,28 @@ class EnterpriseTypeLevelSerializers(serializers.ModelSerializer):
 		fields = "__all__"
 		
 
-#企业类型序列化 -- 开始
-class EnterpriseTypeSerializers3(serializers.ModelSerializer):
-	
-	class Meta:
-		model = EnterpriseType
-		fields = "__all__"
-
-
-class EnterpriseTypeSerializers2(serializers.ModelSerializer):
-	sub_type = EnterpriseTypeSerializers3(many=True)
-	
-	class Meta:
-		model = EnterpriseType
-		fields = "__all__"
-		
-class EnterpriseTypeSerializers(serializers.ModelSerializer):
-	sub_type = EnterpriseTypeSerializers2(many=True)
-	
-	class Meta:
-		model = EnterpriseType
-		fields = "__all__"
-#企业类型序列化 -- 结束
+# #企业类型序列化 -- 开始
+# class EnterpriseTypeSerializers3(serializers.ModelSerializer):
+#
+# 	class Meta:
+# 		model = EnterpriseType
+# 		fields = "__all__"
+#
+#
+# class EnterpriseTypeSerializers2(serializers.ModelSerializer):
+# 	sub_type = EnterpriseTypeSerializers3(many=True)
+#
+# 	class Meta:
+# 		model = EnterpriseType
+# 		fields = "__all__"
+#
+# class EnterpriseTypeSerializers(serializers.ModelSerializer):
+# 	sub_type = EnterpriseTypeSerializers2(many=True)
+#
+# 	class Meta:
+# 		model = EnterpriseType
+# 		fields = "__all__"
+# #企业类型序列化 -- 结束
 
 
 class EnterpriseReviewFileSerializers(serializers.ModelSerializer):
@@ -83,7 +82,7 @@ class EnterpriseAuthManuallyReviewSerializers(serializers.ModelSerializer):
 	
 	class Meta:
 		model = EnterpriseAuthManuallyReview
-		fields = ['id', 'user_id', 'enterprise_name', 'enterprise_oper_name', 'enterprise_oper_idcard',
+		fields = ['id', 'user_id', 'enterprise_code', 'enterprise_oper_name', 'enterprise_oper_idcard',
 		          'enterprise_license', 'enterprise_review', 'apply_audit_status']
 		
 		
@@ -95,14 +94,14 @@ class EnterpriseAuthUpdateSerializers(serializers.ModelSerializer):
 	
 	class Meta:
 		model = EnterpriseAuthManuallyReview
-		fields = ['id', 'user_id', 'enterprise_name', 'enterprise_oper_name', 'enterprise_oper_idcard',
-		          'enterprise_license', 'enterprise_review', 'apply_audit_status', 'auth_failure_reason']
+		fields = ['id', 'user_id', 'enterprise_code', 'enterprise_oper_idcard', 'enterprise_license',
+				  'enterprise_review', 'apply_audit_status', 'auth_failure_reason']
 
 class BasicEnterpriseInfoSerializers(serializers.ModelSerializer):
 	"""
 	企业基本信息序列化
 	"""
-	enterprise_type = EnterpriseTypeSerializers()
+
 	enterprise_label = EnterpriseLabelSerializers()
 	
 	class Meta:

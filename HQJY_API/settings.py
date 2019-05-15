@@ -198,6 +198,9 @@ SMS_API_KEY = "95adec9c39fc720b44d7932cdb9a6851"
 # 聚合网三网手机实名认证API-KEY：
 REAL_API_KEY = "c06b67b14e7fde9dcc99c651d4c024be"
 
+# 聚合网企业工商数据认证API-KEY：
+EPS_API_KEY = "0b182de1cea873873ee78233ff64ef52"
+
 
 # 手机号码正则表达式
 REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
