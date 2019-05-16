@@ -31,7 +31,7 @@ from users.views import SmsCodeViewset, FindPasswordSmsCodeViewset, UserViewset,
 						UserPasswordModifyViewSet, UserProtocolViewSet, UserRealNameAuthViewSet, UserPasswordOwnerViewSet
 from enterprise_info.views import EnterpriseListViewSet, EnterpriseAuthFileDownloadViewSet, \
 	EnterpriseAuthManuallyReviewViewSet, EnterpriseAuthUpdateViewSet, EnterpriseDetailUpdateViewSet, \
-	EnterpriseInfoOperatorDetailViewSet
+	EnterpriseInfoOperatorDetailViewSet, EnterpriseSelfDefaultServicesViewSet, EnterpriseSelfFinancingServicesViewSet
 
 from user_operation.views import UserFavViewSet, OrderViewSet, OrderDetailViewSet, OrderCancelViewSet
 
@@ -99,6 +99,8 @@ router.register(r'eps-auth-fdownload', EnterpriseAuthFileDownloadViewSet, base_n
 router.register(r'eps-auth-review', EnterpriseAuthManuallyReviewViewSet, base_name='epsar')
 router.register(r'eps-auth-update', EnterpriseAuthUpdateViewSet, base_name='epsau')
 router.register(r'eps_info_detail', EnterpriseInfoOperatorDetailViewSet, base_name='epsinfodetail')
+router.register(r'eps_serv_all_default', EnterpriseSelfDefaultServicesViewSet, base_name='epsservalldefault')
+router.register(r'eps_serv_all_financing', EnterpriseSelfFinancingServicesViewSet, base_name='epsservallfinancing')
 
 #配置文件库路由
 # router.register(r'file-repository', OrderImageViewSet, base_name='filereplist')

@@ -10,6 +10,8 @@
 
 import django_filters
 from .models import BasicEnterpriseInfo
+from users.models import UserInfo
+from service_object.models import DefaultServices, FinancingServices
 
 class BasicEnterpriseInfoFilter(django_filters.rest_framework.FilterSet):
 	"""
@@ -23,3 +25,38 @@ class BasicEnterpriseInfoFilter(django_filters.rest_framework.FilterSet):
 	class Meta:
 		model = BasicEnterpriseInfo
 		fields = ['enterprise_name', 'credit_no', 'oper_name']
+
+
+class EnterpriseInfoOperatorDetailFilter(django_filters.rest_framework.FilterSet):
+	"""
+	企业及负责人信息筛选器
+	"""
+	user_to_company = django_filters.CharFilter(field_name='user_to_company', help_text='企业外键', lookup_expr='exact')
+
+	class Meta:
+		model = UserInfo
+		fields = ['user_to_company', ]
+
+
+class EnterpriseSelfDefaultServicesFilter(django_filters.rest_framework.FilterSet):
+	"""
+	企业归属普适服务产品筛选器
+	"""
+	ds_belong_to_company = django_filters.CharFilter(field_name='service_belong_to_company', help_text='企业外键',
+														    lookup_expr='exact')
+
+	class Meta:
+		model = DefaultServices
+		fields = ['ds_belong_to_company', ]
+
+
+class EnterpriseSelfFinancingServicesFilter(django_filters.rest_framework.FilterSet):
+	"""
+	企业归属金融服务产品筛选器
+	"""
+	fs_belong_to_company = django_filters.CharFilter(field_name='service_belong_to_company', help_text='企业外键',
+														  lookup_expr='exact')
+
+	class Meta:
+		model = FinancingServices
+		fields = ['fs_belong_to_company', ]

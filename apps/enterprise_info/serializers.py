@@ -129,12 +129,29 @@ class BasicEnterpriseInfoNameSerializers(serializers.ModelSerializer):
 
 class EnterpriseInfoOperatorDetailSerializers(serializers.Serializer):
 	"""
-	企业信息及负责人组合序列化
+	显示企业信息及负责人组合序列化
 	"""
-	id = serializers.IntegerField()
-	user_name = serializers.CharField()
-	user_logo = serializers.FileField()
-	user_to_company = BasicEnterpriseInfoSerializers(many=False)
+	id = serializers.IntegerField(read_only=True)
+	user_name = serializers.CharField(read_only=True)
+	user_logo = serializers.FileField(read_only=True)
+	user_introduce = serializers.CharField(read_only=True)
+	user_important_qualification1 = serializers.FileField(read_only=True)
+	user_important_qualification2 = serializers.FileField(read_only=True)
+	user_important_qualification3 = serializers.FileField(read_only=True)
+	userinfo_flag = serializers.BooleanField(read_only=True)
+	user_to_company = BasicEnterpriseInfoSerializers(many=False, read_only=True)
+
+
+class EnterpriseSelfServicesSerializers(serializers.Serializer):
+	"""
+	企业归属产品序列化
+	"""
+	service_sn = serializers.CharField(read_only=True)
+	service_belong_to_company = serializers.CharField(read_only=True)
+	service_name = serializers.CharField(read_only=True)
+	service_describe = serializers.CharField(read_only=True)
+	service_cover_photo = serializers.FileField(read_only=True)
+
 
 
 

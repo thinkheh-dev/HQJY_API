@@ -15,13 +15,15 @@ from apiutils.permissions import IsOwnerOrReadOnly
 from .models import EnterpriseTypeLevel, BasicEnterpriseInfo, EnterpriseReviewFile, EnterpriseAuthManuallyReview
 from .serializers import  BasicEnterpriseInfoSerializers, EnterpriseAuthManuallyReviewSerializers, \
     EnterpriseReviewFileSerializers, EnterpriseAuthUpdateSerializers, BasicEnterpriseInfoUpdateSerializers, \
-    EnterpriseInfoOperatorDetailSerializers
+    EnterpriseInfoOperatorDetailSerializers, EnterpriseSelfServicesSerializers
 from users.serializers import UserInfoDetailSerializers
 from HQJY_API.settings import SMS_API_KEY, REAL_API_KEY, EPS_API_KEY
 from apiutils.yunpiansms import YunPianSmsSend
 from apiutils.epsinfoauth import EnterpriseInfoAuthInterface
-from .filters import BasicEnterpriseInfoFilter
+from .filters import BasicEnterpriseInfoFilter, EnterpriseInfoOperatorDetailFilter, \
+    EnterpriseSelfDefaultServicesFilter, EnterpriseSelfFinancingServicesFilter
 from users.models import UserPermissionsName, UserInfo
+from service_object.models import DefaultServices, FinancingServices
 
 
 #分页
@@ -187,24 +189,7 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
         
         #获取当前用户手机号，用于发送短信 -- 这里不要随意更改
         user_phone = list(user.objects.filter(id=eps_auth_data.user_id).values())[0]['user_phone']
-        
-        # #临时用的测试代码段，正式代码在下方，短信可以发送后，这段代码即废弃
-        # if eps_auth_data.apply_audit_status == 1:
-        #     print("审核通过")
-        #     auth_status = "审核通过"
-        #     user_permission_name_id = UserPermissionsName.objects.get(permission_sn="QX004").id
-        #
-        #     basic_info = BasicEnterpriseInfo.objects.create(name=eps_auth_data.enterprise_name,
-        #                                                     oper_name=eps_auth_data.enterprise_oper_name)
-        #     # 企业认证完成，更新用户权限为：企业用户（QX004)
-        #     user.objects.filter(id=eps_auth_data.user_id).update(user_to_company=basic_info.id,
-        #                                                          user_permission_name=user_permission_name_id)
-        # else:
-        #     print("审核不通过")
-        #     auth_status = "审核未通过"
-            
-        
-        
+
         #实例化发送短信函数，根据申请结果发送短信
         juhe = YunPianSmsSend(SMS_API_KEY)
 
@@ -261,8 +246,7 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
                                                                                  "industryPhyName"],
                                                                 industry_code=eps_info_result["result"]["industryCode"],
                                                                 industry_name=eps_info_result["result"]["industryName"])
-                # basic_info = BasicEnterpriseInfo.objects.create(name=eps_info_result["result"]["enterpriseName"],
-                #                                                 credit_no=eps_info_result["result"]["creditCode"])
+
                 print("创建企业信息完成！")
 
                 # 企业认证完成，更新用户权限为：企业用户（QX004)
@@ -302,6 +286,7 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
     def perform_update(self, serializer):
         return serializer.save()
 
+
 class EnterpriseInfoOperatorDetailViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
     企业信息及负责人组合信息接口
@@ -311,5 +296,42 @@ class EnterpriseInfoOperatorDetailViewSet(mixins.ListModelMixin, mixins.Retrieve
     authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
     serializer_class = EnterpriseInfoOperatorDetailSerializers
 
+    filter_backends = (DjangoFilterBackend, )
+    filter_class = EnterpriseInfoOperatorDetailFilter
+
     def get_queryset(self):
         return UserInfo.objects.all()
+
+
+
+class EnterpriseSelfDefaultServicesViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    """
+    普适服务查询
+    """
+
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+    serializer_class = EnterpriseSelfServicesSerializers
+    filter_backends = (DjangoFilterBackend, )
+    filter_class = EnterpriseSelfDefaultServicesFilter
+
+    def get_queryset(self):
+        #获取普适服务
+        return DefaultServices.objects.all()
+
+
+class EnterpriseSelfFinancingServicesViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    """
+    金融服务查询
+    """
+
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+    serializer_class = EnterpriseSelfFinancingServicesFilter
+    filter_backends = (DjangoFilterBackend, )
+    filter_class = EnterpriseSelfFinancingServicesFilter
+
+    def get_queryset(self):
+        #获取金融服务
+        return FinancingServices.objects.all()
+

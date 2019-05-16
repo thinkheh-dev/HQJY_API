@@ -118,6 +118,17 @@ class UserInfo(AbstractUser):
 	                                     verbose_name="关联用户模式标签", help_text="关联用户模式标签")
 	service_provider = models.BooleanField(default=False, verbose_name="是否服务提供商", help_text="是否服务提供商")
 
+	#新增用户字段
+	user_introduce = models.TextField(max_length=200, blank=True, null=True, verbose_name="用户自我介绍",
+									  help_text="用户自我介绍（200字以内）")
+	user_important_qualification1 = models.ImageField(upload_to=user_upload_path, blank=True, null=True,
+													  verbose_name="用户重要资质一", help_text="您的重要资质")
+	user_important_qualification2 = models.ImageField(upload_to=user_upload_path, blank=True, null=True,
+													  verbose_name="用户重要资质二", help_text="您的重要资质")
+	user_important_qualification3 = models.ImageField(upload_to=user_upload_path, blank=True, null=True,
+													  verbose_name="用户重要资质三", help_text="您的重要资质")
+	userinfo_flag = models.BooleanField(default=False, verbose_name="是否显示用户信息", help_text="是否显示用户信息")
+
 	#来源于聚合三方手机认证API
 	user_phone_type = models.CharField(max_length=20, blank=True, null=True, verbose_name="用户手机运营商", help_text="来源于聚合三方手机认证API")
 	user_phone_province = models.CharField(max_length=20, blank=True, null=True, verbose_name="用户手机归属省市", help_text="来源于聚合三方手机认证API")
