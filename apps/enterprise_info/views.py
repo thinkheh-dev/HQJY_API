@@ -10,23 +10,25 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.authentication import SessionAuthentication
-from apiutils.permissions import IsOwnerOrReadOnly
+from apiutils.permissions import IsOwnerOrReadOnly, IsServiceProvider
 
 from .models import EnterpriseTypeLevel, BasicEnterpriseInfo, EnterpriseReviewFile, EnterpriseAuthManuallyReview
 from .serializers import  BasicEnterpriseInfoSerializers, EnterpriseAuthManuallyReviewSerializers, \
     EnterpriseReviewFileSerializers, EnterpriseAuthUpdateSerializers, BasicEnterpriseInfoUpdateSerializers, \
-    EnterpriseInfoOperatorDetailSerializers, EnterpriseSelfServicesSerializers
+    EnterpriseInfoOperatorDetailSerializers, EnterpriseSelfServicesSerializers, EnterpriseSelfOrderSerializers, \
+    EnterpriseSelfOrderUpdateSerializers
 from users.serializers import UserInfoDetailSerializers
 from HQJY_API.settings import SMS_API_KEY, REAL_API_KEY, EPS_API_KEY
 from apiutils.yunpiansms import YunPianSmsSend
 from apiutils.epsinfoauth import EnterpriseInfoAuthInterface
 from .filters import BasicEnterpriseInfoFilter, EnterpriseInfoOperatorDetailFilter, \
-    EnterpriseSelfDefaultServicesFilter, EnterpriseSelfFinancingServicesFilter
+    EnterpriseSelfDefaultServicesFilter, EnterpriseSelfFinancingServicesFilter, EnterpriseSelfOrderFilter
 from users.models import UserPermissionsName, UserInfo
 from service_object.models import DefaultServices, FinancingServices
+from user_operation.models import OrderInfo
 
 
-#分页
+# 分页
 class EnterpriseInfoPagination(PageNumberPagination):
     page_size = 12
     page_size_query_param = 'page_size'
@@ -84,14 +86,11 @@ class EnterpriseDetailUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelM
         self.perform_update(serializer)
         
         return Response({"message":"恭喜，{} 企业信息更新完成".format(instance.enterprise_name)})
-        
-        
+
     def perform_update(self, serializer):
         return serializer.save()
     
-    
-    
-    
+
 class EnterpriseAuthFileDownloadViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     企业认证文件下载
@@ -118,14 +117,11 @@ class EnterpriseAuthManuallyReviewViewSet(mixins.CreateModelMixin, mixins.ListMo
     permission_classes = (IsAuthenticated, )
     authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
     serializer_class = EnterpriseAuthManuallyReviewSerializers
-    
-    
 
     def get_queryset(self):
         user = self.request.user
         return EnterpriseAuthManuallyReview.objects.filter(user_id=user.id)
-    
-    
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         user_id = request.data['user_id']
@@ -141,9 +137,7 @@ class EnterpriseAuthManuallyReviewViewSet(mixins.CreateModelMixin, mixins.ListMo
 
             auth_content = self.perform_create(serializer)
 
-
-
-            #为当前用户增加验证的关联
+            # 为当前用户增加验证的关联
             user = get_user_model()
 
             user_info = user.objects.filter(id=user_id).update(eps_auth_manually_review=auth_content.id)
@@ -177,7 +171,7 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
     
     def update(self, request, *args, **kwargs):
         
-        #获取当前用户
+        # 获取当前用户
         user = get_user_model()
         
         partial = kwargs.pop('partial', False)
@@ -187,10 +181,10 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
         eps_auth_id = instance.id
         eps_auth_data = self.perform_update(serializer)
         
-        #获取当前用户手机号，用于发送短信 -- 这里不要随意更改
+        # 获取当前用户手机号，用于发送短信 -- 这里不要随意更改
         user_phone = list(user.objects.filter(id=eps_auth_data.user_id).values())[0]['user_phone']
 
-        #实例化发送短信函数，根据申请结果发送短信
+        # 实例化发送短信函数，根据申请结果发送短信
         juhe = YunPianSmsSend(SMS_API_KEY)
 
         if eps_auth_data.apply_audit_status == 1:
@@ -198,12 +192,12 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
             auth_status = "审核通过"
             user_permission_name_id = UserPermissionsName.objects.get(permission_sn="QX004").id
 
-            #人工审核通过后，使用第三方接口获取企业工商数据，并存储到数据库
+            # 人工审核通过后，使用第三方接口获取企业工商数据，并存储到数据库
             juhe_eps_info = EnterpriseInfoAuthInterface(EPS_API_KEY)
             eps_info_result = juhe_eps_info.send_auth(name=eps_auth_data.enterprise_code)
             print(eps_info_result)
 
-            #判断接口是否成功获取数据
+            # 判断接口是否成功获取数据
             if eps_info_result['error_code'] != 0:
                 # basic_info = BasicEnterpriseInfo.objects.create(credit_no=eps_auth_data.enterprise_code,
                 #                                                 oper_name=eps_auth_data.enterprise_oper_name)
@@ -213,7 +207,7 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
                 }, status=status.HTTP_400_BAD_REQUEST)
             else:
                 print("创建企业信息--({})".format(eps_info_result["result"]["enterpriseName"]))
-                #根据获取的工商数据创建企业信息
+                # 根据获取的工商数据创建企业信息
                 basic_info = BasicEnterpriseInfo.objects.create(name=eps_info_result["result"]["enterpriseName"],
                                                                 credit_no=eps_info_result["result"]["creditCode"],
                                                                 oper_name=eps_info_result["result"]["frName"],
@@ -267,9 +261,8 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
                 sms_send_result = "审核短信发送失败！原因：{}".format(sms_fail_send["result"]['resmsg'])
             else:
                 sms_send_result = "审核短信发送成功！"
-        
-        
-        #拼接返回的json数据
+
+        # 拼接返回的json数据
         re_dict = {}
         re_dict['message'] = "人工审核流程完成"
         re_dict['id'] = eps_auth_id
@@ -316,7 +309,7 @@ class EnterpriseSelfDefaultServicesViewSet(mixins.ListModelMixin, mixins.Retriev
     filter_class = EnterpriseSelfDefaultServicesFilter
 
     def get_queryset(self):
-        #获取普适服务
+        # 获取普适服务
         return DefaultServices.objects.all()
 
 
@@ -332,6 +325,48 @@ class EnterpriseSelfFinancingServicesViewSet(mixins.ListModelMixin, mixins.Retri
     filter_class = EnterpriseSelfFinancingServicesFilter
 
     def get_queryset(self):
-        #获取金融服务
+        # 获取金融服务
         return FinancingServices.objects.all()
 
+
+class EnterpriseSelfOrderListViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    """
+    企业订单查询
+    """
+    permission_classes = (IsAuthenticated, IsServiceProvider)
+    pagination_class = EnterpriseInfoPagination
+    authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+    serializer_class = EnterpriseSelfOrderSerializers
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = EnterpriseSelfOrderFilter
+
+    def get_queryset(self):
+        # 获取企业订单
+        userinfo = self.request.user
+        return OrderInfo.objects.filter(order_belong_company=userinfo.user_to_company).order_by("-order_end_time")
+
+
+class EnterpriseSelfOrderUpdateViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
+    """
+    企业订单状态更新
+    """
+    permission_classes = (IsAuthenticated, IsServiceProvider)
+    pagination_class = EnterpriseInfoPagination
+    authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+    serializer_class = EnterpriseSelfOrderUpdateSerializers
+
+    def get_queryset(self):
+        return OrderInfo.objects.all()
+
+    def update(self, request, *args, **kwargs):
+
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        return Response({"message": "订单更新成功"})
+
+    def perform_update(self, serializer):
+        return serializer.save()

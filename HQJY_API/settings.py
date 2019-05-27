@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'file_repository.apps.FileRepositoryConfig',
     'django_filters',
     'rest_framework',
+    'rest_framework_swagger',
     'corsheaders',
     'rest_framework.authtoken',
 ]
@@ -104,10 +105,10 @@ DATABASES = {
         'NAME': 'hqjy_api_database',
         'USER': 'root',
         'PASSWORD': 'P@ssword',
-        'HOST': 'localhost',        #本地测试数据库
-        #'HOST': '192.168.20.53',  #开发用内部测试数据库
+        'HOST': 'localhost',        # 本地测试数据库
+        # 'HOST': '192.168.20.53',  # 开发用内部测试数据库
         'PORT': '3306',
-        #'OPTIONS': { 'init_command': 'SET storage_engine=INNODB;' } ,
+        # 'OPTIONS': { 'init_command': 'SET storage_engine=INNODB;' } ,
     }
 }
 
@@ -232,3 +233,27 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # 关闭浏览器，则COOKIE失效
 import mimetypes
 mimetypes.add_type("image/svg+xml", ".svg", True)
 mimetypes.add_type("image/svg+xml", ".svgz", True)
+
+
+SWAGGER_SETTINGS = {
+    # 基础样式
+    'SECURITY_DEFINITIONS': {
+        "basic": {
+            'type': 'basic'
+        }
+    },
+    # 如果需要登录才能够查看接口文档, 登录的链接使用restframework自带的.
+    'LOGIN_URL': 'rest_framework:login',
+    'LOGOUT_URL': 'rest_framework:logout',
+    # 'DOC_EXPANSION': None,
+    'SHOW_REQUEST_HEADERS':True,
+    # 'USE_SESSION_AUTH': True,
+    'DOC_EXPANSION': 'list',
+    # 接口文档中方法列表以首字母升序排列
+    'APIS_SORTER': 'alpha',
+    # 如果支持json提交, 则接口文档中包含json输入框
+    'JSON_EDITOR': True,
+    # 方法列表字母排序
+    'OPERATIONS_SORTER': 'alpha',
+    'VALIDATOR_URL': None,
+}

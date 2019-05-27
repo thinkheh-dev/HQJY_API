@@ -25,7 +25,8 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         print(obj)
         # Instance must have an attribute named `owner`.
         return obj.user_info == request.user
-    
+
+
 class IsServiceProvider(permissions.BasePermission):
     """
     如果是服务提供商，则允许发自媒体文章
@@ -36,6 +37,7 @@ class IsServiceProvider(permissions.BasePermission):
             request.method in permissions.SAFE_METHODS or
             request.user and request.user.service_provider
         )
+
 
 class IsRealNameUser(permissions.BasePermission):
     """

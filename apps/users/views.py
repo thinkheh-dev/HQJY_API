@@ -104,7 +104,7 @@ class FindPasswordSmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
 		
 		sms_status = yun_pian.send_sms(code=code, user_phone=mobile)
 		
-		if sms_status["code"] != 0:
+		if sms_status["error_code"] != 0:
 			return Response({
 				"user_phone": sms_status["msg"]
 			}, status=status.HTTP_400_BAD_REQUEST)

@@ -12,6 +12,7 @@ import django_filters
 from .models import BasicEnterpriseInfo
 from users.models import UserInfo
 from service_object.models import DefaultServices, FinancingServices
+from user_operation.models import OrderInfo
 
 
 class BasicEnterpriseInfoFilter(django_filters.rest_framework.FilterSet):
@@ -61,3 +62,18 @@ class EnterpriseSelfFinancingServicesFilter(django_filters.rest_framework.Filter
     class Meta:
         model = FinancingServices
         fields = ['fs_belong_to_company', ]
+
+
+class EnterpriseSelfOrderFilter(django_filters.rest_framework.FilterSet):
+    """
+    企业归属订单筛选器
+    """
+    # order_user = django_filters.CharFilter(field_name='user_info', help_text='企业用户外键', lookup_expr='exact')
+    price_min = django_filters.NumberFilter(label="最低价格", field_name='order_amount', help_text='平台最低价格',
+                                            lookup_expr='gte')
+    price_max = django_filters.NumberFilter(label="最高价格", field_name='order_amount', help_text='平台最高价格',
+                                            lookup_expr='lte')
+
+    class Meta:
+        model = OrderInfo
+        fields = ['order_sn', 'order_status', 'price_min', 'price_max']

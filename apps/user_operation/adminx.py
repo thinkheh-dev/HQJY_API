@@ -10,29 +10,30 @@
 
 import xadmin
 from user_operation.models import UserFav, OrderInfo, OrderServiceDetail, WorkbenchNavConfiguration, \
-	WorkbenchParameterConfiguration
+    WorkbenchParameterConfiguration
 
 
 class UserFavAdmin(object):
-	list_display = ['user_info', 'default_services', 'default_services_package', 'financing_services', 'add_time']
-	
+    list_display = ['user_info', 'default_services', 'default_services_package', 'financing_services', 'add_time']
+
 
 class OrderInfoAdmin(object):
-	list_display = ['user_info', 'order_sn', 'order_status', 'order_message', 'order_message', 'order_amount',
-	                'order_remark', 'industry_commissioner', 'order_add_time', 'order_end_time']
+    list_display = ['user_info', 'order_belong_company', 'order_sn', 'order_status', 'order_message',
+                    'order_message', 'order_amount', 'order_remark', 'industry_commissioner', 'order_add_time',
+                    'order_end_time']
 
 
 class OrderServiceDetailAdmin(object):
-	list_display = ['order_info', 'default_services', 'default_services_package', 'financing_services',
-	                'contract_attach_file', 'add_time']
+    list_display = ['order_info', 'default_services', 'default_services_package', 'financing_services',
+                    'contract_attach_file', 'add_time']
 
 
 class WorkbenchNavConfigurationAdmin(object):
-	list_display = ['name', 'index', 'nav_img', 'nav_url', 'display_flag']
-	
+    list_display = ['name', 'index', 'nav_img', 'nav_url', 'display_flag']
+
 
 class WorkbenchParameterConfigurationAdmin(object):
-	list_display = ['name', 'workbench_img', 'workbench_css']
+    list_display = ['name', 'workbench_img', 'workbench_css']
 
 
 xadmin.site.register(UserFav, UserFavAdmin)
