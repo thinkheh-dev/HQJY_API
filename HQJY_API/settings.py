@@ -105,8 +105,8 @@ DATABASES = {
         'NAME': 'hqjy_api_database',
         'USER': 'root',
         'PASSWORD': 'P@ssword',
-        'HOST': 'localhost',        # 本地测试数据库
-        # 'HOST': '192.168.20.53',  # 开发用内部测试数据库
+        # 'HOST': 'localhost',        # 本地测试数据库
+        'HOST': '192.168.20.53',  # 开发用内部测试数据库
         'PORT': '3306',
         # 'OPTIONS': { 'init_command': 'SET storage_engine=INNODB;' } ,
     }
@@ -180,10 +180,10 @@ REST_FRAMEWORK = {
 
     'DEFAULT_THROTTLE_RATES': {
         'user_change_password_scope': '5/minute',
-        'user_realname_auth_scope': '100/day',
+        'user_realname_auth_scope': '3/day',
+        'eps_auth_scope': '3/day',
     },
 }
-
 
 import datetime
 
@@ -201,7 +201,6 @@ REAL_API_KEY = "c06b67b14e7fde9dcc99c651d4c024be"
 
 # 聚合网企业工商数据认证API-KEY：
 EPS_API_KEY = "0b182de1cea873873ee78233ff64ef52"
-
 
 # 手机号码正则表达式
 REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
@@ -229,11 +228,11 @@ SESSION_COOKIE_AGE = 60 * 30  # 30分钟
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # 关闭浏览器，则COOKIE失效
 
-#添加对svg图片的支持
+# 添加对svg图片的支持
 import mimetypes
+
 mimetypes.add_type("image/svg+xml", ".svg", True)
 mimetypes.add_type("image/svg+xml", ".svgz", True)
-
 
 SWAGGER_SETTINGS = {
     # 基础样式
@@ -246,7 +245,7 @@ SWAGGER_SETTINGS = {
     'LOGIN_URL': 'rest_framework:login',
     'LOGOUT_URL': 'rest_framework:logout',
     # 'DOC_EXPANSION': None,
-    'SHOW_REQUEST_HEADERS':True,
+    'SHOW_REQUEST_HEADERS': True,
     # 'USE_SESSION_AUTH': True,
     'DOC_EXPANSION': 'list',
     # 接口文档中方法列表以首字母升序排列

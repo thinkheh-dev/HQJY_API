@@ -9,7 +9,7 @@
 # @software: PyCharm
 
 import django_filters
-from .models import BasicEnterpriseInfo
+from .models import BasicEnterpriseInfo, EnterpriseAuthManuallyReview
 from users.models import UserInfo
 from service_object.models import DefaultServices, FinancingServices
 from user_operation.models import OrderInfo
@@ -22,7 +22,8 @@ class BasicEnterpriseInfoFilter(django_filters.rest_framework.FilterSet):
     enterprise_name = django_filters.CharFilter(field_name='name', help_text='企业名称', lookup_expr='icontains')
     credit_no = django_filters.CharFilter(field_name='credit_no', help_text='统一信用代码', lookup_expr='exact')
     oper_name = django_filters.CharFilter(field_name='oper_name', help_text='法人姓名', lookup_expr='exact')
-    #company_area = django_filters.ChoiceFilter(choices=BasicEnterpriseInfo.COUNTY_CHOICES, help_text='公司归属地', lookup_expr='exact')
+    # company_area = django_filters.ChoiceFilter(choices=BasicEnterpriseInfo.COUNTY_CHOICES, help_text='公司归属地',
+    # lookup_expr='exact')
 
     class Meta:
         model = BasicEnterpriseInfo
@@ -77,3 +78,17 @@ class EnterpriseSelfOrderFilter(django_filters.rest_framework.FilterSet):
     class Meta:
         model = OrderInfo
         fields = ['order_sn', 'order_status', 'price_min', 'price_max']
+
+
+class EnterpriseAuthListFilter(django_filters.rest_framework.FilterSet):
+    """
+    企业认证列表筛选器
+    """
+
+    apply_audit_status = django_filters.ChoiceFilter(label="审核状态", choices=EnterpriseAuthManuallyReview.STATUS,
+                                             help_text='审核状态选择', lookup_expr='exact')
+    soc_mark_flag = django_filters.BooleanFilter(label="是否服务机构申请", field_name='soc_mark_flag')
+
+    class Meta:
+        model = EnterpriseAuthManuallyReview
+        fields = ['apply_audit_status', 'soc_mark_flag']

@@ -77,6 +77,7 @@ class EnterpriseAuthManuallyReviewSerializers(serializers.ModelSerializer):
     """
 
     apply_audit_status = serializers.CharField(default=3, required=False, read_only=True, label="审核状态")
+    soc_mark_flag = serializers.BooleanField(default=False, required=False, write_only=True, label="服务机构认证标志")
 
     # 检测用户是否存在，不存在则报错
     def validate_user_id(self, user_id):
@@ -88,7 +89,7 @@ class EnterpriseAuthManuallyReviewSerializers(serializers.ModelSerializer):
     class Meta:
         model = EnterpriseAuthManuallyReview
         fields = ['id', 'user_id', 'enterprise_code', 'enterprise_oper_name', 'enterprise_oper_idcard',
-                  'enterprise_license', 'enterprise_review', 'apply_audit_status']
+                  'enterprise_license', 'enterprise_review', 'apply_audit_status', 'soc_mark_flag']
 
 
 class EnterpriseAuthUpdateSerializers(serializers.ModelSerializer):
@@ -99,7 +100,7 @@ class EnterpriseAuthUpdateSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = EnterpriseAuthManuallyReview
-        fields = ['id', 'apply_audit_status', 'auth_failure_reason']
+        fields = "__all__"
 
 
 class BasicEnterpriseInfoSerializers(serializers.ModelSerializer):
@@ -174,7 +175,6 @@ class EnterpriseSelfOrderSerializers(serializers.Serializer):
     order_remark = serializers.CharField(read_only=True)
     cancel_order = serializers.CharField(read_only=True)
     order_add_time = serializers.DateTimeField(read_only=True)
-
 
 
 class EnterpriseSelfOrderUpdateSerializers(serializers.ModelSerializer):

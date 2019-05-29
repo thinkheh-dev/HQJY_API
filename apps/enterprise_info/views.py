@@ -22,7 +22,8 @@ from HQJY_API.settings import SMS_API_KEY, REAL_API_KEY, EPS_API_KEY
 from apiutils.yunpiansms import YunPianSmsSend
 from apiutils.epsinfoauth import EnterpriseInfoAuthInterface
 from .filters import BasicEnterpriseInfoFilter, EnterpriseInfoOperatorDetailFilter, \
-    EnterpriseSelfDefaultServicesFilter, EnterpriseSelfFinancingServicesFilter, EnterpriseSelfOrderFilter
+    EnterpriseSelfDefaultServicesFilter, EnterpriseSelfFinancingServicesFilter, EnterpriseSelfOrderFilter, \
+    EnterpriseAuthListFilter
 from users.models import UserPermissionsName, UserInfo
 from service_object.models import DefaultServices, FinancingServices
 from user_operation.models import OrderInfo
@@ -31,6 +32,13 @@ from user_operation.models import OrderInfo
 # 分页
 class EnterpriseInfoPagination(PageNumberPagination):
     page_size = 12
+    page_size_query_param = 'page_size'
+    page_query_param = "p"
+    max_page_size = 100
+
+
+class EnterpriseAuthPagination(PageNumberPagination):
+    page_size = 20
     page_size_query_param = 'page_size'
     page_query_param = "p"
     max_page_size = 100
@@ -164,6 +172,11 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
     permission_classes = (IsAuthenticated, IsAdminUser)
     authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
     serializer_class = EnterpriseAuthUpdateSerializers
+    pagination_class = EnterpriseAuthPagination
+
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
+    filter_class = EnterpriseAuthListFilter
+    ordering_fields = ('add_time', )
     
     def get_queryset(self):
         # return EnterpriseAuthManuallyReview.objects.filter(apply_audit_status=3)

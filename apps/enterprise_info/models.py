@@ -127,6 +127,8 @@ class EnterpriseAuthManuallyReview(models.Model):
 	                                       help_text="如果审核不通过，请填写原因")
 	add_time = models.DateTimeField(default=datetime.now, verbose_name="申请提交时间", help_text="申请提交时间")
 	update_time = models.DateTimeField(auto_now=True, verbose_name="审核更新时间", help_text="审核更新时间")
+	soc_mark_flag = models.BooleanField(default=False, blank=True, null=True, verbose_name="服务机构认证标志",
+										help_text="服务机构认证标志")
 	
 	class Meta:
 		verbose_name = "企业认证人工审核"
