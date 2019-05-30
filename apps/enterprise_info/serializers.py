@@ -12,7 +12,7 @@ from rest_framework import serializers, status
 from django.db.models import Q
 
 from .models import EnterpriseTypeLevel, BasicEnterpriseInfo, EnterpriseLabel, EnterpriseAuthManuallyReview, \
-	EnterpriseReviewFile
+	EnterpriseReviewFile, BasicEnterpriseInfoTemp
 from users.models import UserInfo
 from user_operation.models import OrderInfo
 
@@ -90,6 +90,14 @@ class EnterpriseAuthManuallyReviewSerializers(serializers.ModelSerializer):
 		model = EnterpriseAuthManuallyReview
 		fields = ['id', 'user_id', 'enterprise_code', 'enterprise_oper_name', 'enterprise_oper_idcard',
 		          'enterprise_license', 'enterprise_review', 'apply_audit_status', 'soc_mark_flag']
+
+
+class BasicEnterpriseInfoTempSerializers(serializers.Serializer):
+	"""
+	企业基本信息（临时）序列化
+	"""
+	enterprise_code = serializers.CharField(label="企业统一信用代码", write_only=True, max_length=18, min_length=18,
+	                                        allow_blank=False, allow_null=False)
 
 
 class EnterpriseAuthUpdateSerializers(serializers.ModelSerializer):

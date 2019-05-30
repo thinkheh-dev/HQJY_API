@@ -16,7 +16,7 @@ from .models import EnterpriseTypeLevel, BasicEnterpriseInfo, EnterpriseReviewFi
 from .serializers import BasicEnterpriseInfoSerializers, EnterpriseAuthManuallyReviewSerializers, \
     EnterpriseReviewFileSerializers, EnterpriseAuthUpdateSerializers, BasicEnterpriseInfoUpdateSerializers, \
     EnterpriseInfoOperatorDetailSerializers, EnterpriseSelfServicesSerializers, EnterpriseSelfOrderSerializers, \
-    EnterpriseSelfOrderUpdateSerializers
+    EnterpriseSelfOrderUpdateSerializers, BasicEnterpriseInfoTempSerializers
 from users.serializers import UserInfoDetailSerializers
 from HQJY_API.settings import SMS_API_KEY, REAL_API_KEY, EPS_API_KEY
 from apiutils.yunpiansms import YunPianSmsSend
@@ -93,7 +93,7 @@ class EnterpriseDetailUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelM
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         
-        return Response({"message":"恭喜，{} 企业信息更新完成".format(instance.enterprise_name)})
+        return Response({"message": "恭喜，{} 企业信息更新完成".format(instance.enterprise_name)})
 
     def perform_update(self, serializer):
         return serializer.save()
@@ -156,8 +156,34 @@ class EnterpriseAuthManuallyReviewViewSet(mixins.CreateModelMixin, mixins.ListMo
     def perform_create(self, serializer):
         return serializer.save()
     
+
+class EnterpriseAuthReadInterfaceViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin):
+    """
+    连接第三方接口，获取数据并保存在数据库中
+    """
+
+    permission_classes = (IsAuthenticated, IsAdminUser)
+    authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+    serializer_class = BasicEnterpriseInfoTempSerializers
     
-class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,mixins.UpdateModelMixin,
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+    def get_success_headers(self, data):
+        try:
+            return {'Location': str(data[api_settings.URL_FIELD_NAME])}
+        except (TypeError, KeyError):
+            return {}
+     
+    
+class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
                                   viewsets.GenericViewSet):
     """
     企业认证人工审核更新视图

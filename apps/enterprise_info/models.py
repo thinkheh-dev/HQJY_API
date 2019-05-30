@@ -11,9 +11,9 @@ class EnterpriseLabel(models.Model):
 	企业标签
 	"""
 	LEVEL_CHOICE = (
-		(1,'普通'),
-		(2,'高级'),
-		(3,'超级'),
+		(1, '普通'),
+		(2, '高级'),
+		(3, '超级'),
 	)
 	name = models.CharField(max_length=50, blank=True, null=True, verbose_name="企业标签名称",
 	                        help_text="企业标签名称")
@@ -28,7 +28,6 @@ class EnterpriseLabel(models.Model):
 	def __str__(self):
 		return self.name
 	
-
 
 class EnterpriseTypeLevel(models.Model):
 	"""
@@ -159,6 +158,62 @@ def eps_info_path(instance, filename):
 		return Response({"error_message": "请上传jpg/jpeg/png格式的图片！"})
 
 
+class BasicEnterpriseInfoTemp(models.Model):
+	"""
+	企业基础信息(临时表）
+	"""
+	
+	name = models.CharField(max_length=50, blank=True, null=True, verbose_name="企业名称", help_text="企业名称")
+	credit_no = models.CharField(max_length=18, blank=True, null=True, verbose_name="统一社会信用代码", help_text="统一社会信用代码")
+	oper_name = models.CharField(max_length=20, blank=True, null=True, verbose_name="法人姓名", help_text="法人姓名")
+	reg_no = models.CharField(max_length=20, blank=True, null=True, verbose_name="工商注册号", help_text="工商注册号")
+	econ_kind = models.CharField(max_length=20, blank=True, null=True, verbose_name="企业(机构)类型", help_text="企业(机构)类型")
+	regist_capi = models.CharField(max_length=20, blank=True, null=True, verbose_name="注册资金（万元）",
+	                               help_text="注册资金(单位:万元)")
+	reg_capcur = models.CharField(max_length=20, blank=True, null=True, verbose_name="注册币种", help_text="注册币种")
+	status = models.CharField(max_length=20, blank=True, null=True, verbose_name="经营状态", help_text="经营状态(在营、注销、吊销、其他)")
+	cancel_date = models.CharField(max_length=20, blank=True, null=True, verbose_name="注销日期", help_text="注销日期")
+	revoke_date = models.CharField(max_length=20, blank=True, null=True, verbose_name="吊销日期", help_text="吊销日期")
+	address = models.CharField(max_length=200, blank=True, null=True, verbose_name="注册地址", help_text="注册地址")
+	start_date = models.DateField(blank=True, null=True, verbose_name="开业日期", help_text="开业日期(YYYY-MM-DD)")
+	term_start = models.DateField(blank=True, null=True, verbose_name="经营期限自", help_text="经营期限自(YYYY-MM-DD)")
+	term_end = models.DateField(blank=True, null=True, verbose_name="经营期限至", help_text="经营期限至(YYYY-MM-DD)")
+	belong_org = models.CharField(max_length=50, blank=True, null=True, verbose_name="登记机关", help_text="登记机关")
+	abu_item = models.CharField(max_length=255, blank=True, null=True, verbose_name="许可经营项目", help_text="许可经营项目")
+	cbu_item = models.CharField(max_length=255, blank=True, null=True, verbose_name="一般经营项目", help_text="一般经营项目")
+	operate_scope = models.CharField(max_length=255, blank=True, null=True, verbose_name="经营(业务)范围",
+	                                 help_text="经营(业务)范围")
+	operate_scope_and_form = models.CharField(max_length=255, blank=True, null=True, verbose_name="经营(业务)范围及方式",
+	                                          help_text="经营(业务)范围及方式")
+	org_code = models.CharField(max_length=20, blank=True, null=True, verbose_name="组织机构代码", help_text="组织机构代码")
+	appr_date = models.CharField(max_length=20, blank=True, null=True, verbose_name="核准时间", help_text="核准时间")
+	province = models.CharField(max_length=20, blank=True, null=True, verbose_name="省", help_text="省")
+	city = models.CharField(max_length=20, blank=True, null=True, verbose_name="地级市", help_text="地级市")
+	county = models.CharField(max_length=20, blank=True, null=True, verbose_name="区\县", help_text="区\县")
+	area_code = models.CharField(max_length=20, blank=True, null=True, verbose_name="住所所在行政区划代码",
+	                             help_text="住所所在行政区划代码")
+	industry_phycode = models.CharField(max_length=20, blank=True, null=True, verbose_name="行业门类代码", help_text="行业门类代码")
+	industry_phyname = models.CharField(max_length=20, blank=True, null=True, verbose_name="行业门类名称", help_text="行业门类名称")
+	industry_code = models.CharField(max_length=20, blank=True, null=True, verbose_name="国民经济行业代码",
+	                                 help_text="国民经济行业代码")
+	industry_name = models.CharField(max_length=20, blank=True, null=True, verbose_name="国民经济行业名称",
+	                                 help_text="国民经济行业名称")
+	contact_name = models.CharField(max_length=20, blank=True, null=True, verbose_name="企业联系人姓名", help_text="企业联系人姓名")
+	contact_phone = models.CharField(max_length=11, blank=True, null=True, verbose_name="企业联系人电话", help_text="企业联系人电话")
+	scan_of_company_license = models.ImageField(upload_to=eps_info_path, blank=True, null=True,
+	                                            verbose_name="营业执照正面清晰扫描件", help_text="营业执照正面清晰扫描件")
+	scan_of_id_card = models.ImageField(upload_to=eps_info_path, blank=True, null=True, verbose_name="法人身份清晰彩色扫描件",
+	                                    help_text="法人身份清晰彩色扫描件")
+	add_time = models.DateTimeField(default=datetime.now, verbose_name="企业信息创建时间", help_text="企业信息创建时间")
+	
+	class Meta:
+		verbose_name = "企业基础信息（临时表）"
+		verbose_name_plural = verbose_name
+	
+	def __str__(self):
+		return self.name
+
+
 class BasicEnterpriseInfo(models.Model):
 	"""
 	企业基础信息
@@ -172,7 +227,6 @@ class BasicEnterpriseInfo(models.Model):
 	regist_capi = models.CharField(max_length=20, blank=True, null=True, verbose_name="注册资金（万元）",
 								   help_text="注册资金(单位:万元)")
 	reg_capcur = models.CharField(max_length=20, blank=True, null=True, verbose_name="注册币种", help_text="注册币种")
-	# scope = models.CharField(max_length=255, blank=True, null=True, verbose_name="经营范围", help_text="经营范围")
 	status = models.CharField(max_length=20, blank=True, null=True, verbose_name="经营状态", help_text="经营状态(在营、注销、吊销、其他)")
 	cancel_date = models.CharField(max_length=20, blank=True, null=True, verbose_name="注销日期", help_text="注销日期")
 	revoke_date = models.CharField(max_length=20, blank=True, null=True, verbose_name="吊销日期", help_text="吊销日期")
