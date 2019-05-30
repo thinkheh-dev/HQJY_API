@@ -13,7 +13,7 @@ from rest_framework.authentication import SessionAuthentication
 from apiutils.permissions import IsOwnerOrReadOnly, IsServiceProvider
 
 from .models import EnterpriseTypeLevel, BasicEnterpriseInfo, EnterpriseReviewFile, EnterpriseAuthManuallyReview
-from .serializers import  BasicEnterpriseInfoSerializers, EnterpriseAuthManuallyReviewSerializers, \
+from .serializers import BasicEnterpriseInfoSerializers, EnterpriseAuthManuallyReviewSerializers, \
     EnterpriseReviewFileSerializers, EnterpriseAuthUpdateSerializers, BasicEnterpriseInfoUpdateSerializers, \
     EnterpriseInfoOperatorDetailSerializers, EnterpriseSelfServicesSerializers, EnterpriseSelfOrderSerializers, \
     EnterpriseSelfOrderUpdateSerializers
