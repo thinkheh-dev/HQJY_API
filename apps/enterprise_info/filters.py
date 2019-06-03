@@ -85,10 +85,11 @@ class EnterpriseAuthListFilter(django_filters.rest_framework.FilterSet):
     企业认证列表筛选器
     """
 
-    apply_audit_status = django_filters.ChoiceFilter(label="审核状态", choices=EnterpriseAuthManuallyReview.STATUS,
-                                             help_text='审核状态选择', lookup_expr='exact')
+    auth_status = django_filters.ChoiceFilter(label="审核状态", field_name='apply_audit_status',
+                                              choices=EnterpriseAuthManuallyReview.STATUS, help_text='审核状态选择',
+                                              lookup_expr='exact')
     soc_mark_flag = django_filters.BooleanFilter(label="是否服务机构申请", field_name='soc_mark_flag')
 
     class Meta:
         model = EnterpriseAuthManuallyReview
-        fields = ['apply_audit_status', 'soc_mark_flag']
+        fields = ['auth_status', 'soc_mark_flag']

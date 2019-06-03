@@ -200,25 +200,30 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
     serializer_class = EnterpriseAuthUpdateSerializers
     pagination_class = EnterpriseAuthPagination
 
-    filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
+    filter_backends = (DjangoFilterBackend, )
     filter_class = EnterpriseAuthListFilter
-    ordering_fields = ('add_time', )
+    # ordering_fields = ('add_time', )
     
     def get_queryset(self):
         # return EnterpriseAuthManuallyReview.objects.filter(apply_audit_status=3)
         return EnterpriseAuthManuallyReview.objects.all()
     
     def update(self, request, *args, **kwargs):
-        
+
         # 获取当前用户
         user = get_user_model()
-        
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         eps_auth_id = instance.id
         eps_auth_data = self.perform_update(serializer)
+        
+        # 判断企业是否存在，如果存在则报错，不再往下进行
+        exsited = BasicEnterpriseInfo.objects.filter(credit_no=eps_auth_data.enterprise_code).count()
+        
+        if exsited:
+            return Response({"error_message": "该企业已经存在数据库，不要重复验证！"})
         
         # 获取当前用户手机号，用于发送短信 -- 这里不要随意更改
         user_phone = list(user.objects.filter(id=eps_auth_data.user_id).values())[0]['user_phone']
@@ -296,7 +301,7 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
             print("审核不通过")
             auth_status = "审核未通过"
             sms_fail_send = juhe.send_fail_sms(user_phone=user_phone)
-            if sms_send_code["error_code"] != 0:
+            if sms_fail_send["error_code"] != 0:
                 sms_send_result = "审核短信发送失败！原因：{}".format(sms_fail_send["result"]['resmsg'])
             else:
                 sms_send_result = "审核短信发送成功！"
