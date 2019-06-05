@@ -231,6 +231,8 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
         # 实例化发送短信函数，根据申请结果发送短信
         juhe = YunPianSmsSend(SMS_API_KEY)
 
+        re_dict = {}
+
         if eps_auth_data.apply_audit_status == 1:
             print("审核通过")
             auth_status = "审核通过"
@@ -297,6 +299,17 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
                 else:
                     sms_send_result = "审核短信发送成功！"
 
+                # 拼接返回的json数据
+                re_dict['message'] = "人工审核流程完成"
+                re_dict['id'] = eps_auth_id
+                re_dict['user_id'] = eps_auth_data.user_id
+                re_dict['sms_send_result'] = sms_send_result
+                re_dict['auth_status'] = auth_status
+                re_dict['enterprise_name'] = list(BasicEnterpriseInfo.objects.filter(
+                    credit_no=eps_auth_data.enterprise_code).values())[0]['name']
+                re_dict['enterprise_oper_name'] = eps_auth_data.enterprise_oper_name
+                re_dict['auth_failure_reason'] = eps_auth_data.auth_failure_reason
+
         else:
             print("审核不通过")
             auth_status = "审核未通过"
@@ -306,17 +319,13 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
             else:
                 sms_send_result = "审核短信发送成功！"
 
-        # 拼接返回的json数据
-        re_dict = {}
-        re_dict['message'] = "人工审核流程完成"
-        re_dict['id'] = eps_auth_id
-        re_dict['user_id'] = eps_auth_data.user_id
-        re_dict['sms_send_result'] = sms_send_result
-        re_dict['auth_status'] = auth_status
-        re_dict['enterprise_name'] = list(BasicEnterpriseInfo.objects.filter(
-                                     credit_no=eps_auth_data.enterprise_code).values())[0]['name']
-        re_dict['enterprise_oper_name'] = eps_auth_data.enterprise_oper_name
-        re_dict['auth_failure_reason'] = eps_auth_data.auth_failure_reason
+            # 拼接返回的json数据
+            re_dict['message'] = "人工审核流程完成"
+            re_dict['id'] = eps_auth_id
+            re_dict['user_id'] = eps_auth_data.user_id
+            re_dict['sms_send_result'] = sms_send_result
+            re_dict['auth_status'] = auth_status
+            re_dict['auth_failure_reason'] = eps_auth_data.auth_failure_reason
         
         return Response({"result": re_dict})
 
@@ -338,7 +347,6 @@ class EnterpriseInfoOperatorDetailViewSet(mixins.ListModelMixin, mixins.Retrieve
 
     def get_queryset(self):
         return UserInfo.objects.all()
-
 
 
 class EnterpriseSelfDefaultServicesViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
