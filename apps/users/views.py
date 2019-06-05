@@ -29,6 +29,7 @@ from .models import VerifyCode, UserProtocol, UserPermissionsName
 
 User = get_user_model()
 
+
 class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
 	"""
     发送短信验证码
@@ -158,25 +159,24 @@ class UserViewset(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.Retri
 			serializer.validated_data['user_permission_name'] = UserPermissionsName.objects.filter(
 				permission_sn="QX001").first()
 			
-			#print(serializer.validated_data['user_labels'])
+			# print(serializer.validated_data['user_labels'])
 		
 		user = self.perform_create(serializer)
 		
 		re_dict = serializer.data
 		payload = jwt_payload_handler(user)
-		#获取token
+		# 获取token
 		re_dict["token"] = jwt_encode_handler(payload)
-		#获取用户id
+		# 获取用户id
 		re_dict['user_id'] = user.id
-		#获取用户权限
+		# 获取用户权限
 		re_dict['user_permission_name'] = user.user_permission_name.permission_sn
-		#获取用户头像
+		# 获取用户头像
 		re_dict['user_logo'] = user.user_logo.url
-		#获取用户归属地
+		# 获取用户归属地
 		re_dict['user_home'] = user.user_home
-		#获取管理员模式
+		# 获取管理员模式
 		re_dict['is_staff'] = user.is_staff
-		
 		
 		headers = self.get_success_headers(serializer.data)
 		return Response(re_dict, status=status.HTTP_201_CREATED, headers=headers)
@@ -195,7 +195,7 @@ class UserViewset(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.Retri
 		serializer.is_valid(raise_exception=True)
 		pupdate_data = self.perform_update(serializer)
 		
-		#获取用户头像文件所在的服务器路径
+		# 获取用户头像文件所在的服务器路径
 		user_logo_path = pupdate_data.user_logo.path
 		print(user_logo_path)
 		
@@ -207,14 +207,14 @@ class UserViewset(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.Retri
 		dirs_logo = os.path.dirname(user_logo_path)
 		print(dirs_logo_filename)
 		
-		#列出头像文件所在目录的目录结构
+		# 列出头像文件所在目录的目录结构
 		for root, dirs, files in os.walk(dirs_logo):
 			print(root)
 			print(dirs)
 			print(files)
-			#遍历头像目录下的所有文件
+			# 遍历头像目录下的所有文件
 			for xfile in files:
-				#判断是否是本次上传的头像文件，如果是：跳过，如果不是：删除
+				# 判断是否是本次上传的头像文件，如果是：跳过，如果不是：删除
 				if xfile == dirs_logo_filename:
 					print("{} 是本次上传，不做删除！".format(xfile))
 					pass
@@ -276,7 +276,6 @@ class UserPasswordModifyViewSet(mixins.UpdateModelMixin,
 	
 	throttle_classes = [UserChangePasswordThrottle, ]
 	
-
 	@action(detail=True, methods=['post'])
 	def set_password(self, request, pk=None):
 		user = self.get_object()
@@ -374,7 +373,6 @@ class UserRealNameAuthViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
 		
 		return user_birth
 		
-		
 	def get_queryset(self):
 		return User.objects.all()
 	
@@ -401,13 +399,13 @@ class UserRealNameAuthViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
 				user.user_id_card = user_id_card
 				user.user_permission_name = UserPermissionsName.objects.filter(permission_sn="QX002").first()
 				
-				#判断身份证性别
+				# 判断身份证性别
 				if int(list(user_id_card)[-2]) % 2 :
 					user.user_sex = "male"
 				else:
 					user.user_sex = "female"
 				
-				#调用获取身份证生日的函数
+				# 调用获取身份证生日的函数
 				user.user_birthday = self.get_user_birth(idcard=user_id_card)
 
 				user.user_phone_type = auth_status["result"]['type']

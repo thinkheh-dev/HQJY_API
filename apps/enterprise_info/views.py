@@ -215,119 +215,141 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        eps_auth_id = instance.id
-        eps_auth_data = self.perform_update(serializer)
+        if serializer.is_valid(raise_exception=True):
+            
+            apply_audit_status = serializer.validated_data['apply_audit_status']
+
+            eps_auth_id = instance.id
+
+            enterprise_code = EnterpriseAuthManuallyReview.objects.get(id=eps_auth_id).enterprise_code
+            user_id = EnterpriseAuthManuallyReview.objects.get(id=eps_auth_id).user_id
+
+            # 判断企业是否存在，如果存在则报错，不再往下进行
+            exsited = BasicEnterpriseInfo.objects.filter(credit_no=EnterpriseAuthManuallyReview.objects.get(
+                id=eps_auth_id).enterprise_code).count()
         
-        # 判断企业是否存在，如果存在则报错，不再往下进行
-        exsited = BasicEnterpriseInfo.objects.filter(credit_no=eps_auth_data.enterprise_code).count()
+            if exsited:
+                return Response({"error_message": "该企业已经存在数据库，不要重复验证！"})
         
-        if exsited:
-            return Response({"error_message": "该企业已经存在数据库，不要重复验证！"})
-        
-        # 获取当前用户手机号，用于发送短信 -- 这里不要随意更改
-        user_phone = list(user.objects.filter(id=eps_auth_data.user_id).values())[0]['user_phone']
+            # 获取当前用户手机号，用于发送短信 -- 这里不要随意更改
+            user_phone = list(user.objects.filter(id=user_id).values())[0]['user_phone']
 
-        # 实例化发送短信函数，根据申请结果发送短信
-        juhe = YunPianSmsSend(SMS_API_KEY)
+            # 实例化发送短信函数，根据申请结果发送短信
+            juhe = YunPianSmsSend(SMS_API_KEY)
+    
+            re_dict = {}
+    
+            if apply_audit_status == 1:
+                print("审核通过")
+                auth_status = "审核通过"
+                user_permission_name_id = UserPermissionsName.objects.get(permission_sn="QX004").id
+    
+                # 人工审核通过后，使用第三方接口获取企业工商数据，并存储到数据库
+                juhe_eps_info = EnterpriseInfoAuthInterface(EPS_API_KEY)
+                eps_info_result = juhe_eps_info.send_auth(name=enterprise_code)
+                print(eps_info_result)
+    
+                # 判断接口是否成功获取数据
+                if eps_info_result['error_code'] != 0:
+                    # basic_info = BasicEnterpriseInfo.objects.create(credit_no=eps_auth_data.enterprise_code,
+                    #                                                 oper_name=eps_auth_data.enterprise_oper_name)
+                    EnterpriseAuthManuallyReview.objects.update(apply_audit_status=2,
+                                                                auth_failure_reason=eps_info_result['reason'])
+                    print("审核不通过")
+                    auth_status = "审核未通过"
+                    sms_fail_send = juhe.send_fail_sms(user_phone=user_phone)
+                    if sms_fail_send["error_code"]!=0:
+                        sms_send_result = "审核短信发送失败！原因：{}".format(sms_fail_send["result"]['resmsg'])
+                    else:
+                        sms_send_result = "审核短信发送成功！"
+                    
+                    return Response({
+                        "auth_status": auth_status,
+                        "sms_send_result": sms_send_result,
+                        "fail": 0,
+                        "error_message": eps_info_result['reason']
+                    }, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    print("创建企业信息--({})".format(eps_info_result["result"]["enterpriseName"]))
+                    # 根据获取的工商数据创建企业信息
+                    basic_info = BasicEnterpriseInfo.objects.create(name=eps_info_result["result"]["enterpriseName"],
+                                                                    credit_no=eps_info_result["result"]["creditCode"],
+                                                                    oper_name=eps_info_result["result"]["frName"],
+                                                                    reg_no=eps_info_result["result"]["regNo"],
+                                                                    econ_kind=eps_info_result["result"]["enterpriseType"],
+                                                                    regist_capi=eps_info_result["result"]["regCap"],
+                                                                    reg_capcur=eps_info_result["result"]["regCapCur"],
+                                                                    status=eps_info_result["result"]["enterpriseStatus"],
+                                                                    cancel_date=eps_info_result["result"]["cancelDate"],
+                                                                    revoke_date=eps_info_result["result"]["revokeDate"],
+                                                                    address=eps_info_result["result"]["address"],
+                                                                    start_date=eps_info_result["result"]["esDate"],
+                                                                    term_start=eps_info_result["result"]["openFrom"],
+                                                                    term_end=eps_info_result["result"]["openTo"],
+                                                                    belong_org=eps_info_result["result"]["regOrg"],
+                                                                    abu_item=eps_info_result["result"]["abuItem"],
+                                                                    cbu_item=eps_info_result["result"]["cbuItem"],
+                                                                    operate_scope=eps_info_result["result"]["operateScope"],
+                                                                    operate_scope_and_form=eps_info_result["result"][
+                                                                                           "operateScopeAndForm"],
+                                                                    org_code=eps_info_result["result"]["orgCode"],
+                                                                    appr_date=eps_info_result["result"]["apprDate"],
+                                                                    province=eps_info_result["result"]["province"],
+                                                                    city=eps_info_result["result"]["city"],
+                                                                    county=eps_info_result["result"]["county"],
+                                                                    area_code=eps_info_result["result"]["areaCode"],
+                                                                    industry_phycode=eps_info_result["result"][
+                                                                                     "industryPhyCode"],
+                                                                    industry_phyname=eps_info_result["result"][
+                                                                                     "industryPhyName"],
+                                                                    industry_code=eps_info_result["result"]["industryCode"],
+                                                                    industry_name=eps_info_result["result"]["industryName"])
+    
+                    print("创建企业信息完成！")
+    
+                    # 企业认证完成，更新用户权限为：企业用户（QX004)
+                    user.objects.filter(id=user_id).update(user_to_company=basic_info.id,
+                                                           user_permission_name=user_permission_name_id)
+                    # 发送审核成功短信
+                    sms_success_send = juhe.send_success_sms(user_phone=user_phone)
+                    if sms_success_send["error_code"] != 0:
+                        sms_send_result = "审核短信发送失败！原因：{}".format(sms_success_send["result"]['resmsg'])
+                    else:
+                        sms_send_result = "审核短信发送成功！"
 
-        re_dict = {}
-
-        if eps_auth_data.apply_audit_status == 1:
-            print("审核通过")
-            auth_status = "审核通过"
-            user_permission_name_id = UserPermissionsName.objects.get(permission_sn="QX004").id
-
-            # 人工审核通过后，使用第三方接口获取企业工商数据，并存储到数据库
-            juhe_eps_info = EnterpriseInfoAuthInterface(EPS_API_KEY)
-            eps_info_result = juhe_eps_info.send_auth(name=eps_auth_data.enterprise_code)
-            print(eps_info_result)
-
-            # 判断接口是否成功获取数据
-            if eps_info_result['error_code'] != 0:
-                # basic_info = BasicEnterpriseInfo.objects.create(credit_no=eps_auth_data.enterprise_code,
-                #                                                 oper_name=eps_auth_data.enterprise_oper_name)
-                return Response({
-                    "fail": 0,
-                    "error_message": eps_info_result['reason']
-                }, status=status.HTTP_400_BAD_REQUEST)
+                    eps_auth_data = self.perform_update(serializer)
+    
+                    # 拼接返回的json数据
+                    re_dict['message'] = "人工审核流程完成"
+                    re_dict['id'] = eps_auth_id
+                    re_dict['user_id'] = eps_auth_data.user_id
+                    re_dict['sms_send_result'] = sms_send_result
+                    re_dict['auth_status'] = auth_status
+                    re_dict['enterprise_name'] = list(BasicEnterpriseInfo.objects.filter(
+                        credit_no=eps_auth_data.enterprise_code).values())[0]['name']
+                    re_dict['enterprise_oper_name'] = eps_auth_data.enterprise_oper_name
+                    re_dict['auth_failure_reason'] = eps_auth_data.auth_failure_reason
+    
             else:
-                print("创建企业信息--({})".format(eps_info_result["result"]["enterpriseName"]))
-                # 根据获取的工商数据创建企业信息
-                basic_info = BasicEnterpriseInfo.objects.create(name=eps_info_result["result"]["enterpriseName"],
-                                                                credit_no=eps_info_result["result"]["creditCode"],
-                                                                oper_name=eps_info_result["result"]["frName"],
-                                                                reg_no=eps_info_result["result"]["regNo"],
-                                                                econ_kind=eps_info_result["result"]["enterpriseType"],
-                                                                regist_capi=eps_info_result["result"]["regCap"],
-                                                                reg_capcur=eps_info_result["result"]["regCapCur"],
-                                                                status=eps_info_result["result"]["enterpriseStatus"],
-                                                                cancel_date=eps_info_result["result"]["cancelDate"],
-                                                                revoke_date=eps_info_result["result"]["revokeDate"],
-                                                                address=eps_info_result["result"]["address"],
-                                                                start_date=eps_info_result["result"]["esDate"],
-                                                                term_start=eps_info_result["result"]["openFrom"],
-                                                                term_end=eps_info_result["result"]["openTo"],
-                                                                belong_org=eps_info_result["result"]["regOrg"],
-                                                                abu_item=eps_info_result["result"]["abuItem"],
-                                                                cbu_item=eps_info_result["result"]["cbuItem"],
-                                                                operate_scope=eps_info_result["result"]["operateScope"],
-                                                                operate_scope_and_form=eps_info_result["result"][
-                                                                                       "operateScopeAndForm"],
-                                                                org_code=eps_info_result["result"]["orgCode"],
-                                                                appr_date=eps_info_result["result"]["apprDate"],
-                                                                province=eps_info_result["result"]["province"],
-                                                                city=eps_info_result["result"]["city"],
-                                                                county=eps_info_result["result"]["county"],
-                                                                area_code=eps_info_result["result"]["areaCode"],
-                                                                industry_phycode=eps_info_result["result"][
-                                                                                 "industryPhyCode"],
-                                                                industry_phyname=eps_info_result["result"][
-                                                                                 "industryPhyName"],
-                                                                industry_code=eps_info_result["result"]["industryCode"],
-                                                                industry_name=eps_info_result["result"]["industryName"])
-
-                print("创建企业信息完成！")
-
-                # 企业认证完成，更新用户权限为：企业用户（QX004)
-                user.objects.filter(id=eps_auth_data.user_id).update(user_to_company=basic_info.id,
-                                                                     user_permission_name=user_permission_name_id)
-                # 发送审核成功短信
-                sms_success_send = juhe.send_success_sms(user_phone=user_phone)
-                if sms_success_send["error_code"] != 0:
-                    sms_send_result = "审核短信发送失败！原因：{}".format(sms_success_send["result"]['resmsg'])
+                print("审核不通过")
+                auth_status = "审核未通过"
+                sms_fail_send = juhe.send_fail_sms(user_phone=user_phone)
+                if sms_fail_send["error_code"] != 0:
+                    sms_send_result = "审核短信发送失败！原因：{}".format(sms_fail_send["result"]['resmsg'])
                 else:
                     sms_send_result = "审核短信发送成功！"
 
+                eps_auth_data = self.perform_update(serializer)
+    
                 # 拼接返回的json数据
                 re_dict['message'] = "人工审核流程完成"
                 re_dict['id'] = eps_auth_id
                 re_dict['user_id'] = eps_auth_data.user_id
                 re_dict['sms_send_result'] = sms_send_result
                 re_dict['auth_status'] = auth_status
-                re_dict['enterprise_name'] = list(BasicEnterpriseInfo.objects.filter(
-                    credit_no=eps_auth_data.enterprise_code).values())[0]['name']
-                re_dict['enterprise_oper_name'] = eps_auth_data.enterprise_oper_name
                 re_dict['auth_failure_reason'] = eps_auth_data.auth_failure_reason
-
-        else:
-            print("审核不通过")
-            auth_status = "审核未通过"
-            sms_fail_send = juhe.send_fail_sms(user_phone=user_phone)
-            if sms_fail_send["error_code"] != 0:
-                sms_send_result = "审核短信发送失败！原因：{}".format(sms_fail_send["result"]['resmsg'])
-            else:
-                sms_send_result = "审核短信发送成功！"
-
-            # 拼接返回的json数据
-            re_dict['message'] = "人工审核流程完成"
-            re_dict['id'] = eps_auth_id
-            re_dict['user_id'] = eps_auth_data.user_id
-            re_dict['sms_send_result'] = sms_send_result
-            re_dict['auth_status'] = auth_status
-            re_dict['auth_failure_reason'] = eps_auth_data.auth_failure_reason
-        
-        return Response({"result": re_dict})
+            
+            return Response({"result": re_dict})
 
     def perform_update(self, serializer):
         return serializer.save()
