@@ -109,8 +109,8 @@ class EnterpriseAuthFileDownloadViewSet(mixins.ListModelMixin, viewsets.GenericV
     serializer_class = EnterpriseReviewFileSerializers
     
     
-class EnterpriseAuthManuallyReviewViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
-                                          viewsets.GenericViewSet):
+class EnterpriseAuthManuallyReviewViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.ListModelMixin,
+                                          mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
     企业认证创建人工审核视图
     list:
@@ -253,8 +253,8 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
                 if eps_info_result['error_code'] != 0:
                     # basic_info = BasicEnterpriseInfo.objects.create(credit_no=eps_auth_data.enterprise_code,
                     #                                                 oper_name=eps_auth_data.enterprise_oper_name)
-                    EnterpriseAuthManuallyReview.objects.update(apply_audit_status=2,
-                                                                auth_failure_reason=eps_info_result['reason'])
+                    EnterpriseAuthManuallyReview.objects.filter(id=eps_auth_id).update(apply_audit_status=2,
+                                                                                       auth_failure_reason=eps_info_result['reason'])
                     print("审核不通过")
                     auth_status = "审核未通过"
                     sms_fail_send = juhe.send_fail_sms(user_phone=user_phone)
