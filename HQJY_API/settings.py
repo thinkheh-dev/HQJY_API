@@ -180,8 +180,8 @@ REST_FRAMEWORK = {
 	
 	'DEFAULT_THROTTLE_RATES': {
 		'user_change_password_scope': '5/minute',
-		'user_realname_auth_scope': '3/day',
-		'eps_auth_scope': '3/day',
+		'user_realname_auth_scope': '100/day',
+		'eps_auth_scope': '100/day',
 	},
 }
 
@@ -207,6 +207,23 @@ REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
 
 # 18位身份证号码正则表达式
 REGEX_IDCARD = "^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$"
+
+
+'''
+参照标准：
+
+《GB_32100-2015_法人和其他组织统一社会信用代码编码规则.》
+按照编码规则:
+统一代码为18位，统一代码由十八位的数字或大写英文字母（不适用I、O、Z、S、V）组成，由五个部分组成：
+第一部分（第1位）为登记管理部门代码，9表示工商部门；(数字或大写英文字母)
+第二部分（第2位）为机构类别代码;(数字或大写英文字母)
+第三部分（第3-8位）为登记管理机关行政区划码；(数字)
+第四部分（第9-17位）为全国组织机构代码；(数字或大写英文字母)
+第五部分（第18位）为校验码(数字或大写英文字母)
+'''
+
+# 18位企业统一信用代码正则表达式
+REGEX_CREDIT = "/^[^_IOZSVa-z\W]{2}\d{6}[^_IOZSVa-z\W]{10}$/g"
 
 # 支付宝相关配置
 # private_key_path = os.path.join(BASE_DIR, 'apps/trade/keys/private_2048.txt')
