@@ -392,32 +392,51 @@ class UserRealNameAuthViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
 			if auth_status['error_code'] != 0:
 				return Response({
 					"fail": 0,
-					"error_message": auth_status["result"]['resmsg']
+					"error_message": auth_status["reason"]
 				}, status=status.HTTP_400_BAD_REQUEST)
 			else:
-				user.user_name = user_name
-				user.user_id_card = user_id_card
-				user.user_permission_name = UserPermissionsName.objects.filter(permission_sn="QX002").first()
-				
-				# 判断身份证性别
-				if int(list(user_id_card)[-2]) % 2 :
-					user.user_sex = "male"
+				if auth_status['result']['res'] != 1:
+					if auth_status["rescode"] == 21:
+						auth_status_res = "姓名不匹配"
+					elif auth_status["rescode"] == 22:
+						auth_status_res = "身份证不匹配"
+					elif auth_status["rescode"] == 23:
+						auth_status_res = "姓名身份证均不匹配"
+					elif auth_status["rescode"] == 33:
+						auth_status_res = "身份证和姓名不一致"
+					elif auth_status["rescode"] == 24:
+						auth_status_res = "不匹配,具体要素不匹配未知"
+					else:
+						auth_status_res = "匹配"
+					
+					return Response({
+						"fail": 0,
+						"error_message": auth_status_res
+					}, status=status.HTTP_400_BAD_REQUEST)
 				else:
-					user.user_sex = "female"
-				
-				# 调用获取身份证生日的函数
-				user.user_birthday = self.get_user_birth(idcard=user_id_card)
-
-				user.user_phone_type = auth_status["result"]['type']
-				user.user_phone_province = auth_status["result"]['province']
-				user.user_phone_city = auth_status["result"]['city']
-
-				user.save()
-				
-				return Response({
-					"success": 1,
-					"auth_status": auth_status['result']['resmsg']
-				}, status=status.HTTP_200_OK)
+					user.user_name = user_name
+					user.user_id_card = user_id_card
+					user.user_permission_name = UserPermissionsName.objects.filter(permission_sn="QX002").first()
+					
+					# 判断身份证性别
+					if int(list(user_id_card)[-2]) % 2:
+						user.user_sex = "male"
+					else:
+						user.user_sex = "female"
+					
+					# 调用获取身份证生日的函数
+					user.user_birthday = self.get_user_birth(idcard=user_id_card)
+	
+					user.user_phone_type = auth_status["result"]['type']
+					user.user_phone_province = auth_status["result"]['province']
+					user.user_phone_city = auth_status["result"]['city']
+	
+					user.save()
+					
+					return Response({
+						"success": 1,
+						"auth_status": auth_status['result']['resmsg']
+					}, status=status.HTTP_200_OK)
 		
 	def throttled(self, request, wait):
 		"""
