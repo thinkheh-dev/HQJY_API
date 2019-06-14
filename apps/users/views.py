@@ -392,19 +392,19 @@ class UserRealNameAuthViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
 			if auth_status['error_code'] != 0:
 				return Response({
 					"fail": 0,
-					"error_message": auth_status["reason"]
+					"error_message": auth_status['reason']
 				}, status=status.HTTP_400_BAD_REQUEST)
 			else:
 				if auth_status['result']['res'] != 1:
-					if auth_status["rescode"] == 21:
+					if auth_status['result']['rescode'] == 21:
 						auth_status_res = "姓名不匹配"
-					elif auth_status["rescode"] == 22:
+					elif auth_status['result']['rescode'] == 22:
 						auth_status_res = "身份证不匹配"
-					elif auth_status["rescode"] == 23:
+					elif auth_status['result']['rescode'] == 23:
 						auth_status_res = "姓名身份证均不匹配"
-					elif auth_status["rescode"] == 33:
+					elif auth_status['result']['rescode'] == 33:
 						auth_status_res = "身份证和姓名不一致"
-					elif auth_status["rescode"] == 24:
+					elif auth_status['result']['rescode'] == 24:
 						auth_status_res = "不匹配,具体要素不匹配未知"
 					else:
 						auth_status_res = "匹配"
