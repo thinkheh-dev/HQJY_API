@@ -143,7 +143,6 @@ class UserViewset(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.Retri
 
 		return UserInfoDetailSerializers
 
-
 	def get_permissions(self):
 		if self.action == "retrieve":
 			return [permissions.IsAuthenticated()]
@@ -199,7 +198,6 @@ class UserViewset(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.Retri
 		user_logo_path = pupdate_data.user_logo.path
 		print(user_logo_path)
 		
-		
 		import os
 		# 获取头像文件的文件名
 		dirs_logo_filename = os.path.basename(user_logo_path)
@@ -231,7 +229,6 @@ class UserViewset(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.Retri
 	
 	def perform_update(self, serializer):
 		return serializer.save()
-	
 	
 	def partial_update(self, request, *args, **kwargs):
 		kwargs['partial'] = True

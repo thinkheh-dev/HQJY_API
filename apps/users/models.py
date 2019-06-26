@@ -5,7 +5,7 @@ import os
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
-from enterprise_info.models import BasicEnterpriseInfo, EnterpriseAuthManuallyReview
+from enterprise_info.models import BasicEnterpriseInfo, EnterpriseAuthManuallyReview, EnterpriseCertification
 
 from DjangoUeditor.models import UEditorField
 
@@ -111,13 +111,15 @@ class UserInfo(AbstractUser):
 	contact_address = models.CharField(max_length=200, blank=True, null=True, verbose_name="联系地址",
 	                                   help_text="联系地址")
 	user_email = models.EmailField(blank=True, null=True, verbose_name="电子邮件地址", help_text="电子邮件地址")
-	user_to_company = models.OneToOneField(BasicEnterpriseInfo, blank=True, null=True, on_delete=models.CASCADE,
+	user_to_company = models.OneToOneField(BasicEnterpriseInfo, blank=True, null=True, on_delete=models.SET_NULL,
 	                                       related_name="user_to_company", verbose_name="关联的企业",
 	                                       help_text="关联的企业")
 	eps_auth_manually_review = models.OneToOneField(EnterpriseAuthManuallyReview, blank=True, null=True,
-	                                                on_delete=models.CASCADE, related_name="eps_amr",
+	                                                on_delete=models.SET_NULL, related_name="eps_amr",
 	                                                verbose_name="企业认证人工审核关联", help_text="企业认证人工审核关联")
-	user_permission_name = models.ForeignKey(UserPermissionsName, null=True, blank=True, on_delete=models.CASCADE,
+	eps_auth_soc = models.OneToOneField(EnterpriseCertification, blank=True, null=True, on_delete=models.SET_NULL,
+	                                    related_name="eps_soc", verbose_name="企业认证证书关联", help_text="企业认证证书关联,请勿修改")
+	user_permission_name = models.ForeignKey(UserPermissionsName, null=True, blank=True, on_delete=models.SET_NULL,
 	                                         related_name="user_permission_userinfo", verbose_name="关联用户权限",
 	                                         help_text="关联用户权限")
 	user_home = models.CharField(max_length=10, choices=COUNTY_CHOICES, blank=True, null=True,
@@ -181,8 +183,7 @@ class UserProtocol(models.Model):
 	protocol_title = models.CharField(max_length=200, verbose_name="协议标题", help_text="协议标题")
 	protocol_subtitle = models.CharField(max_length=200, verbose_name="协议副标题", help_text="协议副标题")
 	protocol_content = UEditorField(verbose_name="协议内容", imagePath="user_protocol/images/", width=1000,
-	                                height=300,
-	                                filePath="user_protocol/files/", default='', help_text="协议内容")
+	                                height=300, filePath="user_protocol/files/", default='', help_text="协议内容")
 	
 	class Meta:
 		verbose_name = "用户协议"

@@ -10,7 +10,7 @@
 
 import xadmin
 from enterprise_info.models import EnterpriseTypeLevel, EnterpriseType, BasicEnterpriseInfo, EnterpriseLabel, \
-	EnterpriseReviewFile, EnterpriseAuthManuallyReview, BasicEnterpriseInfoTemp
+	EnterpriseReviewFile, EnterpriseAuthManuallyReview, BasicEnterpriseInfoTemp, EnterpriseCertification
 
 
 class EnterpriseLabelAdmin(object):
@@ -30,8 +30,9 @@ class EnterpriseReviewFileAdmin(object):
 
 
 class EnterpriseAuthManuallyReviewAdmin(object):
-	list_display = ['user_id', 'enterprise_code', 'enterprise_oper_name', 'enterprise_oper_idcard',
-	                'enterprise_license', 'enterprise_review', 'apply_audit_status', 'add_time', 'update_time']
+	list_display = ['user_id', 'enterprise_code', 'enterprise_name', 'enterprise_oper_idcard', 'enterprise_license',
+	                'enterprise_review', 'apply_audit_status', 'add_time', 'update_time', 'soc_mark_flag',
+	                'idcard_status', 'license_status', 'review_status', 'audit_valid_flag']
 
 
 class BasicEnterpriseInfoTempAdmin(object):
@@ -50,6 +51,12 @@ class BasicEnterpriseInfoAdmin(object):
 	                'province', 'city', 'county', 'area_code', 'industry_phycode', 'industry_phyname', 'industry_code',
 	                'industry_name', 'enterprise_label', 'contact_name', 'contact_phone', 'scan_of_company_license',
 	                'scan_of_id_card', 'add_time']
+	
+	
+class EnterpriseCertificationAdmin(object):
+	list_display = ['user_id', 'enterprise_name', 'certificate_sn', 'certificate_effective_date',
+	                'certificate_expiry_date', 'certificate_flag', 'enterprise_name', 'soc_mark_flag', 'add_time',
+	                'update_time']
 
 
 xadmin.site.register(EnterpriseLabel, EnterpriseLabelAdmin)
@@ -59,3 +66,4 @@ xadmin.site.register(EnterpriseReviewFile, EnterpriseReviewFileAdmin)
 xadmin.site.register(EnterpriseAuthManuallyReview, EnterpriseAuthManuallyReviewAdmin)
 xadmin.site.register(BasicEnterpriseInfo, BasicEnterpriseInfoAdmin)
 xadmin.site.register(BasicEnterpriseInfoTemp, BasicEnterpriseInfoTempAdmin)
+xadmin.site.register(EnterpriseCertification, EnterpriseCertificationAdmin)

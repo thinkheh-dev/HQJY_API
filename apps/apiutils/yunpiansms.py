@@ -12,6 +12,7 @@ import json
 import requests
 import urllib
 
+
 class YunPianSms(object):
 	"""
 	原定使用云片网短信，后修改为聚合网短信，函数名称不做修改
@@ -36,6 +37,7 @@ class YunPianSms(object):
 	# if __name__ == "__main__":
 	# 	yun_pian = YunPianSms("")
 	# 	yun_pian.send_sms("2018", "")
+
 
 class YunPianSmsSend(object):
 	"""

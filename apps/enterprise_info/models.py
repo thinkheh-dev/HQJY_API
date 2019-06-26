@@ -1,6 +1,8 @@
 from django.db import models
-from datetime import datetime
+from datetime import datetime, date
+import datetime as temp_datetime
 from rest_framework.response import Response
+import random
 
 import uuid
 import os
@@ -19,8 +21,9 @@ class EnterpriseLabel(models.Model):
 	                        help_text="企业标签名称")
 	label_ico = models.FileField(verbose_name="标签图片", upload_to="en_label_ico/", blank=True, null=True,
 	                             help_text="企业标签图片")
-	level = models.IntegerField(default=1, choices=LEVEL_CHOICE, blank=True, null=True, verbose_name="企业标签级别", \
-	                                                                                               help_text="标签级别")
+	level = models.IntegerField(default=1, choices=LEVEL_CHOICE, blank=True, null=True, verbose_name="企业标签级别",
+	                            help_text="标签级别")
+	
 	class Meta:
 		verbose_name = "企业标签管理"
 		verbose_name_plural = verbose_name
@@ -66,10 +69,10 @@ class EnterpriseType(models.Model):
 		return self.name
 
 
-def auth_review_path(instance, filename):
+def auth_review_path_idcard(instance, filename):
 	"""
-	文件上传路径拼装类
-	:param instance: 文 件实例
+	身份证文件上传路径拼装类
+	:param instance: 文件实例
 	:param filename: 文件名
 	:return: 拼装后的文件路径
 	"""
@@ -77,10 +80,51 @@ def auth_review_path(instance, filename):
 	filename = '{}.{}'.format(uuid.uuid4().hex[:8], ext)
 	
 	sub_folder = 'enterprise_auth_file'
-	u_name = instance.enterprise_code
+	eps_code = instance.enterprise_code
+	id_card_file = 'idcard'
 	
 	if ext.lower() in ["jpg", "jpeg", "png"]:
-		return os.path.join(sub_folder, u_name, filename)
+		return os.path.join(sub_folder, eps_code, id_card_file, filename)
+	else:
+		return Response({"error_message": "请上传jpg/jpeg/png格式的图片！"})
+
+
+def auth_review_path_license(instance, filename):
+	"""
+	企业营业执照文件上传路径拼装类
+	:param instance: 文件实例
+	:param filename: 文件名
+	:return: 拼装后的文件路径
+	"""
+	ext = filename.split('.')[-1]
+	filename = '{}.{}'.format(uuid.uuid4().hex[:8], ext)
+	
+	sub_folder = 'enterprise_auth_file'
+	eps_code = instance.enterprise_code
+	license_file = 'license'
+	
+	if ext.lower() in ["jpg", "jpeg", "png"]:
+		return os.path.join(sub_folder, eps_code, license_file, filename)
+	else:
+		return Response({"error_message": "请上传jpg/jpeg/png格式的图片！"})
+
+
+def auth_review_path_review(instance, filename):
+	"""
+	申请文件上传路径拼装类
+	:param instance: 文件实例
+	:param filename: 文件名
+	:return: 拼装后的文件路径
+	"""
+	ext = filename.split('.')[-1]
+	filename = '{}.{}'.format(uuid.uuid4().hex[:8], ext)
+	
+	sub_folder = 'enterprise_auth_file'
+	eps_code = instance.enterprise_code
+	review_file = 'review'
+	
+	if ext.lower() in ["jpg", "jpeg", "png"]:
+		return os.path.join(sub_folder, eps_code, review_file, filename)
 	else:
 		return Response({"error_message": "请上传jpg/jpeg/png格式的图片！"})
 	
@@ -108,32 +152,43 @@ class EnterpriseAuthManuallyReview(models.Model):
 	
 	STATUS = (
 		(1, "审核成功"),
-		(2, "审核未通过"),
-		(3, "待审核")
+		(2, "企业基本信息已通过"),
+		(3, "资料已上传"),
+		(4, "完全驳回"),
+		(5, "修改扫描资料")
 	)
 	
 	user_id = models.CharField(max_length=20, blank=True, null=True, verbose_name="被审核用户id", help_text="被审核用户id")
-	enterprise_code = models.CharField(max_length=18, verbose_name="统一社会信用代码", help_text="统一社会信用代码")
-	enterprise_oper_name = models.CharField(max_length=20, verbose_name="企业法人姓名", help_text="企业法人姓名")
-	enterprise_oper_idcard = models.ImageField(upload_to=auth_review_path, blank=True, verbose_name="企业法人身份证正面照片",
+	enterprise_code = models.CharField(max_length=18, blank=True, null=True, verbose_name="统一社会信用代码",
+	                                   help_text="统一社会信用代码")
+	enterprise_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="企业名称", help_text="企业名称")
+	enterprise_oper_idcard = models.ImageField(upload_to=auth_review_path_idcard, blank=True, verbose_name="企业法人身份证正面照片",
 	                                           help_text="企业法人身份证正面照片")
-	enterprise_license = models.ImageField(upload_to=auth_review_path, verbose_name="企业营业执照正面照片", blank=True,
+	enterprise_license = models.ImageField(upload_to=auth_review_path_license, verbose_name="企业营业执照正面照片", blank=True,
 	                                       help_text="企业营业执照正面照片")
-	enterprise_review = models.ImageField(upload_to=auth_review_path, verbose_name="企业认证申请扫描件",
+	enterprise_review = models.ImageField(upload_to=auth_review_path_review, verbose_name="企业认证申请扫描件",
 	                                      blank=True, help_text="企业认证申请扫描件")
-	apply_audit_status = models.IntegerField(choices=STATUS, default=3, verbose_name="申请审核状态", help_text="申请审核状态")
+	apply_audit_status = models.IntegerField(choices=STATUS, default=2, verbose_name="申请审核状态", help_text="申请审核状态")
 	auth_failure_reason = models.TextField(max_length=200, blank=True, null=True, verbose_name="审核不通过的原因",
 	                                       help_text="如果审核不通过，请填写原因")
 	add_time = models.DateTimeField(default=datetime.now, verbose_name="申请提交时间", help_text="申请提交时间")
 	update_time = models.DateTimeField(auto_now=True, verbose_name="审核更新时间", help_text="审核更新时间")
 	soc_mark_flag = models.BooleanField(default=False, blank=True, null=True, verbose_name="服务机构认证标志",
-										help_text="服务机构认证标志")
+	                                    help_text="服务机构认证标志")
+	audit_valid_flag = models.BooleanField(default=True, blank=True, null=True, verbose_name="审核是否有效",
+	                                       help_text="审核是否有效")
+	
+	# 身份证过审标志
+	idcard_status = models.BooleanField(default=False, blank=True, null=True, verbose_name="企业法人身份证是否审核通过")
+	# 营业执照过审标志
+	license_status = models.BooleanField(default=False, blank=True, null=True, verbose_name="企业营业执照正面照片是否审核通过")
+	# 申请书过审标志
+	review_status = models.BooleanField(default=False, blank=True, null=True, verbose_name="企业认证申请表是否审核通过")
 	
 	class Meta:
 		verbose_name = "企业认证人工审核"
 		verbose_name_plural = verbose_name
 		ordering = ['-add_time', ]
-		unique_together = (('user_id', 'enterprise_code'))
 	
 	def __str__(self):
 		return "{} -- 企业认证信息".format(self.enterprise_code)
@@ -267,4 +322,31 @@ class BasicEnterpriseInfo(models.Model):
 	
 	def __str__(self):
 		return self.name
+
+
+class EnterpriseCertification(models.Model):
+	"""
+	企业认证证书
+	"""
+		
+	user_id = models.CharField(max_length=20, blank=True, null=True, verbose_name="证书所属用户id", help_text="证书所属用户id")
+	certificate_sn = models.CharField(max_length=33, blank=True, null=True, verbose_name="证书编号", help_text="证书编号",
+	                                  unique=True)
+	certificate_effective_date = models.DateField(blank=True, null=True, verbose_name="证书生效日期", help_text="证书生效日期")
+	certificate_expiry_date = models.DateField(blank=True, null=True, verbose_name="证书失效日期", help_text="证书失效日期")
+	certificate_flag = models.BooleanField(default=True, blank=True, null=True, verbose_name="证书是否有效",
+	                                       help_text="证书是否有效")
+	enterprise_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="企业名称", help_text="企业名称")
+	soc_mark_flag = models.BooleanField(default=False, blank=True, null=True, verbose_name="服务机构标志",
+	                                    help_text="服务机构标志")
+	add_time = models.DateTimeField(default=datetime.now, verbose_name="证书生成时间", help_text="证书生成时间")
+	update_time = models.DateTimeField(auto_now=True, verbose_name="证书更新时间", help_text="证书更新时间")
+	
+	class Meta:
+		verbose_name = "企业认证证书"
+		verbose_name_plural = verbose_name
+	
+	def __str__(self):
+		return self.certificate_sn
+		
 

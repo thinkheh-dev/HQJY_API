@@ -19,8 +19,7 @@ class EnterpriseInfoAuthInterface(object):
         # 根据参数说明，按需添加所需的参数
         params['key'] = self.api_key  # 必填
         params['name'] = name  # 必填
-
-
+        
         # 拼接企业认证请求url
         url = self.send_url + "?" + urllib.parse.urlencode(params)
 

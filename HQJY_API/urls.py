@@ -32,7 +32,7 @@ from users.views import SmsCodeViewset, FindPasswordSmsCodeViewset, UserViewset,
 from enterprise_info.views import EnterpriseListViewSet, EnterpriseAuthFileDownloadViewSet, \
     EnterpriseAuthManuallyReviewViewSet, EnterpriseAuthUpdateViewSet, EnterpriseDetailUpdateViewSet, \
     EnterpriseInfoOperatorDetailViewSet, EnterpriseSelfDefaultServicesViewSet, EnterpriseSelfFinancingServicesViewSet, \
-    EnterpriseSelfOrderListViewSet, EnterpriseSelfOrderUpdateViewSet
+    EnterpriseSelfOrderListViewSet, EnterpriseSelfOrderUpdateViewSet, EnterpriseAuthComRejectViewSet
 
 from user_operation.views import UserFavViewSet, OrderViewSet, OrderDetailViewSet, OrderCancelViewSet
 
@@ -102,6 +102,7 @@ router.register(r'enterprise-update', EnterpriseDetailUpdateViewSet, base_name='
 router.register(r'eps-auth-fdownload', EnterpriseAuthFileDownloadViewSet, base_name='epsafdown')
 router.register(r'eps-auth-review', EnterpriseAuthManuallyReviewViewSet, base_name='epsar')
 router.register(r'eps-auth-update', EnterpriseAuthUpdateViewSet, base_name='epsau')
+router.register(r'eps-com-rej', EnterpriseAuthComRejectViewSet, base_name='ecr')
 
 # 配置查看企业信息及查看企业订单相关路由
 router.register(r'eps-info-detail', EnterpriseInfoOperatorDetailViewSet, base_name='epsinfodetail')

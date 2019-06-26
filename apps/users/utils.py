@@ -32,17 +32,12 @@ def jwt_response_payload_handler(token, user=None, request=None):
 	}
 
 
-
 class CustomBackend(ModelBackend):
 	"""
     自定义用户验证
     """
-	
-	
 
 	def authenticate(self, request, username=None, password=None, **kwargs):
-		
-		
 
 		# def get_ip():
 		#
@@ -60,7 +55,6 @@ class CustomBackend(ModelBackend):
 		# def get_agent():
 		# 	print(request.META.get('HTTP_USER_AGENT', None))
 		# 	return request.META.get('HTTP_USER_AGENT', None)
-		
 		
 		try:
 			user = User.objects.get(Q(username=username) | Q(user_phone=username))

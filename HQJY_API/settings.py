@@ -105,8 +105,8 @@ DATABASES = {
 		'NAME': 'hqjy_api_database',
 		'USER': 'root',
 		'PASSWORD': 'P@ssword',
-		'HOST': 'localhost',        # 本地测试数据库
-		# 'HOST': '192.168.20.53',  # 开发用内部测试数据库
+		# 'HOST': 'localhost',  # 本地测试数据库
+		'HOST': '192.168.20.89',  # 开发用内部测试数据库
 		'PORT': '3306',
 		# 'OPTIONS': { 'init_command': 'SET storage_engine=INNODB;' } ,
 	}
@@ -203,11 +203,10 @@ REAL_API_KEY = "c06b67b14e7fde9dcc99c651d4c024be"
 EPS_API_KEY = "0b182de1cea873873ee78233ff64ef52"
 
 # 手机号码正则表达式
-REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
+REGEX_MOBILE = r'^1[358]\d{9}$|^147\d{8}$|^176\d{8}$'
 
 # 18位身份证号码正则表达式
-REGEX_IDCARD = "^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$"
-
+REGEX_IDCARD = r'^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$'
 
 '''
 参照标准：
@@ -223,7 +222,7 @@ REGEX_IDCARD = "^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9
 '''
 
 # 18位企业统一信用代码正则表达式
-REGEX_CREDIT = "/^[^_IOZSVa-z\W]{2}\d{6}[^_IOZSVa-z\W]{10}$/g"
+REGEX_CREDIT = r'^(11|12|13|19|51|52|53|59|91|92|93|Y1)\d{6}\w{9}\w$'
 
 # 支付宝相关配置
 # private_key_path = os.path.join(BASE_DIR, 'apps/trade/keys/private_2048.txt')
