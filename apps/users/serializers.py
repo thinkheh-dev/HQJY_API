@@ -132,6 +132,18 @@ class UserInfoDetailSerializers(WritableNestedModelSerializer):
 				  'is_staff')
 
 
+class UserNameSerializers(serializers.ModelSerializer):
+	"""
+	用户名称序列化
+	"""
+	user_name = serializers.CharField(read_only=True)
+	user_phone = serializers.CharField(read_only=True)
+	
+	class Meta:
+		model = User
+		fields = ('id', 'user_name', 'user_phone')
+
+
 class UserPhoneSerializers(serializers.Serializer):
 	"""
 	用户手机号异步验证序列化

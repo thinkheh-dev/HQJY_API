@@ -56,10 +56,12 @@ INSTALLED_APPS = [
 	'page_control.apps.PageControlConfig',
 	'file_repository.apps.FileRepositoryConfig',
 	'django_filters',
+	'django_crontab',
 	'rest_framework',
 	'rest_framework_swagger',
 	'corsheaders',
 	'rest_framework.authtoken',
+	
 ]
 
 MIDDLEWARE = [
@@ -75,6 +77,13 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+CRONJOBS = [
+
+    ('00 00 * * *', "enterprise_info.views.update_stock_status",
+     '>> /home/warlock921/MyCode/PycharmProjects/HQJY_API/con_logs/daydata.log'),
+
+]
 
 ROOT_URLCONF = 'HQJY_API.urls'
 

@@ -158,7 +158,9 @@ class EnterpriseAuthManuallyReview(models.Model):
 		(5, "修改扫描资料")
 	)
 	
-	user_id = models.CharField(max_length=20, blank=True, null=True, verbose_name="被审核用户id", help_text="被审核用户id")
+	user_id = models.IntegerField(blank=True, null=True, verbose_name="被审核用户id", help_text="被审核用户id")
+	user_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="被审核用户姓名", help_text="被审核用户姓名")
+	user_phone = models.CharField(max_length=11, blank=True, null=True, verbose_name="被审核用户手机号", help_text="被审核用户手机号")
 	enterprise_code = models.CharField(max_length=18, blank=True, null=True, verbose_name="统一社会信用代码",
 	                                   help_text="统一社会信用代码")
 	enterprise_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="企业名称", help_text="企业名称")
