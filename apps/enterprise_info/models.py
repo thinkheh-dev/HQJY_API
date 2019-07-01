@@ -187,6 +187,15 @@ class EnterpriseAuthManuallyReview(models.Model):
 	# 申请书过审标志
 	review_status = models.BooleanField(default=False, blank=True, null=True, verbose_name="企业认证申请表是否审核通过")
 	
+	# 证书编号
+	certificate_sn = models.CharField(max_length=33, blank=True, null=True, verbose_name="证书编号", help_text="证书编号",
+	                                  unique=True)
+	# 证书生效日期
+	certificate_effective_date = models.DateField(blank=True, null=True, verbose_name="证书生效日期", help_text="证书生效日期")
+	# 证书失效日期
+	certificate_expiry_date = models.DateField(blank=True, null=True, verbose_name="证书失效日期", help_text="证书失效日期")
+
+	
 	class Meta:
 		verbose_name = "企业认证人工审核"
 		verbose_name_plural = verbose_name

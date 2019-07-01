@@ -186,7 +186,7 @@ class EnterpriseAuthManuallyReviewViewSet(mixins.CreateModelMixin, mixins.Update
 				eps_info_result = juhe_eps_info.send_auth(name=enterprise_code)
 				
 				# 判断接口是否成功获取数据
-				if eps_info_result['error_code']!=0:
+				if eps_info_result['error_code'] != 0:
 					return Response({
 						"fail": 0,
 						"error_message": eps_info_result['reason']},
@@ -199,7 +199,7 @@ class EnterpriseAuthManuallyReviewViewSet(mixins.CreateModelMixin, mixins.Update
 					# 验证第三方接口返回的企业名称与用户提供的企业名称是否一致
 					if enterprise_name==enterprise_name_tmp:
 						# 企业名称验证一致，检测企业是否注销或吊销
-						if enterprise_cancel_date!="" and enterprise_revoke_date!="":
+						if enterprise_cancel_date != "" and enterprise_revoke_date!="":
 							return Response({"error_message": "您提交验证的企业已经注销或者被吊销！"}, status=status.HTTP_400_BAD_REQUEST)
 						else:
 							print("创建企业--{}".format(eps_info_result["result"]["enterpriseName"]))
@@ -245,6 +245,7 @@ class EnterpriseAuthManuallyReviewViewSet(mixins.CreateModelMixin, mixins.Update
 							                                                                  user_name=user_name,
 							                                                                  user_phone=user_phone
 							                                                                  )
+							eps_cert = EnterpriseCertification.objects.get(user_id=user_id)
 							headers = self.get_success_headers(serializer.data)
 							return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 					else:
@@ -280,7 +281,7 @@ class EnterpriseAuthManuallyReviewViewSet(mixins.CreateModelMixin, mixins.Update
 			
 			import os
 			
-			if eps_idcard_path!="" or eps_idcard_path is not None:
+			if eps_idcard_path != "" or eps_idcard_path is not None:
 				# 获取文件名
 				dirs_idcard_filename = os.path.basename(eps_idcard_path)
 				# 获取目录结构
@@ -293,7 +294,7 @@ class EnterpriseAuthManuallyReviewViewSet(mixins.CreateModelMixin, mixins.Update
 					# 遍历企业负责人身份证文件目录下的所有文件
 					for xfile in files:
 						# 判断是否是本次上传的文件，如果是：跳过，如果不是：删除
-						if xfile==dirs_idcard_filename:
+						if xfile == dirs_idcard_filename:
 							print("{} 是本次上传，不做删除！".format(xfile))
 							pass
 						else:
@@ -301,7 +302,7 @@ class EnterpriseAuthManuallyReviewViewSet(mixins.CreateModelMixin, mixins.Update
 							# 删除不是本次上传的文件
 							os.remove(os.path.join(os.path.dirname(eps_idcard_path), xfile))
 			
-			if eps_license_path!="" or eps_license_path is not None:
+			if eps_license_path != "" or eps_license_path is not None:
 				# 获取文件名
 				dirs_license_filename = os.path.basename(eps_license_path)
 				# 获取目录结构
@@ -314,7 +315,7 @@ class EnterpriseAuthManuallyReviewViewSet(mixins.CreateModelMixin, mixins.Update
 					# 遍历企业负责人身份证文件目录下的所有文件
 					for xfile in files:
 						# 判断是否是本次上传的文件，如果是：跳过，如果不是：删除
-						if xfile==dirs_license_filename:
+						if xfile == dirs_license_filename:
 							print("{} 是本次上传，不做删除！".format(xfile))
 							pass
 						else:
@@ -322,7 +323,7 @@ class EnterpriseAuthManuallyReviewViewSet(mixins.CreateModelMixin, mixins.Update
 							# 删除不是本次上传的文件
 							os.remove(os.path.join(os.path.dirname(eps_license_path), xfile))
 			
-			if eps_review_path!="" or eps_review_path is not None:
+			if eps_review_path != "" or eps_review_path is not None:
 				# 获取文件名
 				dirs_review_filename = os.path.basename(eps_review_path)
 				# 获取目录结构
@@ -335,7 +336,7 @@ class EnterpriseAuthManuallyReviewViewSet(mixins.CreateModelMixin, mixins.Update
 					# 遍历企业申请文件目录下的所有文件
 					for xfile in files:
 						# 判断是否是本次上传的文件，如果是：跳过，如果不是：删除
-						if xfile==dirs_review_filename:
+						if xfile == dirs_review_filename:
 							print("{} 是本次上传，不做删除！".format(xfile))
 							pass
 						else:
@@ -415,143 +416,141 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
 		partial = kwargs.pop('partial', False)
 		instance = self.get_object()
 		serializer = self.get_serializer(instance, data=request.data, partial=partial)
-		if serializer.is_valid(raise_exception=True):
+		serializer.is_valid(raise_exception=True)
 			
-			apply_audit_status = serializer.validated_data['apply_audit_status']
-			idcard_status = serializer.validated_data['idcard_status']
-			license_status = serializer.validated_data['license_status']
-			review_status = serializer.validated_data['review_status']
-			
-			print(idcard_status, license_status, review_status)
-			
-			eps_auth_id = instance.id
-			
-			user_id = EnterpriseAuthManuallyReview.objects.get(id=eps_auth_id).user_id
-			
-			# 获取机构信息
-			eps_code = EnterpriseAuthManuallyReview.objects.get(id=eps_auth_id).enterprise_code
-			eps_name = EnterpriseAuthManuallyReview.objects.get(id=eps_auth_id).enterprise_name
-			soc_mark = EnterpriseAuthManuallyReview.objects.get(id=eps_auth_id).soc_mark_flag
-			
-			basic_info = BasicEnterpriseInfo.objects.get(credit_no=eps_code)
-			
-			# 获取当前用户手机号，用于发送短信 -- 这里不要随意更改
-			user_phone = list(UserInfo.objects.filter(id=user_id).values())[0]['user_phone']
-			
-			# 实例化发送短信函数，根据申请结果发送短信
-			juhe = YunPianSmsSend(SMS_API_KEY)
-			
-			re_dict = {}
-			
-			if apply_audit_status==1:
-				# 判断是否点选了任何一个提交的文件，如果点击了，则无法审核通过
-				if idcard_status or license_status or review_status:
-					return Response({"error_message": "出错了，您选择了修改提交的文件，但仍然审核通过！"}, status=status.HTTP_400_BAD_REQUEST)
-				else:
-					# 审核通过后的代码
-					print("审核通过")
-					auth_status = "审核通过"
-					user_permission_name_id = UserPermissionsName.objects.get(permission_sn="QX004").id
-					
-					# 创建认证证书
-					cert_no_create = EnterpriseAuthCertification(eps_code)
-					# 获取编号,证书生效日期及失效日期
-					cert_no = cert_no_create.create_cert_sn()
-					cert_start = datetime.date.today().strftime('%Y-%m-%d')
-					cert_end = (datetime.date.today() + datetime.timedelta(days=366)).strftime('%Y-%m-%d')
-					print(cert_no, cert_start, cert_end)
-					
-					# 创建证书，在数据库内生成证书
-					new_cert = EnterpriseCertification.objects.create(user_id=user_id,
-					                                                  certificate_sn=cert_no,
-					                                                  certificate_effective_date=cert_start,
-					                                                  certificate_expiry_date=cert_end,
-					                                                  enterprise_name=eps_name,
-					                                                  soc_mark_flag=soc_mark)
-					print(new_cert)
-					print("企业认证证书创建完成！")
-					
-					# 判断是否是服务机构认证
-					if soc_mark:
-						# 是服务机构认证，关联用户所属企业，修改用户权限为“QX004”，并且关联用户证书及开启服务提供商
-						UserInfo.objects.filter(id=user_id).update(user_to_company=basic_info.id,
-						                                           user_permission_name=user_permission_name_id,
-						                                           eps_auth_soc=new_cert.id,
-						                                           service_provider=True)
-					else:
-						# 不是服务机构认证，关联用户所属企业，修改用户权限为“QX004”，并且关联用户证书，但不开启服务提供商
-						UserInfo.objects.filter(id=user_id).update(user_to_company=basic_info.id,
-						                                           user_permission_name=user_permission_name_id,
-						                                           eps_auth_soc=new_cert.id)
-					
-					# 发送审核成功短信
-					sms_success_send = juhe.send_success_sms(user_phone=user_phone)
-					if sms_success_send["error_code"]!=0:
-						sms_send_result = "审核短信发送失败！原因：{}".format(sms_success_send["result"]['resmsg'])
-					else:
-						sms_send_result = "审核短信发送成功！"
-					
-					eps_auth_data = self.perform_update(serializer)
-					
-					# 拼接返回的json数据
-					re_dict['message'] = "{} -- 人工审核流程完成".format(status.HTTP_201_CREATED)
-					re_dict['eps_auth_id'] = eps_auth_id
-					re_dict['user_id'] = eps_auth_data.user_id
-					re_dict['sms_send_result'] = sms_send_result
-					re_dict['auth_status'] = auth_status
-					re_dict['enterprise_name'] = eps_name
-					re_dict['cert_no'] = cert_no
-					re_dict['cert_start'] = cert_start
-					re_dict['cert_end'] = cert_end
-					re_dict['auth_failure_reason'] = eps_auth_data.auth_failure_reason
-			
-			elif apply_audit_status==4:
-				print("审核被完全驳回")
-				auth_status = "审核被完全驳回"
-				# # 将审核置为无效
-				# EnterpriseAuthManuallyReview.objects.filter(id=eps_auth_id).update(audit_valid_flag=False)
-				
-				# 发送审核失败短信
-				sms_fail_send = juhe.send_fail_sms(user_phone=user_phone)
-				if sms_fail_send["error_code"]!=0:
-					sms_send_result = "审核短信发送失败！原因：{}".format(sms_fail_send["result"]['resmsg'])
-				else:
-					sms_send_result = "审核短信发送成功！"
-				
-				# 更新信息
-				eps_auth_data = self.perform_update(serializer)
-				
-				# 拼接返回的json数据
-				re_dict['message'] = "人工审核流程完成"
-				re_dict['eps_auth_id'] = eps_auth_id
-				re_dict['user_id'] = eps_auth_data.user_id
-				re_dict['sms_send_result'] = sms_send_result
-				re_dict['auth_status'] = auth_status
-				re_dict['auth_failure_reason'] = eps_auth_data.auth_failure_reason
-			
-			elif apply_audit_status==5:
-				print("审核被驳回,扫描资料有问题，需要修改")
-				auth_status = "驳回--修改扫描资料"
-				
-				# 部分更新信息
-				eps_auth_data = self.perform_update(serializer)
-				
-				# 发送审核失败短信
-				sms_fail_send = juhe.send_fail_sms(user_phone=user_phone)
-				if sms_fail_send["error_code"]!=0:
-					sms_send_result = "审核短信发送失败！原因：{}".format(sms_fail_send["result"]['resmsg'])
-				else:
-					sms_send_result = "审核短信发送成功！"
-				
-				# 拼接返回的json数据
-				re_dict['message'] = "人工审核流程完成"
-				re_dict['eps_auth_id'] = eps_auth_id
-				re_dict['user_id'] = eps_auth_data.user_id
-				re_dict['sms_send_result'] = sms_send_result
-				re_dict['auth_status'] = auth_status
-				re_dict['auth_failure_reason'] = eps_auth_data.auth_failure_reason
+		apply_audit_status = serializer.validated_data['apply_audit_status']
+		idcard_status = serializer.validated_data['idcard_status']
+		license_status = serializer.validated_data['license_status']
+		review_status = serializer.validated_data['review_status']
+		
+		eps_auth_data = self.perform_update(serializer)
+		
+		print(idcard_status, license_status, review_status)
+		
+		eps_auth_id = instance.id
+		
+		user_id = EnterpriseAuthManuallyReview.objects.get(id=eps_auth_id).user_id
+		
+		# 获取机构信息
+		eps_code = EnterpriseAuthManuallyReview.objects.get(id=eps_auth_id).enterprise_code
+		eps_name = EnterpriseAuthManuallyReview.objects.get(id=eps_auth_id).enterprise_name
+		soc_mark = EnterpriseAuthManuallyReview.objects.get(id=eps_auth_id).soc_mark_flag
+		
+		basic_info = BasicEnterpriseInfo.objects.get(credit_no=eps_code)
+		
+		# 获取当前用户手机号，用于发送短信 -- 这里不要随意更改
+		user_phone = list(UserInfo.objects.filter(id=user_id).values())[0]['user_phone']
+		
+		# 实例化发送短信函数，根据申请结果发送短信
+		juhe = YunPianSmsSend(SMS_API_KEY)
+		
+		re_dict = {}
+		
+		if apply_audit_status == 1:
+			# 判断是否点选了任何一个提交的文件，如果点击了，则无法审核通过
+			if idcard_status or license_status or review_status:
+				return Response({"error_message": "出错了，您选择了修改提交的文件，但仍然审核通过！"}, status=status.HTTP_400_BAD_REQUEST)
 			else:
-				return Response({"error_message": "发生错误，请传入 1，4，5 这三个值，其他值不接受！"}, status=status.HTTP_400_BAD_REQUEST)
+				# 审核通过后的代码
+				print("审核通过")
+				auth_status = "审核通过"
+				user_permission_name_id = UserPermissionsName.objects.get(permission_sn="QX004").id
+				
+				# 创建认证证书
+				cert_no_create = EnterpriseAuthCertification(eps_code)
+				# 获取编号,证书生效日期及失效日期
+				cert_no = cert_no_create.create_cert_sn()
+				cert_start = datetime.date.today().strftime('%Y-%m-%d')
+				cert_end = (datetime.date.today() + datetime.timedelta(days=366)).strftime('%Y-%m-%d')
+				print(cert_no, cert_start, cert_end)
+				
+				# 创建证书，在数据库内生成证书
+				new_cert = EnterpriseCertification.objects.create(user_id=user_id,
+				                                                  certificate_sn=cert_no,
+				                                                  certificate_effective_date=cert_start,
+				                                                  certificate_expiry_date=cert_end,
+				                                                  enterprise_name=eps_name,
+				                                                  soc_mark_flag=soc_mark)
+				# 更新用户审核信息 -- 证书信息
+				EnterpriseAuthManuallyReview.objects.filter(id=instance.id).update(certificate_sn=cert_no,
+				                                                  certificate_effective_date=cert_start,
+				                                                  certificate_expiry_date=cert_end)
+				print(new_cert)
+				print("企业认证证书创建完成！")
+				
+				# 判断是否是服务机构认证
+				if soc_mark:
+					# 是服务机构认证，关联用户所属企业，修改用户权限为“QX004”，并且关联用户证书及开启服务提供商
+					UserInfo.objects.filter(id=user_id).update(user_to_company=basic_info.id,
+					                                           user_permission_name=user_permission_name_id,
+					                                           eps_auth_soc=new_cert.id,
+					                                           service_provider=True)
+				else:
+					# 不是服务机构认证，关联用户所属企业，修改用户权限为“QX004”，并且关联用户证书，但不开启服务提供商
+					UserInfo.objects.filter(id=user_id).update(user_to_company=basic_info.id,
+					                                           user_permission_name=user_permission_name_id,
+					                                           eps_auth_soc=new_cert.id)
+				
+				# 发送审核成功短信
+				sms_success_send = juhe.send_success_sms(user_phone=user_phone)
+				if sms_success_send["error_code"] != 0:
+					sms_send_result = "审核短信发送失败！原因：{}".format(sms_success_send["result"]['resmsg'])
+				else:
+					sms_send_result = "审核短信发送成功！"
+				
+				# 拼接返回的json数据
+				re_dict['message'] = "{} -- 人工审核流程完成".format(status.HTTP_201_CREATED)
+				re_dict['eps_auth_id'] = eps_auth_id
+				re_dict['user_id'] = eps_auth_data.user_id
+				re_dict['sms_send_result'] = sms_send_result
+				re_dict['auth_status'] = auth_status
+				re_dict['enterprise_name'] = eps_name
+				re_dict['cert_no'] = cert_no
+				re_dict['cert_start'] = cert_start
+				re_dict['cert_end'] = cert_end
+				re_dict['auth_failure_reason'] = eps_auth_data.auth_failure_reason
+		
+		elif apply_audit_status == 4:
+			print("审核被完全驳回")
+			auth_status = "审核被完全驳回"
+			# # 将审核置为无效
+			# EnterpriseAuthManuallyReview.objects.filter(id=eps_auth_id).update(audit_valid_flag=False)
+			
+			# 发送审核失败短信
+			sms_fail_send = juhe.send_fail_sms(user_phone=user_phone)
+			if sms_fail_send["error_code"] != 0:
+				sms_send_result = "审核短信发送失败！原因：{}".format(sms_fail_send["result"]['resmsg'])
+			else:
+				sms_send_result = "审核短信发送成功！"
+			
+			# 拼接返回的json数据
+			re_dict['message'] = "人工审核流程完成"
+			re_dict['eps_auth_id'] = eps_auth_id
+			re_dict['user_id'] = eps_auth_data.user_id
+			re_dict['sms_send_result'] = sms_send_result
+			re_dict['auth_status'] = auth_status
+			re_dict['auth_failure_reason'] = eps_auth_data.auth_failure_reason
+		
+		elif apply_audit_status == 5:
+			print("审核被驳回,扫描资料有问题，需要修改")
+			auth_status = "驳回--修改扫描资料"
+			
+			# 发送审核失败短信
+			sms_fail_send = juhe.send_fail_sms(user_phone=user_phone)
+			if sms_fail_send["error_code"] != 0:
+				sms_send_result = "审核短信发送失败！原因：{}".format(sms_fail_send["result"]['resmsg'])
+			else:
+				sms_send_result = "审核短信发送成功！"
+			
+			# 拼接返回的json数据
+			re_dict['message'] = "人工审核流程完成"
+			re_dict['eps_auth_id'] = eps_auth_id
+			re_dict['user_id'] = eps_auth_data.user_id
+			re_dict['sms_send_result'] = sms_send_result
+			re_dict['auth_status'] = auth_status
+			re_dict['auth_failure_reason'] = eps_auth_data.auth_failure_reason
+		else:
+			return Response({"error_message": "发生错误，请传入 1，4，5 这三个值，其他值不接受！"}, status=status.HTTP_400_BAD_REQUEST)
 		
 		return Response({"result": re_dict})
 	
@@ -596,6 +595,10 @@ class EnterpriseAuthComRejectViewSet(mixins.ListModelMixin, mixins.RetrieveModel
 	
 	def perform_update(self, serializer):
 		return serializer.save()
+	
+	def partial_update(self, request, *args, **kwargs):
+		kwargs['partial'] = True
+		return self.update(request, *args, **kwargs)
 
 
 class EnterpriseInfoOperatorDetailViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
@@ -686,6 +689,10 @@ class EnterpriseSelfOrderUpdateViewSet(mixins.UpdateModelMixin, viewsets.Generic
 	
 	def perform_update(self, serializer):
 		return serializer.save()
+	
+	def partial_update(self, request, *args, **kwargs):
+		kwargs['partial'] = True
+		return self.update(request, *args, **kwargs)
 
 
 def update_stock_status():

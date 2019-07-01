@@ -33,7 +33,7 @@ class EnterpriseAuthManuallyReviewAdmin(object):
 	list_display = ['user_id', 'user_name', 'user_phone', 'enterprise_code', 'enterprise_name',
 	                'enterprise_oper_idcard', 'enterprise_license', 'enterprise_review', 'apply_audit_status',
 	                'add_time', 'update_time', 'soc_mark_flag', 'idcard_status', 'license_status', 'review_status',
-	                'audit_valid_flag']
+	                'audit_valid_flag', 'certificate_sn', 'certificate_effective_date', 'certificate_expiry_date']
 
 
 class BasicEnterpriseInfoTempAdmin(object):

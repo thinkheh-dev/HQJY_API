@@ -126,7 +126,8 @@ class EnterpriseAuthManuallyReviewSerializers(serializers.ModelSerializer):
 		model = EnterpriseAuthManuallyReview
 		fields = ['id', 'user_id', 'apply_audit_status', 'enterprise_code', 'enterprise_name', 'enterprise_oper_idcard',
 		          'enterprise_license', 'enterprise_review', 'soc_mark_flag', 'idcard_status', 'license_status',
-		          'review_status', 'auth_failure_reason']
+		          'review_status', 'auth_failure_reason', 'certificate_sn', 'certificate_effective_date',
+		          'certificate_expiry_date']
 
 
 class BasicEnterpriseInfoTempSerializers(serializers.Serializer):
