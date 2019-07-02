@@ -245,7 +245,6 @@ class EnterpriseAuthManuallyReviewViewSet(mixins.CreateModelMixin, mixins.Update
 							                                                                  user_name=user_name,
 							                                                                  user_phone=user_phone
 							                                                                  )
-							eps_cert = EnterpriseCertification.objects.get(user_id=user_id)
 							headers = self.get_success_headers(serializer.data)
 							return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 					else:
@@ -702,4 +701,19 @@ def update_stock_status():
 	
 	
 def check_or_update_cert():
-	now_time = datetime.date.today()
+	cert = EnterpriseCertification.objects.filter(certificate_flag=True)
+	today_date = datetime.date.today()
+	month_delta = 30
+	
+	for cert_true in cert:
+		pass
+		# 这个函数轮询所有的证书
+		# 要做的事：
+		# 1. 删除所有无效证书
+		# 2. 判断有效证书是否还差30天到期，是则发短信通知，同时更新证书可更新标志
+		#       * 更新证书会提供接口，接口的作用是让用户选择直接使用服务器资料重新提交认证，还是需要部分修改提交资料，
+		#         还是需要从头完全重新提交新资料（即更换企业）
+		
+		# 3.如果判断用户证书已经到期，则删除用户证书，并将认证重置为完全驳回状态，且自动填写驳回原因，用户需重新提交资料审核，并发放证书
+		#
+		# 2.判断证书是否到期，如果到期，则重置或删除用户所有认证、权限、证书等，让用户回到实名认证状态
