@@ -171,7 +171,7 @@ class OrderDetailViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, views
 	serializer_class = OrderServiceDetailSerializers
 
 	def get_queryset(self):
-		return OrderServiceDetail.objects.all()
+		return OrderServiceDetail.objects.filter(order_info__user_info=self.request.user)
 
 
 class OrderCancelViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
