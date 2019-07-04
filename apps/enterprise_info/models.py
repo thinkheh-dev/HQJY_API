@@ -300,7 +300,8 @@ class BasicEnterpriseInfo(models.Model):
 	address = models.CharField(max_length=200, blank=True, null=True, verbose_name="注册地址", help_text="注册地址")
 	start_date = models.DateField(blank=True, null=True, verbose_name="开业日期", help_text="开业日期(YYYY-MM-DD)")
 	term_start = models.DateField(blank=True, null=True, verbose_name="经营期限自", help_text="经营期限自(YYYY-MM-DD)")
-	term_end = models.DateField(blank=True, null=True, verbose_name="经营期限至", help_text="经营期限至(YYYY-MM-DD)")
+	term_end = models.CharField(max_length=20, blank=True, null=True, verbose_name="经营期限至", help_text="经营期限至("
+	                                                                                                 "YYYY-MM-DD)")
 	belong_org = models.CharField(max_length=50, blank=True, null=True, verbose_name="登记机关", help_text="登记机关")
 	abu_item = models.CharField(max_length=255, blank=True, null=True, verbose_name="许可经营项目", help_text="许可经营项目")
 	cbu_item = models.CharField(max_length=255, blank=True, null=True, verbose_name="一般经营项目", help_text="一般经营项目")
