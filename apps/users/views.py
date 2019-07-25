@@ -107,7 +107,7 @@ class FindPasswordSmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
 		
 		if sms_status["error_code"] != 0:
 			return Response({
-				"user_phone": sms_status["msg"]
+				"user_phone": sms_status["reason"]
 			}, status=status.HTTP_400_BAD_REQUEST)
 		else:
 			code_record = VerifyCode(code=code, user_phone=mobile)

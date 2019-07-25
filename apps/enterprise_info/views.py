@@ -322,7 +322,7 @@ class EnterpriseAuthManuallyReviewViewSet(mixins.CreateModelMixin, mixins.Update
 							# 删除不是本次上传的文件
 							os.remove(os.path.join(os.path.dirname(eps_license_path), xfile))
 			
-			if eps_review_path != "" or eps_review_path is not None:
+			try:
 				# 获取文件名
 				dirs_review_filename = os.path.basename(eps_review_path)
 				# 获取目录结构
@@ -342,6 +342,8 @@ class EnterpriseAuthManuallyReviewViewSet(mixins.CreateModelMixin, mixins.Update
 							print("删除以前的文件：{}".format(xfile))
 							# 删除不是本次上传的文件
 							os.remove(os.path.join(os.path.dirname(eps_review_path), xfile))
+			except Exception as e:
+				print(e)
 		
 		return Response(serializer.data)
 	
