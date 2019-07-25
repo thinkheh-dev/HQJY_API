@@ -199,7 +199,7 @@ class EnterpriseAuthManuallyReviewViewSet(mixins.CreateModelMixin, mixins.Update
 					# 验证第三方接口返回的企业名称与用户提供的企业名称是否一致
 					if enterprise_name==enterprise_name_tmp:
 						# 企业名称验证一致，检测企业是否注销或吊销
-						if enterprise_cancel_date != "" and enterprise_revoke_date!="":
+						if enterprise_cancel_date != "" and enterprise_revoke_date != "":
 							return Response({"error_message": "您提交验证的企业已经注销或者被吊销！"}, status=status.HTTP_400_BAD_REQUEST)
 						else:
 							print("创建企业--{}".format(eps_info_result["result"]["enterpriseName"]))
@@ -495,7 +495,7 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
 				# 发送审核成功短信
 				sms_success_send = juhe.send_success_sms(user_phone=user_phone)
 				if sms_success_send["error_code"] != 0:
-					sms_send_result = "审核短信发送失败！原因：{}".format(sms_success_send["result"]['resmsg'])
+					sms_send_result = "审核短信发送失败！原因：{}".format(sms_success_send["reason"])
 				else:
 					sms_send_result = "审核短信发送成功！"
 				
@@ -520,7 +520,7 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
 			# 发送审核失败短信
 			sms_fail_send = juhe.send_fail_sms(user_phone=user_phone)
 			if sms_fail_send["error_code"] != 0:
-				sms_send_result = "审核短信发送失败！原因：{}".format(sms_fail_send["result"]['resmsg'])
+				sms_send_result = "审核短信发送失败！原因：{}".format(sms_fail_send["reason"])
 			else:
 				sms_send_result = "审核短信发送成功！"
 			
@@ -539,7 +539,7 @@ class EnterpriseAuthUpdateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMix
 			# 发送审核失败短信
 			sms_fail_send = juhe.send_fail_sms(user_phone=user_phone)
 			if sms_fail_send["error_code"] != 0:
-				sms_send_result = "审核短信发送失败！原因：{}".format(sms_fail_send["result"]['resmsg'])
+				sms_send_result = "审核短信发送失败！原因：{}".format(sms_fail_send["reason"])
 			else:
 				sms_send_result = "审核短信发送成功！"
 			

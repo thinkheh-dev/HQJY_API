@@ -114,7 +114,7 @@ DATABASES = {
 		'NAME': 'hqjy_api_database',
 		'USER': 'root',
 		'PASSWORD': 'P@ssword',
-		'HOST': 'localhost',  # 本地测试数据库
+		# 'HOST': 'localhost',  # 本地测试数据库
 		# 'HOST': '192.168.20.89',  # 开发用内部测试数据库
 		# 'HOST': '192.168.20.53',  # 生产数据库
 		'PORT': '3306',
