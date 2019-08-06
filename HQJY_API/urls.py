@@ -39,6 +39,8 @@ from user_operation.views import UserFavViewSet, OrderViewSet, OrderDetailViewSe
 from platform_operation.views import WeMediaArticlesCreateViewSet, WeMediaArticlesDetailViewSet, \
     WeMediaArticlesFavViewSet
 
+from page_control.views import WebFooterInfoViewSet, WebLogoViewSet, WebFooterLinkViewSet, WebNameViewSet
+
 from file_repository.views import TinyMCEImageViewSet
 
 from page_control.models import SystemAdminURL
@@ -126,6 +128,12 @@ router.register(r'order-cancel', OrderCancelViewSet, base_name='ordercancel')
 # 配置平台自媒体文章相关路由
 router.register(r'wemedia-detail', WeMediaArticlesDetailViewSet, base_name='wemediadetail')
 router.register(r'wemedia-create', WeMediaArticlesCreateViewSet, base_name='wemediacreate')
+
+# 配置网站管理相关路由
+router.register(r'web-logo', WebLogoViewSet, base_name='weblogo')
+router.register(r'web-name', WebNameViewSet, base_name='webname')
+router.register(r'web-footer-info', WebFooterInfoViewSet, base_name='webfooterinfo')
+router.register(r'web-footer-link', WebFooterLinkViewSet, base_name='webfooterlink')
 
 urlpatterns = [
     # 后台管理地址（初始）
