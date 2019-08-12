@@ -29,7 +29,8 @@ def jwt_response_payload_handler(token, user=None, request=None):
 		'user_logo': user.user_logo.url,
 		'user_home': user.user_home,
 		'is_staff': user.is_staff,
-		'is_superuser': user.is_superuser
+		'is_superuser': user.is_superuser,
+		'user_to_company': user.user_to_company
 	}
 
 
