@@ -17,7 +17,8 @@ from .models import ServiceClassification, DefaultServices, FinancingServicesCla
 
 from enterprise_info.serializers import BasicEnterpriseInfoNameSerializers
 
-#普适服务分类序列化函数--开始
+
+# 普适服务分类序列化函数--开始
 class ServiceClassificationSerializers5(serializers.ModelSerializer):
 	class Meta:
 		model = ServiceClassification
@@ -26,6 +27,7 @@ class ServiceClassificationSerializers5(serializers.ModelSerializer):
 
 class ServiceClassificationSerializers4(serializers.ModelSerializer):
 	sub_classification = ServiceClassificationSerializers5(many=True)
+	
 	class Meta:
 		model = ServiceClassification
 		fields = "__all__"
@@ -33,6 +35,7 @@ class ServiceClassificationSerializers4(serializers.ModelSerializer):
 
 class ServiceClassificationSerializers3(serializers.ModelSerializer):
 	sub_classification = ServiceClassificationSerializers4(many=True)
+	
 	class Meta:
 		model = ServiceClassification
 		fields = "__all__"
@@ -40,6 +43,7 @@ class ServiceClassificationSerializers3(serializers.ModelSerializer):
 
 class ServiceClassificationSerializers2(serializers.ModelSerializer):
 	sub_classification = ServiceClassificationSerializers3(many=True)
+	
 	class Meta:
 		model = ServiceClassification
 		fields = "__all__"
@@ -50,10 +54,11 @@ class ServiceClassificationSerializers(serializers.ModelSerializer):
 	普适产品分类
 	"""
 	sub_classification = ServiceClassificationSerializers2(many=True)
+	
 	class Meta:
 		model = ServiceClassification
 		fields = "__all__"
-#普适服务分类序列化函数--结束
+# 普适服务分类序列化函数--结束
 
 
 class ServiceClassificationNavSerializers(serializers.ModelSerializer):
@@ -81,11 +86,13 @@ class DefaultServicesSerializers(serializers.ModelSerializer):
 	
 	default_images = DefaultServicesImageSerializers(many=True)
 	service_belong_to_company = BasicEnterpriseInfoNameSerializers()
+	
 	class Meta:
 		model = DefaultServices
 		fields = "__all__"
 
-#金融服务分类序列化函数--开始
+
+# 金融服务分类序列化函数--开始
 class FinancingServicesClassificationSerializers5(serializers.ModelSerializer):
 	class Meta:
 		model = FinancingServicesClassification
@@ -125,7 +132,8 @@ class FinancingServicesClassificationSerializers(serializers.ModelSerializer):
 	class Meta:
 		model = FinancingServicesClassification
 		fields = "__all__"
-#金融服务分类序列化函数--结束
+# 金融服务分类序列化函数--结束
+
 
 class FinancingServicesClassificationNavSerializers(serializers.ModelSerializer):
 	"""
@@ -149,7 +157,7 @@ class FinancingServicesSerializers(serializers.ModelSerializer):
 	"""
 	金融产品序列化
 	"""
-	#fsc = FinancingServicesClassificationSerializers()
+	# fsc = FinancingServicesClassificationSerializers()
 	financing_images = FinancingServicesImageSerializers(many=True)
 	service_belong_to_company = BasicEnterpriseInfoNameSerializers()
 	class Meta:
@@ -164,7 +172,8 @@ class ServiceBrandSerializers(serializers.ModelSerializer):
 	class Meta:
 		model = ServiceBrand
 		fields = "__all__"
-		
+
+
 class DefaultServicesPackageSerializers(serializers.ModelSerializer):
 	"""
 	普适项目服务包序列化

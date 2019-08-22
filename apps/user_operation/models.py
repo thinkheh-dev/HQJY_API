@@ -15,11 +15,11 @@ User = get_user_model()
 
 def user_upload_path(instance, filename):
     """
-	文件上传路径拼装类
-	:param instance: 文件实例
-	:param filename: 文件名
-	:return: 拼装后的文件路径
-	"""
+    文件上传路径拼装类
+    :param instance: 文件实例
+    :param filename: 文件名
+    :return: 拼装后的文件路径
+    """
     ext = filename.split('.')[-1]
     filename = '{}.{}'.format(uuid.uuid4().hex[:8], ext)
 
@@ -36,8 +36,8 @@ def user_upload_path(instance, filename):
 
 class UserFav(models.Model):
     """
-	用户收藏
-	"""
+    用户收藏
+    """
     user_info = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="用户", help_text="用户")
     default_services = models.ForeignKey(DefaultServices, blank=True, null=True, on_delete=models.CASCADE,
                                          verbose_name="普适服务", help_text="普适服务id")

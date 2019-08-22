@@ -44,6 +44,23 @@ class DefaultServicesListViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixi
     filter_class = DefaultServicesFilter
     search_fields = ('service_name', 'service_sn', 'service_describe', 'service_detailed_description')
     ordering_fields = ('service_sales', 'service_platform_price', 'add_time')
+    
+    # 此函数的意义在于,区分用户动作,并发送信号
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            
+            sig_re = self.get_object()
+
+            # 导入自定义信号
+            from service_signal import signal_service_re
+            # 发送信号
+            signal_service_re.send(sender=sig_re, signal_re="retrieve")
+            
+            return DefaultServicesSerializers
+        elif self.action == "list":
+            return DefaultServicesSerializers
+        
+        return DefaultServicesSerializers
 
 
 class FinancingServicesListViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
@@ -87,7 +104,6 @@ class DefaultCategoryNavViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = ServiceClassificationNavSerializers
     filter_backends = (DjangoFilterBackend, )
     filter_class = DefaultCategoryFilter
-    
     
     
 class FinancingCategoryViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
@@ -150,6 +166,7 @@ class ServicesBrandViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, vie
     queryset = ServiceBrand.objects.all()
     serializer_class = ServiceBrandSerializers
     
+
 class EnterpriseDemandViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin,
                               viewsets.GenericViewSet):
     """
@@ -163,6 +180,7 @@ class EnterpriseDemandViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, 
     """
     queryset = EnterpriseDemand.objects.all()
     serializer_class = EnterpriseDemandSerializers
+
 
 class CorporateFinanceDemandViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin,
                                     viewsets.GenericViewSet):
