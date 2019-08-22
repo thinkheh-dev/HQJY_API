@@ -9,7 +9,7 @@
 # @software: PyCharm
 
 from .models import DefaultServices
-from service_signal import signal_service_re
+from .service_signal import signal_service_re
 
 
 def browse_nums_signal(sender, signal_re, **kwargs):
