@@ -52,7 +52,7 @@ class DefaultServicesListViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixi
             sig_re = self.get_object()
 
             # 导入自定义信号
-            from service_signal import signal_service_re
+            from .service_signal import signal_service_re
             # 发送信号
             signal_service_re.send(sender=sig_re, signal_re="retrieve")
             
