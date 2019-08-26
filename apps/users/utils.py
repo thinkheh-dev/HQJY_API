@@ -20,6 +20,9 @@ User = get_user_model()
 
 def jwt_response_payload_handler(token, user=None, request=None):
 	"""为返回的结果添加用户相关信息"""
+	
+	# 解决登录用户获取公司信息报错
+	company_id = User.objects.filter(pk=user.id).values_list('user_to_company', flat=True)[0]
 
 	return {
 		'token': token,
@@ -30,7 +33,7 @@ def jwt_response_payload_handler(token, user=None, request=None):
 		'user_home': user.user_home,
 		'is_staff': user.is_staff,
 		'is_superuser': user.is_superuser,
-		'user_to_company': user.user_to_company.id
+		'user_to_company': company_id
 	}
 
 
