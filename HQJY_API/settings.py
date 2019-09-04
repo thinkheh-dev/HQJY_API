@@ -114,7 +114,8 @@ DATABASES = {
 		'NAME': 'hqjy_api_database',
 		'USER': 'root',
 		'PASSWORD': 'P@ssword',
-		'HOST': 'localhost',  # 生产数据库
+		'HOST': '192.168.10.205', # 生产数据库
+		# 'HOST': 'localhost',  # 测试数据库
 		'PORT': '3306',
 		# 'OPTIONS': { 'init_command': 'SET storage_engine=INNODB;' } ,
 	}
@@ -161,11 +162,11 @@ AUTHENTICATION_BACKENDS = (
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+# STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
-# STATICFILES_DIRS = (
-# 	os.path.join(BASE_DIR, "static"),
-# )
+STATICFILES_DIRS = (
+	os.path.join(BASE_DIR, "static"),
+)
 
 MEDIA_URL = "/media/"
 
