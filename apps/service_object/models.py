@@ -212,7 +212,7 @@ class FinancingServices(ServiceAbstractClass):
 	service_market_price = models.FloatField(verbose_name="市场价格", default=0)
 	service_platform_price = models.FloatField(verbose_name="平台价格", default=0)
 	service_unit = models.CharField(max_length=50, verbose_name="价格单位", help_text="价格单位", blank=True, null=True)
-	time_limit = models.CharField(max_length=10, verbose_name="期限")
+	time_limit = models.CharField(max_length=200, verbose_name="期限")
 	annual_interest_rate = models.CharField(max_length=10, verbose_name="年利率")
 	approval_lines = models.CharField(max_length=10, verbose_name="审批额度")
 	
