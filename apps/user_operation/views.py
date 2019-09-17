@@ -92,11 +92,13 @@ class OrderViewSet(mixins.ListModelMixin, mixins.UpdateModelMixin, mixins.Create
 
 			# 判断接收的是什么产品
 			if default_services_tmp:
+				print("普通服务产品订单下单")
 				obc_id = DefaultServices.objects.get(service_sn=default_services_tmp).service_belong_to_company
 				order_amount = DefaultServices.objects.get(service_sn=default_services_tmp).service_platform_price
 			if financing_services_tmp:
+				print("金融服务产品订单下单")
 				obc_id = FinancingServices.objects.get(service_sn=financing_services_tmp).service_belong_to_company
-				order_amount = FinancingServices.objects.get(service_sn=default_services_tmp).service_platform_price
+				order_amount = FinancingServices.objects.get(service_sn=financing_services_tmp).service_platform_price
 
 			# 进行订单公司归属赋值
 			serializer.validated_data['order_belong_company'] = obc_id
@@ -114,24 +116,24 @@ class OrderViewSet(mixins.ListModelMixin, mixins.UpdateModelMixin, mixins.Create
 		order_service_detail = OrderServiceDetail()
 		order_service_detail.order_info = order_info
 
-		if DefaultServices.objects.get(pk=default_services_tmp):
+		if default_services_tmp:
 
 			order_service_detail.default_services = DefaultServices.objects.get(pk=default_services_tmp)
 			order_service_detail.financing_services = None
 			order_service_detail.default_services_package = None
 
-		elif FinancingServices.objects.get(pk=financing_services_tmp):
+		elif financing_services_tmp:
 
 			order_service_detail.default_services = None
 			order_service_detail.financing_services = FinancingServices.objects.get(pk=financing_services_tmp)
 			order_service_detail.default_services_package = None
 
-		elif DefaultServicesPackage.objects.get(pk=default_services_package_tmp) :
-
-			order_service_detail.default_services = None
-			order_service_detail.financing_services = None
-			order_service_detail.default_services_package = DefaultServicesPackage.objects.get(
-				pk=default_services_package_tmp)
+		# elif default_services_package_tmp:
+		#
+		# 	order_service_detail.default_services = None
+		# 	order_service_detail.financing_services = None
+		# 	order_service_detail.default_services_package = DefaultServicesPackage.objects.get(
+		# 		pk=default_services_package_tmp)
 		else:
 			raise ValueError("出错啦！必须传任意一个服务的值")
 
