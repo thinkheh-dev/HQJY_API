@@ -290,7 +290,7 @@ class BasicEnterpriseInfo(models.Model):
 	credit_no = models.CharField(max_length=18, blank=True, null=True, verbose_name="统一社会信用代码", help_text="统一社会信用代码")
 	oper_name = models.CharField(max_length=20, blank=True, null=True, verbose_name="法人姓名", help_text="法人姓名")
 	reg_no = models.CharField(max_length=20, blank=True, null=True, verbose_name="工商注册号", help_text="工商注册号")
-	econ_kind = models.CharField(max_length=20, blank=True, null=True, verbose_name="企业(机构)类型", help_text="企业(机构)类型")
+	econ_kind = models.CharField(max_length=200, blank=True, null=True, verbose_name="企业(机构)类型", help_text="企业(机构)类型")
 	regist_capi = models.CharField(max_length=20, blank=True, null=True, verbose_name="注册资金（万元）",
 								   help_text="注册资金(单位:万元)")
 	reg_capcur = models.CharField(max_length=20, blank=True, null=True, verbose_name="注册币种", help_text="注册币种")
