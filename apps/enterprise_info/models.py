@@ -305,8 +305,9 @@ class BasicEnterpriseInfo(models.Model):
 	belong_org = models.CharField(max_length=50, blank=True, null=True, verbose_name="登记机关", help_text="登记机关")
 	abu_item = models.CharField(max_length=255, blank=True, null=True, verbose_name="许可经营项目", help_text="许可经营项目")
 	cbu_item = models.CharField(max_length=255, blank=True, null=True, verbose_name="一般经营项目", help_text="一般经营项目")
-	operate_scope = models.CharField(max_length=255, blank=True, null=True, verbose_name="经营(业务)范围", help_text="经营(业务)范围")
-	operate_scope_and_form = models.CharField(max_length=255, blank=True, null=True, verbose_name="经营(业务)范围及方式",
+	operate_scope = models.CharField(max_length=1000, blank=True, null=True, verbose_name="经营(业务)范围", help_text="经营("
+	                                                                                                          "业务)范围")
+	operate_scope_and_form = models.CharField(max_length=1000, blank=True, null=True, verbose_name="经营(业务)范围及方式",
 	                                          help_text="经营(业务)范围及方式")
 	org_code = models.CharField(max_length=20, blank=True, null=True, verbose_name="组织机构代码", help_text="组织机构代码")
 	appr_date = models.CharField(max_length=20, blank=True, null=True, verbose_name="核准时间", help_text="核准时间")
