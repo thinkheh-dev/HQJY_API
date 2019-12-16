@@ -10,5 +10,6 @@ uwsgi_hqjy.ini
 uwsgi_params
 hqjy_uwsgi.log
 uwsgi/
+HQJY_API/whoosh_index/
 
 

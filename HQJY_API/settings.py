@@ -46,6 +46,8 @@ INSTALLED_APPS = [
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
 	'DjangoUeditor',
+	'haystack',
+	'drf_haystack',
 	'service_object.apps.ServiceObjectConfig',
 	'enterprise_info.apps.EnterpriseInfoConfig',
 	'users.apps.UsersConfig',
@@ -85,6 +87,19 @@ CRONJOBS = [
 
 ]
 
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'service_object.whoosh_cn_backend.WhooshEngine',
+		# 'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+    },
+}
+# # 每页显示搜索结果数目为10
+# HAYSTACK_SEARCH_RESULTS_PER_PAGE = 5
+# 自动生成索引
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+
 ROOT_URLCONF = 'HQJY_API.urls'
 
 TEMPLATES = [
@@ -114,8 +129,8 @@ DATABASES = {
 		'NAME': 'hqjy_api_database',
 		'USER': 'root',
 		'PASSWORD': 'P@ssword',
-		'HOST': '192.168.10.205', # 生产数据库
-		# 'HOST': 'localhost',  # 测试数据库
+		# 'HOST': '192.168.20.89', # 生产数据库
+		'HOST': 'localhost',  # 测试数据库
 		'PORT': '3306',
 		# 'OPTIONS': { 'init_command': 'SET storage_engine=INNODB;' } ,
 	}

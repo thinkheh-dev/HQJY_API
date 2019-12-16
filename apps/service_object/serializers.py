@@ -9,6 +9,8 @@
 # @software: PyCharm
 
 from rest_framework import serializers
+from drf_haystack.serializers import HaystackSerializer
+from .search_indexes import DefaultServicesIndex, FinancingServicesIndex
 
 from .models import ServiceClassification, DefaultServices, FinancingServicesClassification, \
 	FinancingServices, ServiceBrand, DefaultServicesPackage, DefaultCouponType, DefaultServiceCoupon, HotSearchWords, \
@@ -250,3 +252,44 @@ class CorporateFinanceDemandSerializers(serializers.ModelSerializer):
 	class Meta:
 		model = CorporateFinanceDemand
 		fields = "__all__"
+
+
+class DefaultServicesSearchSerializers(HaystackSerializer):
+	"""
+	普适服务全文搜索序列化
+	"""
+	
+	more_like_this = serializers.HyperlinkedIdentityField(view_name="dsearch-more-like-this", read_only=True,
+	                                                      source="*")
+	
+	class Meta:
+		index_classes = [DefaultServicesIndex]
+		fields = ["text", "service_sn", "service_belong_to_company", "service_name", "service_describe",
+		          "service_detailed_description"]
+
+
+class FinancingServicesSearchSerializers(HaystackSerializer):
+	"""
+	金融服务全文搜索序列化
+	"""
+	
+	more_like_this = serializers.HyperlinkedIdentityField(view_name="fsearch-more-like-this", read_only=True,
+	                                                      source="*")
+	
+	class Meta:
+		index_classes = [FinancingServicesIndex]
+		fields = ["text", "service_sn", "service_belong_to_company", "service_name", "service_describe",
+		          "service_detailed_description"]
+		
+		
+class DefaultAndFinancingSearchSerializers(HaystackSerializer):
+	"""
+	合并普适及金融服务搜索序列化
+	"""
+
+	class Meta:
+		
+		serializers = {
+			DefaultServicesIndex: DefaultServicesSearchSerializers,
+			FinancingServicesIndex: FinancingServicesSearchSerializers
+		}

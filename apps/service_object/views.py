@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from rest_framework import mixins, generics, viewsets
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_haystack.viewsets import HaystackViewSet, HaystackGenericAPIView
+from drf_haystack.mixins import MoreLikeThisMixin
 
 from .models import DefaultServices, FinancingServices, ServiceClassification, FinancingServicesClassification, \
     HotSearchWords, ServiceBrand, DefaultServicesBanner, FinancingServicesBanner, EnterpriseDemand, CorporateFinanceDemand
@@ -14,7 +16,7 @@ from .serializers import DefaultServicesSerializers, FinancingServicesSerializer
     DefaultServicesPackageSerializers, DefaultCouponTypeSerializers, DefaultServiceCouponSerializers, \
     HotSearchWordsSerializers, DefaultServicesBannerSerializers, FinancingServicesBannerSerializers, \
     EnterpriseDemandSerializers, CorporateFinanceDemandSerializers, ServiceClassificationSerializers, \
-    ServiceClassificationNavSerializers, FinancingServicesClassificationNavSerializers
+    ServiceClassificationNavSerializers, FinancingServicesClassificationNavSerializers, DefaultAndFinancingSearchSerializers
 
 from .filters import DefaultServicesFilter, FinancingServicesFilter, DefaultCategoryFilter, FinancingCategoryFilter
 
@@ -195,3 +197,12 @@ class CorporateFinanceDemandViewset(mixins.ListModelMixin, mixins.RetrieveModelM
     """
     queryset = CorporateFinanceDemand.objects.all()
     serializer_class = CorporateFinanceDemandSerializers
+
+
+class ServicesSearchViewset(MoreLikeThisMixin, HaystackViewSet):
+    """
+    服务全文搜索视图
+    """
+
+    index_models = [DefaultServices, FinancingServices]
+    serializer_class = DefaultAndFinancingSearchSerializers

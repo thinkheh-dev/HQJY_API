@@ -1,0 +1,4 @@
+{{ object.service_belong_to_company }}
+{{ object.service_name }}
+{{ object.service_describe }}
+{{ object.service_detailed_description }}

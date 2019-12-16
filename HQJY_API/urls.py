@@ -26,7 +26,7 @@ from DjangoUeditor import urls as DjangoUeditor_urls
 from service_object.views import DefaultServicesListViewSet, FinancingServicesListViewSet, DefaultCategoryViewset, \
     FinancingCategoryViewset, HotSearchsViewset, DefaultServicesBannerViewset, FinancingServicesBannerViewset, \
     ServicesBrandViewset, EnterpriseDemandViewset, CorporateFinanceDemandViewset, DefaultCategoryNavViewset, \
-    FinancingCategoryNavViewset
+    FinancingCategoryNavViewset, ServicesSearchViewset
 from users.views import SmsCodeViewset, FindPasswordSmsCodeViewset, UserViewset, UserPhoneViewSet, \
     UserPasswordModifyViewSet, UserProtocolViewSet, UserRealNameAuthViewSet, UserPasswordOwnerViewSet
 from enterprise_info.views import EnterpriseListViewSet, EnterpriseAuthFileDownloadViewSet, \
@@ -134,6 +134,11 @@ router.register(r'web-logo', WebLogoViewSet, base_name='weblogo')
 router.register(r'web-name', WebNameViewSet, base_name='webname')
 router.register(r'web-footer-info', WebFooterInfoViewSet, base_name='webfooterinfo')
 router.register(r'web-footer-link', WebFooterLinkViewSet, base_name='webfooterlink')
+
+# 配置全文搜索路由
+router.register(r'services/search', ServicesSearchViewset, base_name='service-search')
+router.register(r'default-services', ServicesSearchViewset, base_name='dsearch')
+router.register(r'financing-services', ServicesSearchViewset, base_name='fsearch')
 
 urlpatterns = [
     # 后台管理地址（初始）
