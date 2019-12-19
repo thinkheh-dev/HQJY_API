@@ -300,6 +300,8 @@ SWAGGER_SETTINGS = {
 	'VALIDATOR_URL': None,
 }
 
+CKEDITOR_BASEPATH = "static/ckeditor/ckeditor/"
+
 #ckeditor上传文件配置
 CKEDITOR_UPLOAD_PATH = "ckeditor-upload/images/"
 
