@@ -2,6 +2,7 @@ from django.db import models
 from datetime import datetime
 
 from DjangoUeditor.models import UEditorField
+from ckeditor_uploader.fields import RichTextUploadingField
 from users.models import UserInfo
 
 
@@ -44,8 +45,7 @@ class WeMediaArticles(models.Model):
     info_categories = models.ForeignKey(InfoCategories, on_delete=models.CASCADE, verbose_name="信息版块分类",
                                         help_text="信息版块分类")
     abstract = models.TextField(max_length=200, blank=True, null=True, verbose_name="摘要", help_text="摘要")
-    content = UEditorField(default="", width=1000, height=300, filePath="platform_op/files/",
-                           imagePath="platform_op/images/", verbose_name="正文", help_text="正文")
+    content = RichTextUploadingField(verbose_name="正文", help_text="这里是自媒体文章的正文")
     attachment = models.FileField(upload_to="we_media_articles/", blank=True, null=True, verbose_name="附件", help_text="附件")
     publish_time = models.DateTimeField(auto_now_add=True, verbose_name="发布时间", help_text="发布时间")
     user_info = models.ForeignKey(UserInfo, on_delete=models.CASCADE, verbose_name="作者", help_text="作者")
