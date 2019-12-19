@@ -179,12 +179,17 @@ AUTHENTICATION_BACKENDS = (
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+STATIC_ROOT = [
+    os.path.join(BASE_DIR, "static"),
+]
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
-
-# STATICFILES_DIRS = (
-# 	os.path.join(BASE_DIR, "static"),
-# )
 
 MEDIA_URL = "/media/"
 
@@ -301,14 +306,20 @@ SWAGGER_SETTINGS = {
 }
 
 
-#ckeditor上传文件配置
+# ckeditor上传文件配置
 CKEDITOR_UPLOAD_PATH = "ckeditor_upload/images/"
+# 不允许非图片文件上传，默认为True
+CKEDITOR_ALLOW_NONIMAGE_FILES = False
+# 在编辑器里浏览上传的图片时，图片会以路径分组，日期排序
+CKEDITOR_BROWSE_SHOW_DIRS = True
+# 限制用户浏览图片的权限，只能浏览自己上传的图片，图片会传到以用户名命名的文件夹下，超级管理员依旧可以看所有图片
+CKEDITOR_RESTRICT_BY_USER = True
 
 CKEDITOR_IMAGE_BACKEND = 'pillow'
 #ckeditor编辑器样式配置
 CKEDITOR_CONFIGS = {
     'default': {
-        'skin': 'moono',
+        # 'skin': 'moono',
         # 'skin': 'office2013',
         'toolbar_Basic': [
             ['Source', '-', 'Bold', 'Italic']
