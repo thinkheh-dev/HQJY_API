@@ -194,7 +194,7 @@ STATICFILES_FINDERS = (
 
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = '/home/hhsme/www/HQJY_API/media/'
 
 REST_FRAMEWORK = {
 	'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -309,6 +309,7 @@ SWAGGER_SETTINGS = {
 # CKEDITOR_BASEPATH = os.path.join(BASE_DIR, "/static/ckeditor/ckeditor/")
 # ckeditor上传文件配置
 CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_JQUERY_URL = 'js/jquery.min.js'
 # 不允许非图片文件上传，默认为True
 CKEDITOR_ALLOW_NONIMAGE_FILES = False
 # 在编辑器里浏览上传的图片时，图片会以路径分组，日期排序
