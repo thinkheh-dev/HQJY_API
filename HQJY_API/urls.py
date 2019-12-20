@@ -162,7 +162,7 @@ urlpatterns = [
     path('api/login/', obtain_jwt_token),
 
     path('api/docs/', include_docs_urls(title='红企家园后端API')),
-    re_path(r'^media/(?P<path>.*)', serve, {"document_root": MEDIA_ROOT}),
+    # re_path(r'^media/(?P<path>.*)', serve, {"document_root": MEDIA_ROOT}),
 
     # path('default-services/', DefaultServicesListView.as_view(), name='ds-list')
 ]
