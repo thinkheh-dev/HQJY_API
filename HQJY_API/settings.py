@@ -306,7 +306,7 @@ SWAGGER_SETTINGS = {
 	'VALIDATOR_URL': None,
 }
 
-
+CKEDITOR_BASEPATH = os.path.join(BASE_DIR, "/static/ckeditor/ckeditor/")
 # ckeditor上传文件配置
 CKEDITOR_UPLOAD_PATH = "ckeditor_upload/images/"
 # 不允许非图片文件上传，默认为True
