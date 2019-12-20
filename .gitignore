@@ -3,9 +3,11 @@ migrations/
 .idea/
 media/
 nginx-pro
+static/ckeditor/
 static/admin/
 static/rest_framework/
 static/xadmin/
+static/rest_framework_swagger/
 uwsgi_hqjy.ini
 uwsgi_params
 hqjy_uwsgi.log

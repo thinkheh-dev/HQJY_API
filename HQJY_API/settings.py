@@ -28,7 +28,7 @@ SECRET_KEY = '%miidy5)f#ku6dq5jt#bq^gj7h@97)y_^+)=*@v1!^+x8n&7ei'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0", "192.168.20.89", "www.thinkheh.cn"]
 
 # 替换系统用户模型
 AUTH_USER_MODEL = 'users.UserInfo'
@@ -179,12 +179,13 @@ AUTHENTICATION_BACKENDS = (
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, "/static/"),
 ]
-STATIC_ROOT = [
-    os.path.join(BASE_DIR, "static"),
-]
+
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',

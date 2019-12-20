@@ -44,6 +44,8 @@ from page_control.views import WebFooterInfoViewSet, WebLogoViewSet, WebFooterLi
 from file_repository.views import TinyMCEImageViewSet
 
 from page_control.models import SystemAdminURL
+from django.views.static import serve
+from HQJY_API.settings import MEDIA_ROOT
 
 # 引入swagger
 from rest_framework_swagger.views import get_swagger_view
@@ -160,6 +162,7 @@ urlpatterns = [
     path('api/login/', obtain_jwt_token),
 
     path('api/docs/', include_docs_urls(title='红企家园后端API')),
+    re_path(r'^media/(?P<path>.*)', serve, {"document_root": MEDIA_ROOT}),
 
     # path('default-services/', DefaultServicesListView.as_view(), name='ds-list')
 ]
