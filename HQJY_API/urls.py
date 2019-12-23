@@ -150,7 +150,7 @@ urlpatterns = [
     re_path(r'^api/%s/' % (admin_url), xadmin.site.urls),  # 在后台修改过系统管理地址后，则可以启用这条
 
     path('ueditor/', include(DjangoUeditor_urls)),
-    path('ckeditor /', include('ckeditor_uploader.urls')),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
     path('api/V-1/', schema_view),
     path('api/', include(router.urls)),
     path('api/api-auth/', include('rest_framework.urls', namespace='rest_framework')),
