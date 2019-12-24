@@ -28,10 +28,10 @@ class ServiceAbstractClass(models.Model):
 	service_clicks = models.IntegerField(default=0, editable=True, verbose_name="被点击数", help_text="被点击数")
 	service_sales = models.IntegerField(default=0, editable=True, verbose_name="销量", help_text="销量")
 	service_fav_nums = models.IntegerField(default=0, editable=True, verbose_name="被收藏数", help_text="被收藏数")
-	# service_detailed_description = RichTextUploadingField(verbose_name="详细描述", help_text="详细描述")
-	service_detailed_description = UEditorField(verbose_name="详细描述", imagePath="service/images/", width=1000,
-	                                            height=300, filePath="", upload_settings={'imagePathFormat':"service/images/%(basename)s_%(datetime)s.%(extname)s",
-	                                                                                      'imageMaxSize': 2048000}, default='', help_text="详细描述")
+	service_detailed_description = RichTextUploadingField(verbose_name="详细描述", help_text="详细描述")
+	# service_detailed_description = UEditorField(verbose_name="详细描述", imagePath="service/images/", width=1000,
+	#                                             height=300, filePath="", upload_settings={'imagePathFormat':"service/images/%(basename)s_%(datetime)s.%(extname)s",
+	#                                                                                       'imageMaxSize': 2048000}, default='', help_text="详细描述")
 	service_additional_costs = models.IntegerField(default=0, editable=True, verbose_name="额外费用", help_text="额外费用")
 	service_cover_photo = models.ImageField(upload_to="service_cover/", blank=True, null=True, verbose_name="封面图片", help_text="封面图片")
 	is_new = models.BooleanField(default=True, verbose_name="是否新品", help_text="是否新品")
