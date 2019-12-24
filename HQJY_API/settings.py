@@ -26,7 +26,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'extra_apps'))
 SECRET_KEY = '%miidy5)f#ku6dq5jt#bq^gj7h@97)y_^+)=*@v1!^+x8n&7ei'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0", "192.168.20.89", "www.thinkheh.cn"]
 
